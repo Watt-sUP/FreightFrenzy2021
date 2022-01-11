@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## NOTICE
 
 This repository contains the public FTC SDK for the Freight Frenzy (2021-2022) competition season.
@@ -1130,3 +1131,6 @@ Changes include:
  * The API for the Legacy Module and Core Device Interface Module have been updated.
    - Support for encoders with the Legacy Module is now working.
  * The hardware loop has been updated for better performance.
+=======
+# FreightFrenzy2021
+>>>>>>> d8027678203c00a333265fcd33cfdb9c796fc50e
