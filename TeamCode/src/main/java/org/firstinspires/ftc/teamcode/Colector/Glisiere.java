@@ -1,4 +1,4 @@
 package org.firstinspires.ftc.teamcode.Colector;
 
-public class Motor {
+public class Glisiere {
 }
