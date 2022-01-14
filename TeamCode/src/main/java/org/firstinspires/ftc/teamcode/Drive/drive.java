@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "Freight Frenzy Mecanum Driving")
-public class MecanumDriving extends LinearOpMode {
+public class drive extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
 
     @SuppressLint("DefaultLocale")
