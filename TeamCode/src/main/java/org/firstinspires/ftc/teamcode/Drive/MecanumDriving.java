@@ -9,9 +9,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Freight Frenzy Mecanum Driving")
+@TeleOp(name = "Freight Frenzy Mecanum Driving", group = "Drive")
 public class MecanumDriving extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
+    private int facing = 1;
+    private boolean isHeld = false;
+    private String facingData = "Forwards";
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -28,25 +31,34 @@ public class MecanumDriving extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            double y = gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x * 1.1;
-            double rx = -gamepad1.right_stick_x;
+            double acceleration = gamepad1.left_stick_y;
+            double strafe = gamepad1.left_stick_x * 1.1;
+            double rotation = -gamepad1.right_stick_x;
 
-            double limit = 1.0 - gamepad1.right_trigger;
+            double powerLimit = 1.0 - gamepad1.right_trigger;
+            if(gamepad1.b && !isHeld) {
+                isHeld = true;
+                facing = facing * (-1);
 
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+                if(facing == 1) facingData = "Forwards";
+                else facingData = "Backwards";
+            }
+            else isHeld = false;
 
-            frontLeftMotor.setPower(Range.clip(frontLeftPower, -limit, limit));
-            backLeftMotor.setPower(Range.clip(backLeftPower, -limit, limit));
-            frontRightMotor.setPower(Range.clip(frontRightPower, -limit, limit));
-            backRightMotor.setPower(Range.clip(backRightPower, -limit, limit));
+            double denominator = Math.max(Math.abs(acceleration) + Math.abs(strafe) + Math.abs(rotation), 1);
+            double frontLeftPower = (acceleration + strafe + rotation) / denominator;
+            double backLeftPower = (acceleration - strafe + rotation) / denominator;
+            double frontRightPower = (acceleration - strafe - rotation) / denominator;
+            double backRightPower = (acceleration + strafe - rotation) / denominator;
+
+            frontLeftMotor.setPower(Range.clip(frontLeftPower, -powerLimit, powerLimit) * facing);
+            backLeftMotor.setPower(Range.clip(backLeftPower, -powerLimit, powerLimit) * facing);
+            frontRightMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit) * facing);
+            backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit) * facing);
 
             telemetry.addData("Elapsed time:", runtime.toString());
-            telemetry.addData("Power limit:", String.format("%.01f", limit));
+            telemetry.addData("Power limit:", String.format("%.01f", powerLimit));
+            telemetry.addData("Facing:", facingData);
 
             telemetry.update();
         }
