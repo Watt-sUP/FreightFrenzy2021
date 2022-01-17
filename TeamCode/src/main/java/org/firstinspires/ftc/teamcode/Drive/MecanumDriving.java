@@ -12,8 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "Freight Frenzy Mecanum Driving", group = "Drive")
 public class MecanumDriving extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
-    private int facing = 1;
-    private boolean isHeld = false;
+    private boolean faceIsHeld = false, triggerIsHeld = false, faceChanged;
     private String facingData = "Forwards";
 
     @SuppressLint("DefaultLocale")
@@ -35,15 +34,26 @@ public class MecanumDriving extends LinearOpMode {
             double strafe = gamepad1.left_stick_x * 1.1;
             double rotation = -gamepad1.right_stick_x;
 
-            double powerLimit = 1.0 - gamepad1.right_trigger;
-            if(gamepad1.b && !isHeld) {
-                isHeld = true;
-                facing = facing * (-1);
-
-                if(facing == 1) facingData = "Forwards";
-                else facingData = "Backwards";
+            double powerLimit;
+            if(gamepad1.left_trigger > 0.3 && !triggerIsHeld) {
+                triggerIsHeld = true;
+                powerLimit = 0.2;
             }
-            else isHeld = false;
+            else if(gamepad1.right_trigger > 0.3 && !triggerIsHeld) {
+                triggerIsHeld = true;
+                powerLimit = 0.5;
+            }
+            else {
+                powerLimit = 1.0;
+                triggerIsHeld = false;
+            }
+
+
+            if(gamepad1.y && !faceIsHeld) {
+                faceIsHeld = true;
+                faceChanged = !faceChanged;
+            }
+            else faceIsHeld = false;
 
             double denominator = Math.max(Math.abs(acceleration) + Math.abs(strafe) + Math.abs(rotation), 1);
             double frontLeftPower = (acceleration + strafe + rotation) / denominator;
@@ -51,10 +61,21 @@ public class MecanumDriving extends LinearOpMode {
             double frontRightPower = (acceleration - strafe - rotation) / denominator;
             double backRightPower = (acceleration + strafe - rotation) / denominator;
 
-            frontLeftMotor.setPower(Range.clip(frontLeftPower, -powerLimit, powerLimit) * facing);
-            backLeftMotor.setPower(Range.clip(backLeftPower, -powerLimit, powerLimit) * facing);
-            frontRightMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit) * facing);
-            backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit) * facing);
+
+            if(faceChanged == false) {
+                frontLeftMotor.setPower(Range.clip(frontLeftPower, -powerLimit, powerLimit));
+                backLeftMotor.setPower(Range.clip(backLeftPower, -powerLimit, powerLimit));
+                frontRightMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit));
+                backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
+
+                facingData = "Forwards";
+            }
+            else {
+                frontLeftMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
+                backLeftMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit));
+                frontRightMotor.setPower(Range.clip(backLeftPower, -powerLimit, powerLimit));
+                backRightMotor.setPower(Range.clip(frontLeftPower, -powerLimit, powerLimit));
+            }
 
             telemetry.addData("Elapsed time:", runtime.toString());
             telemetry.addData("Power limit:", String.format("%.01f", powerLimit));
