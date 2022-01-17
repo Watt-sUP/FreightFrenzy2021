@@ -75,6 +75,8 @@ public class MecanumDriving extends LinearOpMode {
                 backLeftMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit));
                 frontRightMotor.setPower(Range.clip(backLeftPower, -powerLimit, powerLimit));
                 backRightMotor.setPower(Range.clip(frontLeftPower, -powerLimit, powerLimit));
+
+                facingData = "Backwards";
             }
 
             telemetry.addData("Elapsed time:", runtime.toString());
