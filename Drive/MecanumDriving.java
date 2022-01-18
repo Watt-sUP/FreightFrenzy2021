@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Config.Config;
-
 @TeleOp(name = "Controlat Mecanum", group = "Drive")
 public class MecanumDriving extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
@@ -21,10 +19,10 @@ public class MecanumDriving extends LinearOpMode {
     @SuppressLint("DefaultLocale")
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
-        DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("LF");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("LB");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("RF");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("RB");
 
 
 

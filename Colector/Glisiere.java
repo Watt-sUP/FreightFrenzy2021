@@ -7,11 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-<<<<<<< HEAD
-import org.firstinspires.ftc.teamcode.Config.Config;
-
-=======
->>>>>>> ecad45d32c989cb8f905146baef09cfcea2ca48a
 @TeleOp(name="Glisiere pozitii", group = "Testing")
 public class Glisiere extends LinearOpMode {
     Servo servoTest;
@@ -25,16 +20,6 @@ public class Glisiere extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-<<<<<<< HEAD
-        servoCarusel = hardwareMap.crservo.get(Config.rate);
-        com.qualcomm.robotcore.hardware.Servo servoTest = hardwareMap.servo.get(Config.cupa);
-        DcMotor motorTest = hardwareMap.dcMotor.get(Config.gli);
-        DcMotor motorMatura = hardwareMap.dcMotor.get(Config.matura);
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
-        DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
-=======
         servoCarusel = hardwareMap.crservo.get("RATE");
         com.qualcomm.robotcore.hardware.Servo servoTest = hardwareMap.servo.get("CUPA");
         DcMotor motorTest = hardwareMap.dcMotor.get("GLI");
@@ -43,7 +28,6 @@ public class Glisiere extends LinearOpMode {
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("LB");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("RF");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("RB");
->>>>>>> ecad45d32c989cb8f905146baef09cfcea2ca48a
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);

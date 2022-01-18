@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Config.Config;
-
 @TeleOp(name="Matura Controlat", group="Colectare")
 public class Maturica extends LinearOpMode {
     private String motorData = "Idle";
@@ -13,7 +11,7 @@ public class Maturica extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor motorMatura = hardwareMap.dcMotor.get(Config.matura);
+        DcMotor motorMatura = hardwareMap.dcMotor.get("MAT");
         waitForStart();
 
         while (opModeIsActive()) {
