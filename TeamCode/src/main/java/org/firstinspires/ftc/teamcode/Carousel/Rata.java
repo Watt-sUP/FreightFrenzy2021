@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Carousel;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Config.Config;
 
@@ -16,10 +15,6 @@ public class Rata extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         servoCarusel = hardwareMap.crservo.get(Config.rate);
-
-        servoCarusel = hardwareMap.crservo.get("RATE");
-
-        servoCarusel = hardwareMap.crservo.get("RATE");
 
         servoCarusel.resetDeviceConfigurationForOpMode();
         waitForStart();
