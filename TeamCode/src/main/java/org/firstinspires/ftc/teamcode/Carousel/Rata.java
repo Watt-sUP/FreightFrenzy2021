@@ -4,14 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 import org.firstinspires.ftc.teamcode.Config.Config;
-=======
->>>>>>> ecad45d32c989cb8f905146baef09cfcea2ca48a
-=======
->>>>>>> ecad45d32c989cb8f905146baef09cfcea2ca48a
 
 @TeleOp(name = "Carusel Rata", group = "Carusel")
 public class Rata extends LinearOpMode {
@@ -21,15 +15,12 @@ public class Rata extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         servoCarusel = hardwareMap.crservo.get(Config.rate);
-=======
+
         servoCarusel = hardwareMap.crservo.get("RATE");
->>>>>>> ecad45d32c989cb8f905146baef09cfcea2ca48a
-=======
+
         servoCarusel = hardwareMap.crservo.get("RATE");
->>>>>>> ecad45d32c989cb8f905146baef09cfcea2ca48a
+
         servoCarusel.resetDeviceConfigurationForOpMode();
         waitForStart();
 
