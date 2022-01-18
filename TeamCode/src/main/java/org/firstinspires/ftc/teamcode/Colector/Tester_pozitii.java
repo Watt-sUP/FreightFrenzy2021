@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Colector.Servo;
 
-@Disabled
 @TeleOp(name="Servo Position Tester Glisiere", group = "Testing")
 public class Tester_pozitii extends LinearOpMode {
     Servo servoTest;

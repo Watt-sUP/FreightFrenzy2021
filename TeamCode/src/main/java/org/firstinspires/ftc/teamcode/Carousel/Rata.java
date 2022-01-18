@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "Carusel Rata", group = "Carusel")
 public class Rata extends LinearOpMode {
     private int powerrat = 0;
-    private int isHeld, state = 0;
+    private int isHeldservo, stateservo = 0;
     CRServo servoCarusel;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -18,17 +18,17 @@ public class Rata extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            if (gamepad1.a && isHeld == 0) {
-                isHeld = 1;
-                if(state == -1) {state = 0;  servoCarusel.setPower(0);}
-                else {state = -1;  servoCarusel.setPower(-1);}
+            if (gamepad1.a && isHeldservo == 0) {
+                isHeldservo = 1;
+                if(stateservo == -1) {stateservo = 0;  servoCarusel.setPower(0);}
+                else {stateservo = -1;  servoCarusel.setPower(-1);}
             }
-            else if(gamepad1.b && isHeld == 0) {
-                isHeld = 1;
-                if (state==1) {state=0; servoCarusel.setPower(0.0);}
-                else {state=1; servoCarusel.setPower(1.0);}
+            else if(gamepad1.b && isHeldservo == 0) {
+                isHeldservo = 1;
+                if (stateservo==1) {stateservo=0; servoCarusel.setPower(0.0);}
+                else {stateservo=1; servoCarusel.setPower(1.0);}
             }
-            else isHeld = 0;
+            else isHeldservo = 0;
         }
         }
     }

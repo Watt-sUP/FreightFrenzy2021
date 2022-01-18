@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Colector;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
@@ -14,9 +15,12 @@ public class Glisiere extends LinearOpMode {
     private String motorData = "Idle";
     private boolean faceIsHeld = false, triggerIsHeld = false, faceChanged;
     private String facingData = "Forwards";
+    CRServo servoCarusel;
+    private int isHeldservo, stateservo = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        servoCarusel = hardwareMap.crservo.get("RATE");
         com.qualcomm.robotcore.hardware.Servo servoTest = hardwareMap.servo.get("CUPA");
         DcMotor motorTest = hardwareMap.dcMotor.get("GLI");
         DcMotor motorMatura = hardwareMap.dcMotor.get("MAT");
@@ -28,6 +32,7 @@ public class Glisiere extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        servoCarusel.resetDeviceConfigurationForOpMode();
 
         waitForStart();
 
@@ -40,12 +45,10 @@ public class Glisiere extends LinearOpMode {
             double rotation = gamepad1.right_stick_x;
 
             double powerLimit;
-            if(gamepad1.left_trigger >= 0.3 && !triggerIsHeld) {
-                triggerIsHeld = true;
+            if(gamepad1.left_trigger >= 0.3 ) {
                 powerLimit = 0.2;
             }
-            else if(gamepad1.right_trigger >= 0.3 && !triggerIsHeld) {
-                triggerIsHeld = true;
+            else if(gamepad1.right_trigger >= 0.3 ) {
                 powerLimit = 0.5;
             }
             else {
@@ -59,6 +62,7 @@ public class Glisiere extends LinearOpMode {
                 faceChanged = !faceChanged;
             }
             else faceIsHeld = false;
+
 
             if(faceChanged == false) {
 
@@ -132,17 +136,29 @@ public class Glisiere extends LinearOpMode {
                 if (gamepad2.y) {
                 if (servoPosition == 0.04) servoPosition = 0.70;
                 else servoPosition = 0.04;
-                ((com.qualcomm.robotcore.hardware.Servo) servoTest).setPosition(servoPosition);
+                servoTest.setPosition(servoPosition);
             }
+            if (gamepad1.x && isHeldservo == 0) {
+                isHeldservo = 1;
+                if(stateservo == -1) {stateservo = 0;  servoCarusel.setPower(0);}
+                else {stateservo = -1;  servoCarusel.setPower(-1);}
+            }
+            else if(gamepad1.b && isHeldservo == 0) {
+                isHeldservo = 1;
+                if (stateservo==1) {stateservo=0; servoCarusel.setPower(0.0);}
+                else {stateservo=1; servoCarusel.setPower(1.0);}
+            }
+            else isHeldservo = 0;
+
                 idle();
             telemetry.addData("Current Ticks:", currentTicks);
             telemetry.addData("ServoPosition:", servoPosition);
             telemetry.addData("Maturica Status:", motorData);
             telemetry.addData("Power Limit:", powerLimit);
+            telemetry.addData("Faceing:", facingData);
             telemetry.update();
         }
         motorTest.setPower(0.0);
-        motorTest.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }
 
