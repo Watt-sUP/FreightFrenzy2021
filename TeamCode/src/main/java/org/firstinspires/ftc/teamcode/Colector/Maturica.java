@@ -19,7 +19,7 @@ public class Maturica extends LinearOpMode {
 
         while (opModeIsActive()) {
             /*
-                CR bogdan: aceeasi problema ca la Rata.java
+                [X] CR bogdan: aceeasi problema ca la Rata.java
              */
             if(gamepad2.b && !isHeld) {
                 isHeld = true;
