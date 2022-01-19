@@ -36,6 +36,9 @@ public class MecanumDriving extends LinearOpMode {
             double rotation = gamepad1.right_stick_x;
 
             double powerLimit;
+            /*
+                CR bogdan: aici nu cred ca e nevoie de variabila triggerIsHeld
+             */
             if(gamepad1.left_trigger >= 0.3 && !triggerIsHeld) {
                 triggerIsHeld = true;
                 powerLimit = 0.2;
@@ -49,7 +52,12 @@ public class MecanumDriving extends LinearOpMode {
                 triggerIsHeld = false;
             }
 
-
+            /*
+                CR-someday bogdan: pare complicat modul in care este facuta schimbarea de fete
+                                   se poate face mult mai usor prin schimbarea motoarelor ca obiecte
+                                   adica frontRightMotor = initial_frontRightMotor (in caz de face = forward)
+                                      si frontRightMotor = initial_backLeftMotor (in caz de face = backward)
+             */
             if(gamepad1.y && !faceIsHeld) {
                 faceIsHeld = true;
                 faceChanged = !faceChanged;

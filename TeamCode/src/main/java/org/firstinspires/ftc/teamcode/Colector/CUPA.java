@@ -15,11 +15,20 @@ public class CUPA extends LinearOpMode {
 
     @Override
     public void runOpMode() throws  InterruptedException {
-        servotest = (Servo) hardwareMap.servo.get(Config.cupa);
+        servotest = hardwareMap.servo.get(Config.cupa);
 
         waitForStart();
 
         while (opModeIsActive()) {
+            /*
+                CR-someday bogdan: de obicei e bine sa evitam comparatia de egalitate pe float/double
+                                   astfel, vom avea o variabila care tine starea/pozitia in care este servo-ul
+             */
+            /*
+                CR bogdan:  codul functioneaza sacadat (se trece de mai multe ori prin loop la
+                            o singura apasare de buton). trebuie schimbat astfel incat schimbarea
+                            pozitie sa se efectueze doar o singura data la o apasare de buton
+             */
             if (gamepad1.a) {
                 if (servoPosition == 0.0) servoPosition = 0.5;
                 else servoPosition = 0.0;

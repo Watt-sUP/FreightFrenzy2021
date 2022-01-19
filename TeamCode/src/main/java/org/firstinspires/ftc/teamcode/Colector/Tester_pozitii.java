@@ -14,7 +14,7 @@ public class Tester_pozitii extends LinearOpMode {
     double servoPosition = 0.04;
     @Override
     public void runOpMode() throws InterruptedException {
-        com.qualcomm.robotcore.hardware.Servo servoTest = hardwareMap.servo.get(Config.cupa);
+        Servo servoTest = hardwareMap.servo.get(Config.cupa);
         DcMotor motorTest = hardwareMap.dcMotor.get(Config.gli);
         motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
@@ -35,7 +35,7 @@ public class Tester_pozitii extends LinearOpMode {
             if(gamepad1.y) {
                 if (servoPosition == 0.04) servoPosition = 0.70;
                 else servoPosition = 0.04;
-                ((com.qualcomm.robotcore.hardware.Servo) servoTest).setPosition(servoPosition);
+                servoTest.setPosition(servoPosition);
             }
             idle();
             telemetry.addData("Current Ticks:", currentTicks);

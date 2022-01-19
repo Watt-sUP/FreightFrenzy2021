@@ -17,6 +17,9 @@ public class Maturica extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            /*
+                CR bogdan: aceeasi problema ca la Rata.java
+             */
             if(gamepad2.b && isHeld == 0) {
                 isHeld = 1;
                 if(state == -1) {state = 0; motorData="Idle"; motorMatura.setPower(0.0);}

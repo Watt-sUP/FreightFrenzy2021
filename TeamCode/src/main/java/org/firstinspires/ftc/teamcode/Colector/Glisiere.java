@@ -13,6 +13,17 @@ import org.firstinspires.ftc.teamcode.Config.Config;
 
 @TeleOp(name="Glisiere pozitii", group = "Testing")
 public class Glisiere extends LinearOpMode {
+
+    /*
+        CR bogdan: pare ca asta e combinarea tuturor opmode-urilor, astfel ar fi bine sa aibe un
+                   nume mai sugestiv.
+
+                   acest opmode este prea lung si ar trebui sa facem obiecte pentru fiecare
+                   sistem (in loc de opmode uri). de exemplu: pentru rata, putem avea clasa
+                   Rata.java (care nu este un opmode, este un tip de obiect, echivalent cu
+                   struct in c++).
+     */
+
     Servo servoTest;
     double servoPosition = 0.04;
     private int isHeld, state = 0;
