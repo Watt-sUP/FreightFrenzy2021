@@ -8,29 +8,30 @@ import org.firstinspires.ftc.teamcode.Config.Config;
 
 @TeleOp(name="Matura Controlat", group="Colectare")
 public class Maturica extends LinearOpMode {
-    private String motorData = "Idle";
-    private int isHeld, state = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
         DcMotor motorMatura = hardwareMap.dcMotor.get(Config.matura);
+        String motorData = "Idle";
+        int state = 0;
+        boolean isHeld = false;
         waitForStart();
 
         while (opModeIsActive()) {
             /*
                 CR bogdan: aceeasi problema ca la Rata.java
              */
-            if(gamepad2.b && isHeld == 0) {
-                isHeld = 1;
+            if(gamepad2.b && !isHeld) {
+                isHeld = true;
                 if(state == -1) {state = 0; motorData="Idle"; motorMatura.setPower(0.0);}
                 else {state = -1; motorData="Ejecting"; motorMatura.setPower(-1.0);}
             }
-            else if(gamepad2.a && isHeld == 0) {
-                isHeld = 1;
+            else if(gamepad2.a && !isHeld) {
+                isHeld = true;
                 if (state==1) {state=0; motorData = "Idle"; motorMatura.setPower(0.0);}
                 else {state=1; motorData = "Collecting"; motorMatura.setPower(1.0);}
             }
-            else isHeld = 0;
+            else if(!gamepad2.a && !gamepad2.b) isHeld = false;
             telemetry.addData("Motor Status:", motorData);
             telemetry.update();
         }

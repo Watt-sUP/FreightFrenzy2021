@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Config.Config;
 
-@TeleOp(name="Glisiere pozitii", group = "Testing")
+@TeleOp(name="Glisiere + Coduri Combinate", group = "Testing")
 public class Glisiere extends LinearOpMode {
 
     /*
