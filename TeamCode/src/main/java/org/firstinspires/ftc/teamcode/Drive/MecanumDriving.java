@@ -14,9 +14,7 @@ import org.firstinspires.ftc.teamcode.Config.Config;
 @TeleOp(name = "Controlat Mecanum", group = "Drive")
 public class MecanumDriving extends LinearOpMode {
 
-    private final ElapsedTime runtime = new ElapsedTime();
-    private boolean faceIsHeld = false, triggerIsHeld = false, faceChanged;
-    private String facingData = "Forwards";
+
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -26,6 +24,9 @@ public class MecanumDriving extends LinearOpMode {
         DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
         DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
 
+        String facingData = "Forwards";
+        final ElapsedTime runtime = new ElapsedTime();
+        boolean faceIsHeld = false, faceChanged = false;
 
         waitForStart();
         runtime.reset();
@@ -35,22 +36,13 @@ public class MecanumDriving extends LinearOpMode {
             double strafe = gamepad1.left_stick_x * -1.1;
             double rotation = gamepad1.right_stick_x;
 
-            double powerLimit;
+            double powerLimit = 1.0;
             /*
-                CR bogdan: aici nu cred ca e nevoie de variabila triggerIsHeld
+               [X] CR bogdan: aici nu cred ca e nevoie de variabila triggerIsHeld
              */
-            if(gamepad1.left_trigger >= 0.3 && !triggerIsHeld) {
-                triggerIsHeld = true;
-                powerLimit = 0.2;
-            }
-            else if(gamepad1.right_trigger >= 0.3 && !triggerIsHeld) {
-                triggerIsHeld = true;
-                powerLimit = 0.5;
-            }
-            else {
-                powerLimit = 1.0;
-                triggerIsHeld = false;
-            }
+            if(gamepad1.left_trigger >= 0.3) powerLimit = 0.2;
+            else if(gamepad1.right_trigger >= 0.3) powerLimit = 0.5;
+            else if(gamepad1.left_trigger < 0.3 && gamepad1.right_trigger < 0.3) powerLimit = 1.0;
 
             /*
                 CR-someday bogdan: pare complicat modul in care este facuta schimbarea de fete
@@ -62,9 +54,9 @@ public class MecanumDriving extends LinearOpMode {
                 faceIsHeld = true;
                 faceChanged = !faceChanged;
             }
-            else faceIsHeld = false;
+            else if(!gamepad1.y) faceIsHeld = false;
 
-            if(faceChanged == false) {
+            if(!faceChanged) {
 
                 frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                 backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);

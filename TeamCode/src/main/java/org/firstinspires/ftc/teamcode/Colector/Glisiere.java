@@ -28,7 +28,7 @@ public class Glisiere extends LinearOpMode {
     double servoPosition = 0.04;
     private int isHeld, state = 0;
     private String motorData = "Idle";
-    private boolean faceIsHeld = false, triggerIsHeld = false, faceChanged;
+    private boolean faceIsHeld = false, faceChanged;
     private String facingData = "Forwards";
     CRServo servoCarusel;
     private int isHeldservo, stateservo = 0;
@@ -60,16 +60,15 @@ public class Glisiere extends LinearOpMode {
             double strafe = gamepad1.left_stick_x * -1.1;
             double rotation = gamepad1.right_stick_x;
 
-            double powerLimit;
+            double powerLimit = 1.0;
             if(gamepad1.left_trigger >= 0.3 ) {
                 powerLimit = 0.2;
             }
             else if(gamepad1.right_trigger >= 0.3 ) {
                 powerLimit = 0.5;
             }
-            else {
+            else if(gamepad1.right_trigger < 0.3 && gamepad2.right_trigger < 0.3) {
                 powerLimit = 1.0;
-                triggerIsHeld = false;
             }
 
 
