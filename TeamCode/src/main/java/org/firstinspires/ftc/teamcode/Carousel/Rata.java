@@ -24,7 +24,7 @@ public class Rata extends LinearOpMode {
         servoCarousel.resetDeviceConfigurationForOpMode();
         waitForStart();
 
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             /*
                 [X] CR bogdan: aici cred ca nu va merge codul pentru ca isHeldservo se va face 0 la
                            urmatoarea trecere prin loop chiar daca butonul este inca apasat.
@@ -43,20 +43,24 @@ public class Rata extends LinearOpMode {
              */
             if (gamepad1.a && !isHeldServo) {
                 isHeldServo = true;
-                if(stateServo == -1) {
-                    stateServo = 0;  servoCarousel.setPower(0);}
-                else {
-                    stateServo = -1;  servoCarousel.setPower(-1);}
-            }
-            else if(gamepad1.b && !isHeldServo) {
+                if (stateServo == -1) {
+                    stateServo = 0;
+                    servoCarousel.setPower(0);
+                } else {
+                    stateServo = -1;
+                    servoCarousel.setPower(-1);
+                }
+            } else if (gamepad1.b && !isHeldServo) {
                 isHeldServo = true;
-                if (stateServo==1) {
-                    stateServo=0; servoCarousel.setPower(0.0);}
-                else {
-                    stateServo =1; servoCarousel.setPower(1.0);}
-            }
-            else if(!gamepad1.a && !gamepad1.b) isHeldServo = false;
-        }
+                if (stateServo == 1) {
+                    stateServo = 0;
+                    servoCarousel.setPower(0.0);
+                } else {
+                    stateServo = 1;
+                    servoCarousel.setPower(1.0);
+                }
+            } else if (!gamepad1.a && !gamepad1.b) isHeldServo = false;
         }
     }
+}
 

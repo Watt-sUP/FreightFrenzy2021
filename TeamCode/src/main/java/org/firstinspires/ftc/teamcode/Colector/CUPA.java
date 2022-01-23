@@ -9,13 +9,14 @@ import org.firstinspires.ftc.teamcode.Config.Config;
 
 @TeleOp(name = "Cupa" )
 public class CUPA extends LinearOpMode {
-    Servo servotest;
+    Servo servoCupa;
     private ElapsedTime runtime = new ElapsedTime();
     double servoPosition = 0.0;
+    boolean isHeld = false;
 
     @Override
     public void runOpMode() throws  InterruptedException {
-        servotest = hardwareMap.servo.get(Config.cupa);
+        servoCupa = hardwareMap.servo.get(Config.cupa);
 
         waitForStart();
 
@@ -29,15 +30,16 @@ public class CUPA extends LinearOpMode {
                             o singura apasare de buton). trebuie schimbat astfel incat schimbarea
                             pozitie sa se efectueze doar o singura data la o apasare de buton
              */
-            if (gamepad1.a) {
-                if (servoPosition == 0.0) servoPosition = 0.5;
+            if (gamepad1.a && !isHeld) {
+                if (servoPosition <= 0.02) servoPosition = 0.5;
                 else servoPosition = 0.0;
-                servotest.setPosition(servoPosition);
+                servoCupa.setPosition(servoPosition);
+                isHeld = true;
             }
+            else if(!gamepad1.a) isHeld = false;
             telemetry.addData("Elapsed Time:", runtime.toString());
             telemetry.addData("Servo position:", servoPosition);
         }
 
     }
 }
-

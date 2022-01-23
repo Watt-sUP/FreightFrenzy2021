@@ -12,5 +12,9 @@ public class Config {
     public static final String rate = "RATE";
     public static final String gli = "GLI";
 
+    public static final String rul1 = "rul1";
+    public static final String rul2 = "rul2";
+    public static final String rul3 = "rul3";
+
 
 }
