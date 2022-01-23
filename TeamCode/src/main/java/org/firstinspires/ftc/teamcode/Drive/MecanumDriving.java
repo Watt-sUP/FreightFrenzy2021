@@ -37,9 +37,6 @@ public class MecanumDriving extends LinearOpMode {
             double rotation = gamepad1.right_stick_x;
 
             double powerLimit = 1.0;
-            /*
-               [X] CR bogdan: aici nu cred ca e nevoie de variabila triggerIsHeld
-             */
             if(gamepad1.left_trigger >= 0.3) powerLimit = 0.2;
             else if(gamepad1.right_trigger >= 0.3) powerLimit = 0.5;
             else if(gamepad1.left_trigger < 0.3 && gamepad1.right_trigger < 0.3) powerLimit = 1.0;

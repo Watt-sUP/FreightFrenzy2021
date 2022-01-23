@@ -45,6 +45,10 @@ public class Autonom extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        /*
+            CR bogdan: cand esti in RUN_TO_POSITION, puterea se poate da mereu pozitiva, ca
+                       motorul se duce automat in directia care trebuie
+         */
         leftFront.setPower(-1);
         leftBack.setPower(-1);
         rightFront.setPower(-1);
@@ -173,6 +177,9 @@ public class Autonom extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        /*
+            CR bogdan: de ce are rightFront putere 0.9?
+         */
         leftFront.setPower(1);
         leftBack.setPower(1);
         rightFront.setPower(0.9);

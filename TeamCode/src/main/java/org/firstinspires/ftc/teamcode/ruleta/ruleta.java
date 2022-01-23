@@ -14,6 +14,9 @@ public class ruleta extends LinearOpMode {
         int stateServo = 0;
         boolean isRuletaHeld = false;
 
+        /*
+            CR-someday bogdan: nume mai sugestive pentru cele 3 servo-uri
+         */
         CRServo servoRuleta1;
         CRServo servoRuleta2;
         CRServo servoRuleta3;
@@ -25,7 +28,13 @@ public class ruleta extends LinearOpMode {
         servoRuleta1.resetDeviceConfigurationForOpMode();
         waitForStart();
 
+
         while (opModeIsActive()) {
+            /*
+                CR bogdan: servo urile ar trebui sa se roteasca doar atunci cand axa nu este 0,
+                           in plus, este folosita aceeasi variabila pentru a tine starea tuturor
+                           celor 3 servo uri.
+             */
 
             if (gamepad2.left_stick_y == 1 && !isRuletaHeld) {
                 isRuletaHeld = true;
