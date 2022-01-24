@@ -8,9 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.Config;
-import org.firstinspires.ftc.teamcode.Drive.MecanumDriving;
-
-
 @Autonomous(name = "Autonom 1", group = "Autonom")
 public class Autonom extends LinearOpMode {
 
