@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Config.Config;
 
-@TeleOp(name = "Carusel Rata", group = "Carusel")
+@TeleOp(name = "Carousel Rata", group = "Carusel")
 public class Rata extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
