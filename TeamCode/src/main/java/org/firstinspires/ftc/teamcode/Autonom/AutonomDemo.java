@@ -177,9 +177,6 @@ public class AutonomDemo extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        /*
-            [X] CR bogdan: de ce are rightFront putere 0.9?
-         */
         leftFront.setPower(1);
         leftBack.setPower(1);
         rightFront.setPower(0.9);

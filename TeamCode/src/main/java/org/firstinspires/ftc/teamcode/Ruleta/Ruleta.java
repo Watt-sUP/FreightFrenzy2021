@@ -13,10 +13,6 @@ public class Ruleta extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        /*
-            [X] CR-someday bogdan: nume mai sugestive pentru cele 3 servo-uri
-         */
         CRServo servoRuletaX;
         CRServo servoRuletaY;
         CRServo servoRuletaEx;
@@ -33,9 +29,8 @@ public class Ruleta extends LinearOpMode {
 
         while (opModeIsActive()) {
             /*
-                CR bogdan: servo urile ar trebui sa se roteasca doar atunci cand axa nu este 0,
-                           in plus, este folosita aceeasi variabila pentru a tine starea tuturor
-                           celor 3 servo uri.
+                CR-someday bogdan: in clasa de gamepad am putea face axele sa returneze 0 daca
+                                   nu sunt apasate suficient (echivalent cu if urile astea)
              */
 
             if(gamepad2.left_stick_x < -0.1 || gamepad2.left_stick_x > 0.1) {

@@ -21,10 +21,6 @@ public class CUPA extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            /*
-                CR-someday bogdan: de obicei e bine sa evitam comparatia de egalitate pe float/double
-                                   astfel, vom avea o variabila care tine starea/pozitia in care este servo-ul
-             */
             if (gamepad1.a && !isHeld) {
                 if (servoPosition <= 0.02) servoPosition = 0.5;
                 else servoPosition = 0.0;

@@ -70,6 +70,12 @@ public class AutonomSus extends LinearOpMode {
         motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorGlisiere.setPower(1);
 
+        /*
+            CR bogdan: trebuie o clasa separata pentru cupa, cu functii pentru diferitele pozitii ale cupei,
+                       astfel, nu trebuie sa ne gandim de fiecare data care sunt constantele,
+                       plus ca se intelege ce face codul mai bine daca am avea cupa.jos(),
+                       cupa.mid(), cupa.sus(), etc..
+         */
         sleep(200);
         servoCupa.setPosition(0.70);
         sleep(2000);
@@ -78,6 +84,9 @@ public class AutonomSus extends LinearOpMode {
         motorGlisiere.setPower(0);
 
         sleep(1000);
+        /*
+            CR bogdan: target position trebuie sa fie 0, (nu -currentPosition).
+         */
         motorGlisiere.setTargetPosition(motorGlisiere.getCurrentPosition() * (-1));
         motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorGlisiere.setPower(0.8);
