@@ -12,9 +12,9 @@ public class Config {
     public static final String rate = "RATE";
     public static final String gli = "GLI";
 
-    public static final String rul1 = "rul1";
-    public static final String rul2 = "rul2";
-    public static final String rul3 = "rul3";
+    public static final String rul_fata = "rul_fata";
+    public static final String rul_y = "rul_y";
+    public static final String rul_x = "rul_x";
 
     public static final String VuforiaKey = "AfU5G7L/////AAABmYu22oIwrUJRu51bGUg4lz1WtvGXh+F/uZbpzToheSO03P4l/I33YeFtYDc07EE9fsYS1JWa32duDe+WP4uB487aIw+c0VTJX9B4+nPgdUq0LSNRYR5c377EPMNAIyntxofMYgN6CgwewbxXpeN77tCRbLK8AA1clcYOXV760tC77PKALtZsyurNFxsHKyDPRnNEy9ca2R2Ql5sF1B3oEuPrR2uN2XeRe4sqB6IDDrDpJbqWsES4xCsAbWNnOzM8mChyOUX/vVaIyHUlDiUoz7azXAw5dJ6plQpbQNdD10sW+01ns/T+qgeXx3ee6S05zKxypwP6hYMAnqakE158hqfmj89W8YirxKgelrjOToAm";
 }

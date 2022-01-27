@@ -57,9 +57,9 @@ public class Glisiere extends LinearOpMode {
         CRServo servoRuleta2;
         CRServo servoRuleta3;
 
-        servoRuleta1 = hardwareMap.crservo.get(Config.rul1);
-        servoRuleta2 = hardwareMap.crservo.get(Config.rul2);
-        servoRuleta3 = hardwareMap.crservo.get(Config.rul3);
+        servoRuleta1 = hardwareMap.crservo.get(Config.rul_fata);
+        servoRuleta2 = hardwareMap.crservo.get(Config.rul_x);
+        servoRuleta3 = hardwareMap.crservo.get(Config.rul_y);
 
         servoRuleta1.resetDeviceConfigurationForOpMode();
 
