@@ -27,7 +27,7 @@ public class Rata extends LinearOpMode {
                     motorCarousel.setPower(0);
                 } else {
                     stateMotor = -1;
-                    motorCarousel.setPower(-0.7);
+                    motorCarousel.setPower(-0.75);
                 }
             } else if (gamepad1.b && !isHeldMotor) {
                 isHeldMotor = true;
@@ -36,7 +36,7 @@ public class Rata extends LinearOpMode {
                     motorCarousel.setPower(0.0);
                 } else {
                     stateMotor = 1;
-                    motorCarousel.setPower(0.7);
+                    motorCarousel.setPower(0.75);
                 }
             } else if (!gamepad1.a && !gamepad1.b) isHeldMotor = false;
         }
