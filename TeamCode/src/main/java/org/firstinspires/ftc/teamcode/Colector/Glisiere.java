@@ -32,7 +32,7 @@ public class Glisiere extends LinearOpMode {
     private String motorData = "Idle";
     private boolean faceIsHeld = false, faceChanged, isCupaHeld = false;
     private String facingData = "Forwards";
-    CRServo servoCarusel;
+    DcMotor motorCarusel;
     private ElapsedTime timp = new ElapsedTime();
     private int isHeldservo, stateservo = 0;
 
@@ -42,7 +42,7 @@ public class Glisiere extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        servoCarusel = hardwareMap.crservo.get(Config.rate);
+        motorCarusel = hardwareMap.dcMotor.get(Config.rate);
         com.qualcomm.robotcore.hardware.Servo servoGlisiera = hardwareMap.servo.get(Config.cupa);
         DcMotor motorTest = hardwareMap.dcMotor.get(Config.gli);
         DcMotor motorMatura = hardwareMap.dcMotor.get(Config.matura);
@@ -66,7 +66,7 @@ public class Glisiere extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        servoCarusel.resetDeviceConfigurationForOpMode();
+        motorCarusel.resetDeviceConfigurationForOpMode();
 
         waitForStart();
         timp.reset();
@@ -239,19 +239,19 @@ public class Glisiere extends LinearOpMode {
                 isHeldservo = 1;
                 if (stateservo == -1) {
                     stateservo = 0;
-                    servoCarusel.setPower(0);
+                    motorCarusel.setPower(0);
                 } else {
                     stateservo = -1;
-                    servoCarusel.setPower(-1);
+                    motorCarusel.setPower(-1);
                 }
             } else if (gamepad1.b && isHeldservo == 0) {
                 isHeldservo = 1;
                 if (stateservo == 1) {
                     stateservo = 0;
-                    servoCarusel.setPower(0.0);
+                    motorCarusel.setPower(0.0);
                 } else {
                     stateservo = 1;
-                    servoCarusel.setPower(1.0);
+                    motorCarusel.setPower(1.0);
                 }
             } else if (!gamepad1.x && !gamepad1.b) isHeldservo = 0;
 

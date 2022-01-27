@@ -14,8 +14,8 @@ import java.util.List;
 @Autonomous(name = "Concept Tensorflow", group = "Testing")
 public class TensorflowConcept extends LinearOpMode {
 
-    String tfodModelName = "FreightFrenzy_DM.tflite";
-    String[] labels = {"Duck", "Team Marker"};
+    String tfodModelName = "FreightFrenzy_BCDM.tflite";
+    String[] labels = {"Ball", "Cube", "Duck", "Team Marker"};
 
     private final String VuforiaKey = Config.VuforiaKey;
     private VuforiaLocalizer vuforia;
@@ -34,7 +34,7 @@ public class TensorflowConcept extends LinearOpMode {
         int tfodId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodId);
 
-        tfodParameters.minResultConfidence = 0.7f;
+        tfodParameters.minResultConfidence = 0.8f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
 
@@ -50,7 +50,7 @@ public class TensorflowConcept extends LinearOpMode {
 
         if(tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.25, 16.0/9.0);
+            tfod.setZoom(1, 16.0/9.0);
         }
 
         waitForStart();

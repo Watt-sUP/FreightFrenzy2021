@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Carousel;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Config.Config;
 
@@ -10,34 +11,34 @@ import org.firstinspires.ftc.teamcode.Config.Config;
 public class Rata extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        int stateServo = 0;
-        boolean isHeldServo = false;
-        CRServo servoCarousel;
-        servoCarousel = hardwareMap.crservo.get(Config.rate);
+        int stateMotor = 0;
+        boolean isHeldMotor = false;
+        DcMotor motorCarousel;
+        motorCarousel = hardwareMap.dcMotor.get(Config.rate);
 
-        servoCarousel.resetDeviceConfigurationForOpMode();
+        motorCarousel.resetDeviceConfigurationForOpMode();
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad1.a && !isHeldServo) {
-                isHeldServo = true;
-                if (stateServo == -1) {
-                    stateServo = 0;
-                    servoCarousel.setPower(0);
+            if (gamepad1.a && !isHeldMotor) {
+                isHeldMotor = true;
+                if (stateMotor == -1) {
+                    stateMotor = 0;
+                    motorCarousel.setPower(0);
                 } else {
-                    stateServo = -1;
-                    servoCarousel.setPower(-1);
+                    stateMotor = -1;
+                    motorCarousel.setPower(-1);
                 }
-            } else if (gamepad1.b && !isHeldServo) {
-                isHeldServo = true;
-                if (stateServo == 1) {
-                    stateServo = 0;
-                    servoCarousel.setPower(0.0);
+            } else if (gamepad1.b && !isHeldMotor) {
+                isHeldMotor = true;
+                if (stateMotor == 1) {
+                    stateMotor = 0;
+                    motorCarousel.setPower(0.0);
                 } else {
-                    stateServo = 1;
-                    servoCarousel.setPower(1.0);
+                    stateMotor = 1;
+                    motorCarousel.setPower(1.0);
                 }
-            } else if (!gamepad1.a && !gamepad1.b) isHeldServo = false;
+            } else if (!gamepad1.a && !gamepad1.b) isHeldMotor = false;
         }
     }
 }
