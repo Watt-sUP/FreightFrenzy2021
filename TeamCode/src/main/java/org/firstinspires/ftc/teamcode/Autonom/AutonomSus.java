@@ -78,7 +78,7 @@ public class AutonomSus extends LinearOpMode {
         motorGlisiere.setPower(0);
 
         sleep(1000);
-        motorGlisiere.setTargetPosition(motorGlisiere.getCurrentPosition() * (-3));
+        motorGlisiere.setTargetPosition(motorGlisiere.getCurrentPosition() * (-1));
         motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorGlisiere.setPower(0.8);
 
