@@ -17,8 +17,8 @@ public class Ruleta extends LinearOpMode {
         CRServo servoRuletaY;
         CRServo servoRuletaEx;
 
-        servoRuletaX = hardwareMap.crservo.get(Config.rul_x);
-        servoRuletaY = hardwareMap.crservo.get(Config.rul_y);
+        servoRuletaX = hardwareMap.crservo.get(Config.rul_orizontal);
+        servoRuletaY = hardwareMap.crservo.get(Config.rul_vertical);
         servoRuletaEx = hardwareMap.crservo.get(Config.rul_fata);
 
         servoRuletaX.resetDeviceConfigurationForOpMode();

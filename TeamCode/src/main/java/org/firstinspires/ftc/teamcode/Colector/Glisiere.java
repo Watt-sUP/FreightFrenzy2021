@@ -52,17 +52,18 @@ public class Glisiere extends LinearOpMode {
         DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
 
         int stateServo = 0;
-        boolean isRuletaHeld = false;
 
-        CRServo servoRuleta1;
-        CRServo servoRuleta2;
-        CRServo servoRuleta3;
+        CRServo servoRuletaX;
+        CRServo servoRuletaY;
+        CRServo servoRuletaEx;
 
-        servoRuleta1 = hardwareMap.crservo.get(Config.rul_fata);
-        servoRuleta2 = hardwareMap.crservo.get(Config.rul_x);
-        servoRuleta3 = hardwareMap.crservo.get(Config.rul_y);
+        servoRuletaX = hardwareMap.crservo.get(Config.rul_orizontal);
+        servoRuletaY = hardwareMap.crservo.get(Config.rul_vertical);
+        servoRuletaEx = hardwareMap.crservo.get(Config.rul_fata);
 
-        servoRuleta1.resetDeviceConfigurationForOpMode();
+        servoRuletaX.resetDeviceConfigurationForOpMode();
+        servoRuletaY.resetDeviceConfigurationForOpMode();
+        servoRuletaEx.resetDeviceConfigurationForOpMode();
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -89,63 +90,6 @@ public class Glisiere extends LinearOpMode {
                 powerLimit = 1.0;
             }
 
-
-            if (gamepad2.left_stick_y == 1 && !isRuletaHeld) {
-                isRuletaHeld = true;
-                if (stateServo == -1) {
-                    stateServo = 0;
-                    servoRuleta1.setPower(0);
-                } else {
-                    stateServo = -1;
-                    servoRuleta1.setPower(-1);
-                }
-            } else if (gamepad2.left_stick_y == -1 && !isRuletaHeld) {
-                isRuletaHeld = true;
-                if (stateServo == 1) {
-                    stateServo = 0;
-                    servoRuleta1.setPower(0.0);
-                } else {
-                    stateServo = 1;
-                    servoRuleta1.setPower(1.0);
-                }
-            } else if (gamepad2.left_stick_x == 1 && !isRuletaHeld) {
-                isRuletaHeld = true;
-                if (stateServo == -1) {
-                    stateServo = 0;
-                    servoRuleta2.setPower(0);
-                } else {
-                    stateServo = -1;
-                    servoRuleta2.setPower(-1);
-                }
-            } else if (gamepad2.left_stick_x == -1 && !isRuletaHeld) {
-                isRuletaHeld = true;
-                if (stateServo == 1) {
-                    stateServo = 0;
-                    servoRuleta2.setPower(0.0);
-                } else {
-                    stateServo = 1;
-                    servoRuleta2.setPower(1.0);
-                }
-            } else if (gamepad2.right_stick_y == 1 && !isRuletaHeld) {
-                isRuletaHeld = true;
-                if (stateServo == -1) {
-                    stateServo = 0;
-                    servoRuleta3.setPower(0);
-                } else {
-                    stateServo = -1;
-                    servoRuleta3.setPower(-1);
-                }
-            } else if (gamepad2.right_stick_y == -1 && !isRuletaHeld) {
-                isRuletaHeld = true;
-                if (stateServo == 1) {
-                    stateServo = 0;
-                    servoRuleta3.setPower(0.0);
-                } else {
-                    stateServo = 1;
-                    servoRuleta3.setPower(1.0);
-                }
-            } else if (gamepad2.left_stick_y == 0 && gamepad2.left_stick_x == 0 && gamepad2.right_stick_y == 0)
-                isRuletaHeld = false;
 
             if (gamepad1.y && !faceIsHeld) {
                 faceIsHeld = true;
@@ -181,6 +125,24 @@ public class Glisiere extends LinearOpMode {
             backLeftMotor.setPower(Range.clip(backLeftPower, -powerLimit, powerLimit));
             frontRightMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit));
             backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
+
+            if(gamepad2.left_stick_x < -0.1 || gamepad2.left_stick_x > 0.1) {
+                servoRuletaX.setPower(-gamepad2.left_stick_x);
+            }
+            else if(gamepad2.left_stick_x < 0.1 && gamepad2.left_stick_x > -0.1)
+                servoRuletaX.setPower(0.0);
+
+            if(gamepad2.left_stick_y < -0.1 || gamepad2.left_stick_y > 0.1) {
+                servoRuletaY.setPower(gamepad2.left_stick_y);
+            }
+            else if(gamepad2.left_stick_y < 0.1 && gamepad2.left_stick_y > -0.1)
+                servoRuletaY.setPower(0.0);
+
+            if(gamepad2.right_stick_y < -0.1 || gamepad2.right_stick_y > 0.1) {
+                servoRuletaEx.setPower(-gamepad2.right_stick_y);
+            }
+            else if(gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1)
+                servoRuletaEx.setPower(0.0);
 
 
             if (gamepad2.b && !isHeld) {
