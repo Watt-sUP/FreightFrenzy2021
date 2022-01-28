@@ -100,7 +100,6 @@ public class AutonomDemo extends LinearOpMode {
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
-
         motorRata.setPower(-1.0);
         sleep(4000);
         motorRata.setPower(0);

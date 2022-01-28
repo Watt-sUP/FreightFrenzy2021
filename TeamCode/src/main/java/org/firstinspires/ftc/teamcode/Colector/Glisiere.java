@@ -50,6 +50,7 @@ public class Glisiere extends LinearOpMode {
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
         DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
         DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
+
         int stateServo = 0;
         boolean isRuletaHeld = false;
 
@@ -217,7 +218,7 @@ public class Glisiere extends LinearOpMode {
                 motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorTest.setPower(1);
                 isPressed = true;
-            } else if (gamepad2.left_bumper && !isPressed) {
+            } else if (gamepad2.left_trigger > 0.3 && !isPressed) {
                 motorTest.setTargetPosition(-1100);
                 motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorTest.setPower(1);
@@ -227,7 +228,12 @@ public class Glisiere extends LinearOpMode {
                 motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorTest.setPower(1);
                 isPressed = true;
-            }  else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isPressed = false;
+            } else if (gamepad2.left_bumper && !isPressed) {
+                motorTest.setTargetPosition(-1850);
+                motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorTest.setPower(1);
+                isPressed = true;
+            } else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isPressed = false;
 
             if (gamepad2.y && !isCupaHeld) {
                 if (servoPosition == 0.04) servoPosition = 0.70;
@@ -235,23 +241,23 @@ public class Glisiere extends LinearOpMode {
                 servoGlisiera.setPosition(servoPosition);
                 isCupaHeld = true;
             } else if (!gamepad2.y) isCupaHeld = false;
-            if (gamepad1.x && isHeldservo == 0) {
+            if (gamepad1.b && isHeldservo == 0) {
                 isHeldservo = 1;
                 if (stateservo == -1) {
                     stateservo = 0;
                     motorCarusel.setPower(0);
                 } else {
                     stateservo = -1;
-                    motorCarusel.setPower(-1);
+                    motorCarusel.setPower(-0.65);
                 }
-            } else if (gamepad1.b && isHeldservo == 0) {
+            } else if (gamepad1.x && isHeldservo == 0) {
                 isHeldservo = 1;
                 if (stateservo == 1) {
                     stateservo = 0;
                     motorCarusel.setPower(0.0);
                 } else {
                     stateservo = 1;
-                    motorCarusel.setPower(1.0);
+                    motorCarusel.setPower(0.65);
                 }
             } else if (!gamepad1.x && !gamepad1.b) isHeldservo = 0;
 
