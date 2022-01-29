@@ -112,8 +112,6 @@ public class AutonomSus2 extends LinearOpMode {
     public void turn(int angle){
         BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
 
-        imu.get
-
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
