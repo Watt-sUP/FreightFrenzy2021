@@ -33,22 +33,22 @@ public class Ruleta extends LinearOpMode {
                                    nu sunt apasate suficient (echivalent cu if urile astea)
              */
 
-            if(gamepad2.left_stick_x < -0.1 || gamepad2.left_stick_x > 0.1) {
-                servoRuletaX.setPower(-gamepad2.left_stick_x);
+            if(gamepad2.left_stick_x < -0.05 || gamepad2.left_stick_x > 0.05) {
+                servoRuletaX.setPower(-gamepad2.left_stick_x / 2);
             }
-            else if(gamepad2.left_stick_x < 0.1 && gamepad2.left_stick_x > -0.1)
+            else if(gamepad2.left_stick_x < 0.05 && gamepad2.left_stick_x > -0.05)
                 servoRuletaX.setPower(0.0);
 
-            if(gamepad2.left_stick_y < -0.1 || gamepad2.left_stick_y > 0.1) {
-                servoRuletaY.setPower(gamepad2.left_stick_y);
+            if(gamepad2.left_stick_y < -0.05 || gamepad2.left_stick_y > 0.05) {
+                servoRuletaY.setPower(-gamepad2.left_stick_y);
             }
-            else if(gamepad2.left_stick_y < 0.1 && gamepad2.left_stick_y > -0.1)
+            else if(gamepad2.left_stick_y < 0.05 && gamepad2.left_stick_y > -0.05)
                 servoRuletaY.setPower(0.0);
 
-            if(gamepad2.right_stick_y < -0.1 || gamepad2.right_stick_y > 0.1) {
-                servoRuletaEx.setPower(-gamepad2.right_stick_y);
+            if(gamepad2.right_stick_y < -0.05 || gamepad2.right_stick_y > 0.05) {
+                servoRuletaEx.setPower(gamepad2.right_stick_y / 2);
             }
-            else if(gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1)
+            else if(gamepad2.right_stick_y < 0.05 && gamepad2.right_stick_y > -0.05)
                 servoRuletaEx.setPower(0.0);
 
             telemetry.addData("Pozitie x", gamepad2.left_stick_x);

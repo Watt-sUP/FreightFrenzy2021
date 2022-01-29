@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Config.Config;
 
-@Autonomous(name = "Autonom partea de sus", group = "Autonom")
-public class AutonomSus extends LinearOpMode {
+@Autonomous(name = "Autonom partea de sus 3 cuburi", group = "Autonom")
+public class AutonomSus2 extends LinearOpMode {
 
     private DcMotor leftFront, leftBack, rightFront, rightBack, motorGlisiere, motorMatura;
     private Servo servoCupa;
@@ -239,18 +239,41 @@ public class AutonomSus extends LinearOpMode {
         motorGlisiere.setTargetPosition(0);
         motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorGlisiere.setPower(0.8);
-        walk(-300);
-        strafe(-800);
-        turn(1890);
-        strafe(800);
-        strafe(-200);
-        walkSlow(200);
-        rate.setPower(0.65);
-        sleep(3500);
+        walk(-450);
+        turn(945);
         strafe(-300);
+        motorMatura.setPower(1.0);
+        walk(-1300);
+        sleep(1000);
+        walkSlow(300);
+        motorMatura.setPower(-1.0);
+        sleep(1000);
+        walk(1150);
+        strafe(300);
         turn(-945);
+        walk(320);
+        motorGlisiere.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorGlisiere.setTargetPosition(-1700);
+        motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorGlisiere.setPower(1);
+
+        sleep(200);
+        servoCupa.setPosition(0.70);
+        sleep(2000);
+        servoCupa.setPosition(0.04);
+
+        motorGlisiere.setPower(0);
+
+        sleep(1000);
+
+        motorGlisiere.setTargetPosition(0);
+        motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorGlisiere.setPower(0.8);
+        walk(-450);
+        turn(945);
         strafe(-300);
-        walk(-2260);
+        walk(-1300);
+        sleep(800);
         while (opModeIsActive() && motorGlisiere.isBusy()) idle();
     }
 }

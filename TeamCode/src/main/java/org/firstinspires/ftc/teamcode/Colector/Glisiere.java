@@ -70,6 +70,7 @@ public class Glisiere extends LinearOpMode {
         motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorCarusel.resetDeviceConfigurationForOpMode();
 
+
         waitForStart();
         timp.reset();
 
@@ -126,22 +127,22 @@ public class Glisiere extends LinearOpMode {
             frontRightMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit));
             backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
 
-            if(gamepad2.left_stick_x < -0.1 || gamepad2.left_stick_x > 0.1) {
-                servoRuletaX.setPower(-gamepad2.left_stick_x);
+            if(gamepad2.left_stick_x < -0.05 || gamepad2.left_stick_x > 0.05) {
+                servoRuletaX.setPower(-gamepad2.left_stick_x / 2);
             }
-            else if(gamepad2.left_stick_x < 0.1 && gamepad2.left_stick_x > -0.1)
+            else if(gamepad2.left_stick_x < 0.05 && gamepad2.left_stick_x > -0.05)
                 servoRuletaX.setPower(0.0);
 
-            if(gamepad2.left_stick_y < -0.1 || gamepad2.left_stick_y > 0.1) {
-                servoRuletaY.setPower(gamepad2.left_stick_y);
+            if(gamepad2.left_stick_y < -0.05 || gamepad2.left_stick_y > 0.05) {
+                servoRuletaY.setPower(-gamepad2.left_stick_y);
             }
-            else if(gamepad2.left_stick_y < 0.1 && gamepad2.left_stick_y > -0.1)
+            else if(gamepad2.left_stick_y < 0.05 && gamepad2.left_stick_y > -0.05)
                 servoRuletaY.setPower(0.0);
 
-            if(gamepad2.right_stick_y < -0.1 || gamepad2.right_stick_y > 0.1) {
-                servoRuletaEx.setPower(-gamepad2.right_stick_y);
+            if(gamepad2.right_stick_y < -0.05 || gamepad2.right_stick_y > 0.05) {
+                servoRuletaEx.setPower(gamepad2.right_stick_y / 2);
             }
-            else if(gamepad2.right_stick_y < 0.1 && gamepad2.right_stick_y > -0.1)
+            else if(gamepad2.right_stick_y < 0.05 && gamepad2.right_stick_y > -0.05)
                 servoRuletaEx.setPower(0.0);
 
 
@@ -191,15 +192,15 @@ public class Glisiere extends LinearOpMode {
                 motorTest.setPower(1);
                 isPressed = true;
             } else if (gamepad2.left_bumper && !isPressed) {
-                motorTest.setTargetPosition(-1850);
+                motorTest.setTargetPosition(-1900);
                 motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motorTest.setPower(1);
                 isPressed = true;
             } else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isPressed = false;
 
             if (gamepad2.y && !isCupaHeld) {
-                if (servoPosition == 0.04) servoPosition = 0.70;
-                else servoPosition = 0.04;
+                if (servoPosition == 0.05) servoPosition = 0.70;
+                else servoPosition = 0.05;
                 servoGlisiera.setPosition(servoPosition);
                 isCupaHeld = true;
             } else if (!gamepad2.y) isCupaHeld = false;
