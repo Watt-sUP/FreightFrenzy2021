@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 import org.firstinspires.ftc.teamcode.Config.Config;
+import org.firstinspires.ftc.teamcode.hardware.Maturica;
 
 @TeleOp(name = "Glisiere + Coduri Combinate", group = "Testing")
 public class Glisiere extends LinearOpMode {
@@ -29,10 +30,10 @@ public class Glisiere extends LinearOpMode {
     double servoPosition = 0.04;
     private int state = 0;
     boolean isHeld = false;
-    private String motorData = "Idle";
     private boolean faceIsHeld = false, faceChanged, isCupaHeld = false;
     private String facingData = "Forwards";
     DcMotor motorCarusel;
+    Maturica maturica = new Maturica(hardwareMap, telemetry);
     private ElapsedTime timp = new ElapsedTime();
     private int isHeldservo, stateservo = 0;
 
@@ -45,7 +46,6 @@ public class Glisiere extends LinearOpMode {
         motorCarusel = hardwareMap.dcMotor.get(Config.rate);
         com.qualcomm.robotcore.hardware.Servo servoGlisiera = hardwareMap.servo.get(Config.cupa);
         DcMotor motorTest = hardwareMap.dcMotor.get(Config.gli);
-        DcMotor motorMatura = hardwareMap.dcMotor.get(Config.matura);
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
         DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
@@ -150,23 +150,19 @@ public class Glisiere extends LinearOpMode {
                 isHeld = true;
                 if (state == -1) {
                     state = 0;
-                    motorData = "Idle";
-                    motorMatura.setPower(0.0);
+                    maturica.setMotorPower(0.0);
                 } else {
                     state = -1;
-                    motorData = "Ejecting";
-                    motorMatura.setPower(-1.0);
+                    maturica.setMotorPower(-1.0);
                 }
             } else if (gamepad2.a && !isHeld) {
                 isHeld = true;
                 if (state == 1) {
                     state = 0;
-                    motorData = "Idle";
-                    motorMatura.setPower(0.0);
+                    maturica.setMotorPower(0.0);
                 } else {
                     state = 1;
-                    motorData = "Collecting";
-                    motorMatura.setPower(1.0);
+                    maturica.setMotorPower(1.0);
                 }
             } else if (!gamepad2.a && !gamepad2.b) isHeld = false;
 
@@ -227,7 +223,7 @@ public class Glisiere extends LinearOpMode {
             idle();
             telemetry.addData("Current Ticks:", currentTicks);
             telemetry.addData("ServoPosition:", servoPosition);
-            telemetry.addData("Maturica Status:", motorData);
+            telemetry.addData("Maturica Status:", maturica.maturaData);
             telemetry.addData("Power Limit:", powerLimit);
             telemetry.addData("Facing:", facingData);
             telemetry.addData("Elapsed time:",timp.toString());

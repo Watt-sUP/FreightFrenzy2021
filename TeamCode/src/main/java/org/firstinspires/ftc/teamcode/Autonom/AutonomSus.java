@@ -18,39 +18,6 @@ public class AutonomSus extends LinearOpMode {
     private double MOTOR_TICK_COUNT = 537.7;
     private double circumference = Math.PI * 101.6;
 
-    public void runForTicks(int LF, int LB, int RF, int RB) {
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        if(LF != 0) leftFront.setTargetPosition(LF);
-        if(LB != 0) leftBack.setTargetPosition(LB);
-        if(RF != 0) rightFront.setTargetPosition(RF);
-        if(RB != 0) rightBack.setTargetPosition(RB);
-
-        if(LF != 0) leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if(LB != 0) leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if(RF != 0) rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if(RB != 0) rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if(LF != 0) leftFront.setPower(1);
-        if(LB != 0) leftBack.setPower(1);
-        if(RF != 0) rightFront.setPower(1);
-        if(RB != 0) rightBack.setPower(1);
-
-        while (opModeIsActive() && (leftFront.isBusy() || rightFront.isBusy())) {
-
-            telemetry.addData("Left Front encoder position:", leftFront.getCurrentPosition());
-            telemetry.addData("Left Back encoder position:", leftFront.getCurrentPosition());
-            telemetry.addData("Right Front encoder position:", leftFront.getCurrentPosition());
-            telemetry.addData("Right Back encoder position:", leftFront.getCurrentPosition());
-
-            telemetry.update();
-            idle();
-        }
-    }
-
     public void walk(int distance) {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
