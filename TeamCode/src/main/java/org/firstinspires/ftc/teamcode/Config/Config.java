@@ -11,14 +11,10 @@ public class Config {
     public static final String cupa = "CUPA";
     public static final String rate = "RATE";
     /*
-        CR bogdan: ce reprezinta GLI?
+        CR bogdan: ce reprezinta gli? (nu se intelege ce e gli ca variabila)
      */
     public static final String gli = "GLI";
 
-    /*
-        CR bogdan: ar fi bine sa redenumim in extindere, rotatie_verticala, rotatie_orizontala,
-                   sau ceva mai sugestiv. nu se intelege care e x si care e y.
-     */
     public static final String rul_fata = "rul_fata";
     public static final String rul_vertical = "rul_vertical";
     public static final String rul_orizontal = "rul_orizontal";

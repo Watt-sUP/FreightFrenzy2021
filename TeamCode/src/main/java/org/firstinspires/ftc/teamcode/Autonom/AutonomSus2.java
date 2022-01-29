@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonom;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,7 +17,8 @@ public class AutonomSus2 extends LinearOpMode {
     private Servo servoCupa;
     private DcMotor rate;
     private double MOTOR_TICK_COUNT = 537.7;
-    private double circumference = Math.PI * 101.6;
+    private double WHEEL_DIAMETER = 101.6;
+    private double circumference = Math.PI * WHEEL_DIAMETER;
 
     public void runForTicks(int LF, int LB, int RF, int RB) {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -108,6 +110,10 @@ public class AutonomSus2 extends LinearOpMode {
     }
 
     public void turn(int angle){
+        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        imu.get
+
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -177,6 +183,8 @@ public class AutonomSus2 extends LinearOpMode {
         rate = hardwareMap.dcMotor.get(Config.rate);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        MOTOR_TICK_COUNT = leftFront.getMotorType().getTicksPerRev();
 
         waitForStart();
 
