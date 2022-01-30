@@ -6,21 +6,21 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Config.Config;
 
 public class Runner {
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private Gyro imu;
     public Telemetry telemetry;
-    private double  MOTOR_TICK_COUNT;
-    private double circumference = 97 * Math.PI;
+    private double MOTOR_TICK_COUNT;
+    private final double wheelDiameter = 97; // scos variabila in afara pentru a fi clar in circumference ce inseamna 97 (sterge dupa ce citesti)
+    private final double wheelCircumference = wheelDiameter * Math.PI;
 
-    public Runner(HardwareMap hm) {
-        leftFront = hm.dcMotor.get(Config.left_front);
-        leftBack = hm.dcMotor.get(Config.left_back);
-        rightFront = hm.dcMotor.get(Config.right_front);
-        rightBack = hm.dcMotor.get(Config.right_back);
-        imu = new Gyro(hm.get(BNO055IMU.class, Config.imu));
+    public Runner(HardwareMap hardwareMap) {
+        leftFront = hardwareMap.dcMotor.get(Config.left_front);
+        leftBack = hardwareMap.dcMotor.get(Config.left_back);
+        rightFront = hardwareMap.dcMotor.get(Config.right_front);
+        rightBack = hardwareMap.dcMotor.get(Config.right_back);
+        imu = new Gyro(hardwareMap.get(BNO055IMU.class, Config.imu));
 
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -68,7 +68,7 @@ public class Runner {
 
     public void walk(int distance) {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int target =(int) (distance * MOTOR_TICK_COUNT / circumference);
+        int target =(int) (distance * MOTOR_TICK_COUNT / wheelCircumference);
         setTargetPositions(target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(1);
@@ -80,7 +80,7 @@ public class Runner {
 
     public void walkSlow(int distance) {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int target =(int) (distance * MOTOR_TICK_COUNT / circumference);
+        int target =(int) (distance * MOTOR_TICK_COUNT / wheelCircumference);
         setTargetPositions(target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(0.25);
@@ -98,6 +98,9 @@ public class Runner {
             setPower(-power, -power, power, power);
         } else return;
 
+        /*
+            CR bogdan: nu inteleg prea bine ce se intampla aici. poti sa rescrii/explici cu comentarii?
+         */
         if (angle < 0) {
             while (imu.getAngle() == 0) {}
             while (imu.getAngle() > angle) {}
@@ -110,7 +113,7 @@ public class Runner {
     public void strafe(int distance)
     {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int target =(int) (distance * MOTOR_TICK_COUNT / circumference);
+        int target =(int) (distance * MOTOR_TICK_COUNT / wheelCircumference);
         setTargetPositions(target, -target, -target, target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(1);

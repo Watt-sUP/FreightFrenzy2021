@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Config.Config;
+import org.firstinspires.ftc.teamcode.hardware.Config;
 
 @TeleOp(name="Servo Position Tester Glisiere", group = "Testing")
 public class Tester_pozitii extends LinearOpMode {

@@ -26,6 +26,7 @@ public class Gyro {
 
         imu.initialize(param);
     }
+
     /*
     public double checkDirection()
     {
@@ -39,8 +40,8 @@ public class Gyro {
         return correction;
     }
     */
-    public double getAngle()
-    {
+
+    public double getAngle() {
         //TODO: De verificat ce axa da unghiul
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
@@ -53,8 +54,7 @@ public class Gyro {
         return globalAngle;
     }
 
-    public void resetAngle()
-    {
+    public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }

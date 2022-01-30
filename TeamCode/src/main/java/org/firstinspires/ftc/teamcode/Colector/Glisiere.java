@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-import org.firstinspires.ftc.teamcode.Config.Config;
+import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Maturica;
 
 @TeleOp(name = "Glisiere + Coduri Combinate", group = "Testing")
