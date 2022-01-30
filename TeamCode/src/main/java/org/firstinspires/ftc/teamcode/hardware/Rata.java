@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Config.Config;
 
 public class Rata {
     private Telemetry telemetry;
-    private DcMotor motor;
+    public DcMotor motor;
 
     public Rata(HardwareMap hardwareMap, Telemetry telemetry) {
         motor = hardwareMap.dcMotor.get(Config.rate);
@@ -21,6 +21,15 @@ public class Rata {
     }
 
     public void rotate(double power) {
+        motor.setPower(power);
+    }
+
+    public void score(int position, double power) {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
     }
 }

@@ -11,6 +11,7 @@ public class RataOpmode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int stateMotor = 0;
         boolean isHeldMotor = false;
+        // int position = ...
         Rata rata = new Rata(hardwareMap, telemetry);
         waitForStart();
 
@@ -20,6 +21,7 @@ public class RataOpmode extends LinearOpMode {
                 if (stateMotor == -1) {
                     stateMotor = 0;
                     rata.rotate(0);
+
                 } else {
                     stateMotor = -1;
                     rata.rotate(-0.75);
@@ -38,3 +40,5 @@ public class RataOpmode extends LinearOpMode {
     }
 }
 
+//   Miscare uniform accelerata: rata.score(position, (rata.motor.getCurrentPosition() * 100 / position) / 300 + 0.7);
+// Credit: Cosmin si Dicu (este grele matematica)
