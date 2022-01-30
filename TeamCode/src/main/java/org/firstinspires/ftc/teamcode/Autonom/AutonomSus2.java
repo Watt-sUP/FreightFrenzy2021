@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Autonom;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -175,7 +174,7 @@ public class AutonomSus2 extends LinearOpMode {
         leftBack = hardwareMap.dcMotor.get(Config.left_back);
         rightFront = hardwareMap.dcMotor.get(Config.right_front);
         rightBack = hardwareMap.dcMotor.get(Config.right_back);
-        motorGlisiere = hardwareMap.dcMotor.get(Config.gli);
+        motorGlisiere = hardwareMap.dcMotor.get(Config.glisiera);
         servoCupa = hardwareMap.servo.get(Config.cupa);
         motorMatura = hardwareMap.dcMotor.get(Config.matura);
         rate = hardwareMap.dcMotor.get(Config.rate);

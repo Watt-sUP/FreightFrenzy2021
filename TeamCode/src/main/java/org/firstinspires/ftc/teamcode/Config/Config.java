@@ -10,10 +10,8 @@ public class Config {
     public static final String matura = "MAT";
     public static final String cupa = "CUPA";
     public static final String rate = "RATE";
-    /*
-        CR bogdan: ce reprezinta gli? (nu se intelege ce e gli ca variabila)
-     */
-    public static final String gli = "GLI";
+
+    public static final String glisiera = "GLI";
 
     public static final String rul_fata = "rul_fata";
     public static final String rul_vertical = "rul_vertical";
