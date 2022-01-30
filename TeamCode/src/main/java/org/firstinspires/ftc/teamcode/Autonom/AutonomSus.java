@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonom;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,12 +37,7 @@ public class AutonomSus extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        runner = new Runner(
-                hardwareMap.dcMotor.get(Config.left_front),
-                hardwareMap.dcMotor.get(Config.left_back),
-                hardwareMap.dcMotor.get(Config.right_front),
-                hardwareMap.dcMotor.get(Config.right_back)
-        );
+        runner = new Runner(hardwareMap);
         motorGlisiere = hardwareMap.dcMotor.get(Config.glisiera);
         servoCupa = hardwareMap.servo.get(Config.cupa);
         motorMatura = hardwareMap.dcMotor.get(Config.matura);
@@ -49,11 +45,10 @@ public class AutonomSus extends LinearOpMode {
 
         waitForStart();
 
-        //runForTicks(0, 0, 500, 500);
         runner.walk(450);
         glisiera(3);
         runner.walk(-450);
-        runner.turn(945);
+        runner.turn(90, 1);
         runner.strafe(-300);
         motorMatura.setPower(1.0);
         runner.walk(-1300);
@@ -63,19 +58,19 @@ public class AutonomSus extends LinearOpMode {
         sleep(1000);
         runner.walk(1150);
         runner.strafe(300);
-        runner.turn(-945);
+        runner.turn(-90, 1);
         runner.walk(320);
         glisiera(3);
         runner.walk(-300);
         runner.strafe(-800);
-        runner.turn(1890);
+        runner.turn(180, 1);
         runner.strafe(800);
         runner.strafe(-200);
         runner.walkSlow(200);
         rate.setPower(0.65);
         sleep(3500);
         runner.strafe(-300);
-        runner.turn(-945);
+        runner.turn(-90, 1);
         runner.strafe(-300);
         runner.walk(-2260);
         while (opModeIsActive() && motorGlisiere.isBusy()) idle();

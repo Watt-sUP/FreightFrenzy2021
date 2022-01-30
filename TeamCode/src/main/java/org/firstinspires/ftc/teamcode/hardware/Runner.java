@@ -1,21 +1,26 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Config.Config;
 
 public class Runner {
     private DcMotor leftFront, leftBack, rightFront, rightBack;
+    private Gyro imu;
     public Telemetry telemetry;
     private double  MOTOR_TICK_COUNT;
     private double circumference = 97 * Math.PI;
 
-    public Runner(DcMotor lf, DcMotor lb, DcMotor rf, DcMotor rb) {
-        leftFront = lf;
-        leftBack = lb;
-        rightFront = rf;
-        rightBack = rb;
+    public Runner(HardwareMap hm) {
+        leftFront = hm.dcMotor.get(Config.left_front);
+        leftBack = hm.dcMotor.get(Config.left_back);
+        rightFront = hm.dcMotor.get(Config.right_front);
+        rightBack = hm.dcMotor.get(Config.right_back);
+        imu = new Gyro(hm.get(BNO055IMU.class, Config.imu));
 
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -85,16 +90,21 @@ public class Runner {
         }
     }
 
-    public void turn(int angle){
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int target = (int) (angle * circumference / 360);
-        setTargetPositions(target, target, -target, -target);
-        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setPower(1);
-        while(leftFront.isBusy() && rightFront.isBusy()) {
-            telemetry.addData("Status", "Turning to left");
-            telemetry.update();
-        }
+    public void turn(int angle, int power){
+        imu.resetAngle();
+        if (angle < 0) {
+            setPower(power, power, -power, -power);
+        } else if (angle > 0) {
+            setPower(-power, -power, power, power);
+        } else return;
+
+        if (angle < 0) {
+            while (imu.getAngle() == 0) {}
+            while (imu.getAngle() > angle) {}
+        } while (imu.getAngle() < angle) {}
+
+        setPower(0);
+        imu.resetAngle();
     }
 
     public void strafe(int distance)
