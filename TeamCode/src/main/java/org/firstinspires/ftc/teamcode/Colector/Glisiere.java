@@ -45,7 +45,7 @@ public class Glisiere extends LinearOpMode {
 
         motorCarusel = hardwareMap.dcMotor.get(Config.rate);
         com.qualcomm.robotcore.hardware.Servo servoGlisiera = hardwareMap.servo.get(Config.cupa);
-        DcMotor motorTest = hardwareMap.dcMotor.get(Config.gli);
+        DcMotor motorTest = hardwareMap.dcMotor.get(Config.glisiera);
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
         DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);

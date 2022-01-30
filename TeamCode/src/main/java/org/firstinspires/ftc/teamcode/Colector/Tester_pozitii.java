@@ -15,7 +15,7 @@ public class Tester_pozitii extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Servo servoTest = hardwareMap.servo.get(Config.cupa);
-        DcMotor motorTest = hardwareMap.dcMotor.get(Config.gli);
+        DcMotor motorTest = hardwareMap.dcMotor.get(Config.glisiera);
         motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
         while (opModeIsActive()) {
