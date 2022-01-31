@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode.Ruleta;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Config.Config;
+import org.firstinspires.ftc.teamcode.hardware.Config;
 
 @TeleOp(name = "Ruleta", group = "Ruleta")
 public class Ruleta extends LinearOpMode {

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Config.Config;
+import org.firstinspires.ftc.teamcode.hardware.Config;
 
 @Autonomous(name = "Autonom partea de sus 3 cuburi", group = "Autonom")
 public class AutonomSus2 extends LinearOpMode {

@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.Autonom;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import org.firstinspires.ftc.teamcode.Config.Config;
 
 @TeleOp(name="Tester Pozitii Encodere", group = "Testing")
 public class TesterEncodere extends LinearOpMode {

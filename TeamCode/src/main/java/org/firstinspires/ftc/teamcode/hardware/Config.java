@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Config;
+package org.firstinspires.ftc.teamcode.hardware;
 
 public class Config {
 
