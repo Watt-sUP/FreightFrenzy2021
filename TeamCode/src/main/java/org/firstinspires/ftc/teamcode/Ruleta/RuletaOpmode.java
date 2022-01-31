@@ -16,10 +16,6 @@ public class RuletaOpmode extends LinearOpMode {
         while (opModeIsActive()) {
 
             Ruleta ruleta = new Ruleta(hardwareMap, telemetry);
-            /*
-                CR-someday bogdan: in clasa de gamepad am putea face axele sa returneze 0 daca
-                                   nu sunt apasate suficient (echivalent cu if urile astea)
-             */
             ruleta.move(gamepad2);
 
             telemetry.addData("Pozitie x", gamepad2.left_stick_x);

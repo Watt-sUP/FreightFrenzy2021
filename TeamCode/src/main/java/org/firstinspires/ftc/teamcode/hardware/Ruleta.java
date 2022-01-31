@@ -31,7 +31,10 @@ public class Ruleta {
 
     public void move(Gamepad gamepad2)
     {
-
+        /*
+                CR-someday bogdan: in clasa de gamepad am putea face axele sa returneze 0 daca
+                                   nu sunt apasate suficient (echivalent cu if urile astea)
+        */
         if(gamepad2.left_stick_x < -0.05 || gamepad2.left_stick_x > 0.05) {
             servo_orizontal.setPower(-gamepad2.left_stick_x / 2);
         }
