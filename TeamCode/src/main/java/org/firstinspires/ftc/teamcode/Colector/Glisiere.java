@@ -37,6 +37,7 @@ public class Glisiere extends LinearOpMode {
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
     double cupaPosition = 0.04;
     private int stateMaturica = 0;
+    private double pow = 0.1;
     boolean isHeldMaturica = false;
     private boolean faceIsHeld = false, faceChanged, isCupaHeld = false, isHeldGlisiere = false;
     private String facingData = "Forwards";
@@ -211,21 +212,30 @@ public class Glisiere extends LinearOpMode {
                 isHeldRata = 1;
                 if (stateRata == -1) {
                     stateRata = 0;
+                    pow = 0.1;
                     rata.rotate(0.0);
                 } else {
                     stateRata = -1;
-                    rata.rotate(-0.65);
+                    rata.rotate(pow * -1.0);
                 }
             } else if (gamepad1.x && isHeldRata == 0) {
                 isHeldRata = 1;
                 if (stateRata == 1) {
                     stateRata = 0;
+                    pow = 0.1;
                     rata.rotate(0.0);
                 } else {
                     stateRata = 1;
-                    rata.rotate(0.65);
+                    rata.rotate(pow);
                 }
             } else if (!gamepad1.x && !gamepad1.b) isHeldRata = 0;
+
+            if(rata.motor.isBusy()) {
+                if(rata.motor.getCurrentPosition() % 10 == 0) {
+                    pow += 0.05;
+                    rata.rotate(pow);
+                }
+            }
 
             idle();
 
