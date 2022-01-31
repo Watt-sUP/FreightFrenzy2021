@@ -11,23 +11,20 @@ public class MaturicaOpmode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Maturica maturica = new Maturica(hardwareMap, telemetry);
-        int state = 0;
         boolean isHeld = false;
         waitForStart();
 
         while (opModeIsActive()) {
             if(gamepad2.b && !isHeld) {
                 isHeld = true;
-                if(state == -1) {state = 0; maturica.setMotorPower(0.0);}
-                else {state = -1; maturica.setMotorPower(-1.0);}
+                maturica.toggleEject();
             }
             else if(gamepad2.a && !isHeld) {
                 isHeld = true;
-                if (state==1) {state = 0; maturica.setMotorPower(0.0);}
-                else {state=1; maturica.setMotorPower(1.0);}
+                maturica.toggleCollect();
             }
             else if(!gamepad2.a && !gamepad2.b) isHeld = false;
-            telemetry.addData("Motor Status:", maturica.maturaData);
+            telemetry.addData("Motor Status:", maturica.getMaturaData());
             telemetry.update();
         }
     }

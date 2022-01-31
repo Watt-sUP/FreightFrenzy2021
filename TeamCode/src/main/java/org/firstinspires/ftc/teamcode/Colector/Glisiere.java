@@ -35,20 +35,19 @@ public class Glisiere extends LinearOpMode {
 
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
-    double cupaPosition = 0.04;
-    private int stateMaturica = 0;
     private double pow = 0.1;
     boolean isHeldMaturica = false;
     private boolean faceIsHeld = false, faceChanged, isCupaHeld = false, isHeldGlisiere = false;
     private String facingData = "Forwards";
-    Rata rata = new Rata(hardwareMap, telemetry);
-    Maturica maturica = new Maturica(hardwareMap, telemetry);
-    Cupa cupa = new Cupa(hardwareMap, telemetry);
-    private ElapsedTime timp = new ElapsedTime();
+    private final ElapsedTime timp = new ElapsedTime();
     private int isHeldRata, stateRata = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        Rata rata = new Rata(hardwareMap, telemetry);
+        Maturica maturica = new Maturica(hardwareMap, telemetry);
+        Cupa cupa = new Cupa(hardwareMap, telemetry);
 
         DcMotor motorGlisiera = hardwareMap.dcMotor.get(Config.glisiera);
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
@@ -101,7 +100,7 @@ public class Glisiere extends LinearOpMode {
             } else if (!gamepad1.y) faceIsHeld = false;
 
 
-            if (faceChanged == false) {
+            if (!faceChanged) {
 
                 frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                 backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -152,22 +151,10 @@ public class Glisiere extends LinearOpMode {
             //Maturica
             if (gamepad2.b && !isHeldMaturica) {
                 isHeldMaturica = true;
-                if (stateMaturica == -1) {
-                    stateMaturica = 0;
-                    maturica.setMotorPower(0.0);
-                } else {
-                    stateMaturica = -1;
-                    maturica.setMotorPower(-1.0);
-                }
+                maturica.toggleEject();
             } else if (gamepad2.a && !isHeldMaturica) {
                 isHeldMaturica = true;
-                if (stateMaturica == 1) {
-                    stateMaturica = 0;
-                    maturica.setMotorPower(0.0);
-                } else {
-                    stateMaturica = 1;
-                    maturica.setMotorPower(1.0);
-                }
+                maturica.toggleCollect();
             } else if (!gamepad2.a && !gamepad2.b) isHeldMaturica = false;
 
             //Glisiere
@@ -201,9 +188,7 @@ public class Glisiere extends LinearOpMode {
 
             //Cupa
             if (gamepad2.y && !isCupaHeld) {
-                if (cupaPosition == 0.05) cupaPosition = 0.70;
-                else cupaPosition = 0.05;
-                cupa.setServoPosition(cupaPosition);
+                cupa.toggleCupa();
                 isCupaHeld = true;
             } else if (!gamepad2.y) isCupaHeld = false;
 
@@ -243,8 +228,8 @@ public class Glisiere extends LinearOpMode {
             /* Si aici liniile ar putea fi separate si puse in sectiunea mecanismului
              care apartin, lasand doar telemetry.update la final */
             telemetry.addData("Glisiera Ticks:", currentTicks);
-            telemetry.addData("Cupa Position:", cupa.servo.getPosition());
-            telemetry.addData("Maturica Status:", maturica.maturaData);
+            telemetry.addData("Cupa Position:", cupa.getServoPosition());
+            telemetry.addData("Maturica Status:", maturica.getMaturaData());
             telemetry.addData("Power Limit:", powerLimit);
             telemetry.addData("Facing:", facingData);
             telemetry.addData("Elapsed time:",timp.toString());

@@ -13,8 +13,6 @@ import org.firstinspires.ftc.teamcode.hardware.Cupa;
 @TeleOp(name = "Cupa", group = "Colectare")
 public class CupaOpmode extends LinearOpMode {
     Cupa cupa = new Cupa(hardwareMap, telemetry);
-    private ElapsedTime runtime = new ElapsedTime();
-    double servoPosition = 0.0;
     boolean isHeld = false;
 
     @Override
@@ -23,14 +21,11 @@ public class CupaOpmode extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.a && !isHeld) {
-                if (servoPosition <= 0.02) cupa.setServoPosition(0.5);
-                else cupa.setServoPosition(0.0);
-
+                cupa.toggleCupa();
                 isHeld = true;
             }
             else if(!gamepad1.a) isHeld = false;
-            telemetry.addData("Elapsed Time:", runtime.toString());
-            telemetry.addData("Servo position:", cupa.servoPosition);
+            telemetry.addData("Servo position:", cupa.getServoPosition());
         }
 
     }
