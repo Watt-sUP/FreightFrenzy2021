@@ -25,7 +25,6 @@ public class Rata {
 
     public void score(int position, double power) {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Carousel;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Rata;
 
@@ -11,7 +12,7 @@ public class RataOpmode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int stateMotor = 0;
         boolean isHeldMotor = false;
-        // int position = ...
+        int position = 1500;
         Rata rata = new Rata(hardwareMap, telemetry);
         waitForStart();
 
@@ -33,9 +34,15 @@ public class RataOpmode extends LinearOpMode {
                     rata.rotate(0.0);
                 } else {
                     stateMotor = 1;
-                    rata.rotate(0.75);
+                    rata.score(position, (rata.motor.getCurrentPosition() * 100 / position) / 200 + 0.5);
+                    while (rata.motor.isBusy()) {
+                        telemetry.addData("Current power:", rata.motor.getPower());
+                        telemetry.update();
+                    }
+//                    rata.rotate(0.75);
                 }
             } else if (!gamepad1.a && !gamepad1.b) isHeldMotor = false;
+            telemetry.update();
         }
     }
 }
