@@ -28,7 +28,7 @@ public class Glisiere extends LinearOpMode {
                    [X] Maturica
                    [X] Cupa
                    [X] Rata
-                   [-] Ruleta
+           CR Edy: [x] Ruleta
                    [-] Drive
      */
 
