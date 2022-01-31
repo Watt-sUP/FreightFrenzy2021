@@ -40,5 +40,5 @@ public class RataOpmode extends LinearOpMode {
     }
 }
 
-//   Miscare uniform accelerata: rata.score(position, (rata.motor.getCurrentPosition() * 100 / position) / 300 + 0.7);
+// Miscare uniform accelerata: rata.score(position, (rata.motor.getCurrentPosition() * 100 / position) / 300 + 0.7);
 // Credit: Cosmin si Dicu (este grele matematica)

@@ -5,53 +5,55 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
 import org.firstinspires.ftc.teamcode.Config.Config;
+import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.Maturica;
+import org.firstinspires.ftc.teamcode.hardware.Rata;
 
 @TeleOp(name = "Glisiere + Coduri Combinate", group = "Testing")
 public class Glisiere extends LinearOpMode {
 
     /*
-        CR bogdan: pare ca asta e combinarea tuturor opmode-urilor, astfel ar fi bine sa aibe un
-                   nume mai sugestiv.
-
-                   acest opmode este prea lung si ar trebui sa facem obiecte pentru fiecare
+        CR bogdan: acest opmode este prea lung si ar trebui sa facem obiecte pentru fiecare
                    sistem (in loc de opmode uri). de exemplu: pentru rata, putem avea clasa
                    Rata.java (care nu este un opmode, este un tip de obiect, echivalent cu
                    struct in c++).
+
+        CR Cosmin: un checklist pentru clasele separate:
+                   [-] Glisiere
+                   [X] Maturica
+                   [X] Cupa
+                   [X] Rata
+                   [-] Ruleta
+                   [-] Drive
      */
 
-    Servo servoTest;
-    double servoPosition = 0.04;
-    private int state = 0;
-    boolean isHeld = false;
-    private boolean faceIsHeld = false, faceChanged, isCupaHeld = false;
+
+    //Declaratii
+    //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
+    double cupaPosition = 0.04;
+    private int stateMaturica = 0;
+    boolean isHeldMaturica = false;
+    private boolean faceIsHeld = false, faceChanged, isCupaHeld = false, isHeldGlisiere = false;
     private String facingData = "Forwards";
-    DcMotor motorCarusel;
+    Rata rata = new Rata(hardwareMap, telemetry);
     Maturica maturica = new Maturica(hardwareMap, telemetry);
+    Cupa cupa = new Cupa(hardwareMap, telemetry);
     private ElapsedTime timp = new ElapsedTime();
-    private int isHeldservo, stateservo = 0;
-
-
-    private boolean isPressed = false;
+    private int isHeldRata, stateRata = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        motorCarusel = hardwareMap.dcMotor.get(Config.rate);
-        com.qualcomm.robotcore.hardware.Servo servoGlisiera = hardwareMap.servo.get(Config.cupa);
-        DcMotor motorTest = hardwareMap.dcMotor.get(Config.glisiera);
+        DcMotor motorGlisiera = hardwareMap.dcMotor.get(Config.glisiera);
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
         DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
         DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
-
-        int stateServo = 0;
 
         CRServo servoRuletaX;
         CRServo servoRuletaY;
@@ -67,17 +69,17 @@ public class Glisiere extends LinearOpMode {
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorCarusel.resetDeviceConfigurationForOpMode();
-
+        motorGlisiera.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
         timp.reset();
 
         while (opModeIsActive()) {
 
-            int currentTicks = motorTest.getCurrentPosition();
+            int currentTicks = motorGlisiera.getCurrentPosition();
 
+
+            //Drive
             double acceleration = gamepad1.left_stick_y;
             double strafe = gamepad1.left_stick_x * -1.1;
             double rotation = gamepad1.right_stick_x;
@@ -127,6 +129,7 @@ public class Glisiere extends LinearOpMode {
             frontRightMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit));
             backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
 
+            //Ruleta
             if(gamepad2.left_stick_x < -0.05 || gamepad2.left_stick_x > 0.05) {
                 servoRuletaX.setPower(-gamepad2.left_stick_x / 2);
             }
@@ -145,91 +148,99 @@ public class Glisiere extends LinearOpMode {
             else if(gamepad2.right_stick_y < 0.05 && gamepad2.right_stick_y > -0.05)
                 servoRuletaEx.setPower(0.0);
 
-
-            if (gamepad2.b && !isHeld) {
-                isHeld = true;
-                if (state == -1) {
-                    state = 0;
+            //Maturica
+            if (gamepad2.b && !isHeldMaturica) {
+                isHeldMaturica = true;
+                if (stateMaturica == -1) {
+                    stateMaturica = 0;
                     maturica.setMotorPower(0.0);
                 } else {
-                    state = -1;
+                    stateMaturica = -1;
                     maturica.setMotorPower(-1.0);
                 }
-            } else if (gamepad2.a && !isHeld) {
-                isHeld = true;
-                if (state == 1) {
-                    state = 0;
+            } else if (gamepad2.a && !isHeldMaturica) {
+                isHeldMaturica = true;
+                if (stateMaturica == 1) {
+                    stateMaturica = 0;
                     maturica.setMotorPower(0.0);
                 } else {
-                    state = 1;
+                    stateMaturica = 1;
                     maturica.setMotorPower(1.0);
                 }
-            } else if (!gamepad2.a && !gamepad2.b) isHeld = false;
+            } else if (!gamepad2.a && !gamepad2.b) isHeldMaturica = false;
 
-            if (gamepad2.x && !isPressed) {
-                motorTest.setTargetPosition(0);
-                motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorTest.setPower(0.8);
-                isPressed = true;
+            //Glisiere
+            if (gamepad2.x && !isHeldGlisiere) {
+                motorGlisiera.setTargetPosition(0);
+                motorGlisiera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorGlisiera.setPower(0.8);
+                isHeldGlisiere = true;
             }
-            if (gamepad2.right_trigger > 0.3 && !isPressed) {
-                motorTest.setTargetPosition(-500);
-                motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorTest.setPower(1);
-                isPressed = true;
-            } else if (gamepad2.left_trigger > 0.3 && !isPressed) {
-                motorTest.setTargetPosition(-1100);
-                motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorTest.setPower(1);
-                isPressed = true;
-            } else if (gamepad2.right_bumper && !isPressed) {
-                motorTest.setTargetPosition(-1700);
-                motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorTest.setPower(1);
-                isPressed = true;
-            } else if (gamepad2.left_bumper && !isPressed) {
-                motorTest.setTargetPosition(-1900);
-                motorTest.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorTest.setPower(1);
-                isPressed = true;
-            } else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isPressed = false;
+            if (gamepad2.right_trigger > 0.3 && !isHeldGlisiere) {
+                motorGlisiera.setTargetPosition(-500);
+                motorGlisiera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorGlisiera.setPower(1);
+                isHeldGlisiere = true;
+            } else if (gamepad2.left_trigger > 0.3 && !isHeldGlisiere) {
+                motorGlisiera.setTargetPosition(-1100);
+                motorGlisiera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorGlisiera.setPower(1);
+                isHeldGlisiere = true;
+            } else if (gamepad2.right_bumper && !isHeldGlisiere) {
+                motorGlisiera.setTargetPosition(-1700);
+                motorGlisiera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorGlisiera.setPower(1);
+                isHeldGlisiere = true;
+            } else if (gamepad2.left_bumper && !isHeldGlisiere) {
+                motorGlisiera.setTargetPosition(-1900);
+                motorGlisiera.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                motorGlisiera.setPower(1);
+                isHeldGlisiere = true;
+            } else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isHeldGlisiere = false;
 
+            //Cupa
             if (gamepad2.y && !isCupaHeld) {
-                if (servoPosition == 0.05) servoPosition = 0.70;
-                else servoPosition = 0.05;
-                servoGlisiera.setPosition(servoPosition);
+                if (cupaPosition == 0.05) cupaPosition = 0.70;
+                else cupaPosition = 0.05;
+                cupa.setServoPosition(cupaPosition);
                 isCupaHeld = true;
             } else if (!gamepad2.y) isCupaHeld = false;
-            if (gamepad1.b && isHeldservo == 0) {
-                isHeldservo = 1;
-                if (stateservo == -1) {
-                    stateservo = 0;
-                    motorCarusel.setPower(0);
+
+            //Rata
+            if (gamepad1.b && isHeldRata == 0) {
+                isHeldRata = 1;
+                if (stateRata == -1) {
+                    stateRata = 0;
+                    rata.rotate(0.0);
                 } else {
-                    stateservo = -1;
-                    motorCarusel.setPower(-0.65);
+                    stateRata = -1;
+                    rata.rotate(-0.65);
                 }
-            } else if (gamepad1.x && isHeldservo == 0) {
-                isHeldservo = 1;
-                if (stateservo == 1) {
-                    stateservo = 0;
-                    motorCarusel.setPower(0.0);
+            } else if (gamepad1.x && isHeldRata == 0) {
+                isHeldRata = 1;
+                if (stateRata == 1) {
+                    stateRata = 0;
+                    rata.rotate(0.0);
                 } else {
-                    stateservo = 1;
-                    motorCarusel.setPower(0.65);
+                    stateRata = 1;
+                    rata.rotate(0.65);
                 }
-            } else if (!gamepad1.x && !gamepad1.b) isHeldservo = 0;
+            } else if (!gamepad1.x && !gamepad1.b) isHeldRata = 0;
 
             idle();
-            telemetry.addData("Current Ticks:", currentTicks);
-            telemetry.addData("ServoPosition:", servoPosition);
+
+            //Telemetry
+            /* Si aici liniile ar putea fi separate si puse in sectiunea mecanismului
+             care apartin, lasand doar telemetry.update la final */
+            telemetry.addData("Glisiera Ticks:", currentTicks);
+            telemetry.addData("Cupa Position:", cupa.servo.getPosition());
             telemetry.addData("Maturica Status:", maturica.maturaData);
             telemetry.addData("Power Limit:", powerLimit);
             telemetry.addData("Facing:", facingData);
             telemetry.addData("Elapsed time:",timp.toString());
             telemetry.update();
         }
-        motorTest.setPower(0.0);
+        motorGlisiera.setPower(0.0);
     }
 }
 
