@@ -89,7 +89,7 @@ public class GlisiereOpmode extends LinearOpMode {
                 powerLimit = 0.3;
             } else if (gamepad1.left_trigger >= 0.3) {
                 powerLimit = 0.5;
-            } else if (gamepad1.right_trigger < 0.3 && gamepad2.right_trigger < 0.3) {
+            } else if (gamepad1.right_trigger < 0.3 && gamepad1.left_trigger < 0.3) {
                 powerLimit = 1.0;
             }
             telemetry.addData("Power Limit:", powerLimit);

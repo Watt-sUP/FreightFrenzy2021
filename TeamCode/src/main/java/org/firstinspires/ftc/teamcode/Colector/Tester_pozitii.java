@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
 
 @TeleOp(name="Servo Position Tester Glisiere", group = "Testing")
+@Disabled
 public class Tester_pozitii extends LinearOpMode {
 
     private boolean isHeld = false;

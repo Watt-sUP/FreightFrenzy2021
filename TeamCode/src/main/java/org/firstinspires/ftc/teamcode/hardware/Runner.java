@@ -14,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Runner {
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private BNO055IMU imu;
-    public Telemetry telemetry;
     private double MOTOR_TICK_COUNT;
     private double faceAngle;
     private double wheelAngle = Math.PI / 4;
@@ -101,10 +100,6 @@ public class Runner {
 
         imu.initialize(parameters);
 
-        while (!imu.isGyroCalibrated() && timer.milliseconds() < 1000) {
-            telemetry.addData("Gyro", "Calibrating...");
-            telemetry.update();
-        }
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
@@ -157,10 +152,6 @@ public class Runner {
         setTargetPositions(target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(1);
-        while(leftFront.isBusy() && rightFront.isBusy()) {
-            telemetry.addData("Status", "Walking using encoders");
-            telemetry.update();
-        }
     }
 
     public void walkSlow(int distance) {
@@ -169,10 +160,6 @@ public class Runner {
         setTargetPositions(target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(0.25);
-        while(leftFront.isBusy() && rightFront.isBusy()) {
-            telemetry.addData("Status", "Walking using encoders");
-            telemetry.update();
-        }
     }
 
     public double getHeading() {
@@ -207,11 +194,7 @@ public class Runner {
         double angleDecrease = 40.0;
         while (true) {
             double myAngle = getHeading();
-            telemetry.addData("Heading", myAngle);
-            telemetry.addData("Power", lastPower);
             double distance = getAngleDistance(myAngle, needAngle);
-            telemetry.addData("Distance", distance);
-            telemetry.update();
             if (Math.abs(distance) < accepted) break;
 
             double power = 0.0;
