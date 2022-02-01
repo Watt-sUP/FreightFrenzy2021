@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Ruleta {
 
     private Telemetry telemetry;
+    Gamepad gamepad2;
 
     CRServo servo_orizontal;
     CRServo servo_vertical;
@@ -29,29 +30,29 @@ public class Ruleta {
 
     }
 
-    public void move(Gamepad gamepad2)
+    public void move(double powerVertical, double powerOrizontal, double powerFata)
     {
         /*
                 CR-someday bogdan: in clasa de gamepad am putea face axele sa returneze 0 daca
                                    nu sunt apasate suficient (echivalent cu if urile astea)
         */
+
         if(gamepad2.left_stick_x < -0.05 || gamepad2.left_stick_x > 0.05) {
-            servo_orizontal.setPower(-gamepad2.left_stick_x / 2);
+            servo_orizontal.setPower(powerOrizontal);
         }
         else if(gamepad2.left_stick_x < 0.05 && gamepad2.left_stick_x > -0.05)
             servo_orizontal.setPower(0.0);
 
         if(gamepad2.left_stick_y < -0.05 || gamepad2.left_stick_y > 0.05) {
-            servo_vertical.setPower(-gamepad2.left_stick_y);
+            servo_vertical.setPower(powerVertical);
         }
         else if(gamepad2.left_stick_y < 0.05 && gamepad2.left_stick_y > -0.05)
             servo_vertical.setPower(0.0);
 
         if(gamepad2.right_stick_y < -0.05 || gamepad2.right_stick_y > 0.05) {
-            servo_fata.setPower(gamepad2.right_stick_y / 2);
+            servo_fata.setPower(powerFata);
         }
         else if(gamepad2.right_stick_y < 0.05 && gamepad2.right_stick_y > -0.05)
             servo_fata.setPower(0.0);
     }
-
 }
