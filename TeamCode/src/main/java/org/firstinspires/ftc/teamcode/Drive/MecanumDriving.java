@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Drive;
 
 import android.annotation.SuppressLint;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.hardware.Config;
 
 @TeleOp(name = "Controlat Mecanum", group = "Drive")
+@Disabled
 public class MecanumDriving extends LinearOpMode {
 
 

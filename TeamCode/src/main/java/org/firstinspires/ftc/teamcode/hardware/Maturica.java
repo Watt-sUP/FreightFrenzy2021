@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Maturica {
     private Telemetry telemetry;
-    private DcMotor motor;
+    public DcMotor motor;
 
     public enum State {
         Idle,
@@ -37,12 +37,12 @@ public class Maturica {
 
     private void collect() {
         state = State.Collecting;
-        motor.setPower(1.0);
+        motor.setPower(-1.0);
     }
 
     private void eject() {
         state = State.Ejecting;
-        motor.setPower(-1.0);
+        motor.setPower(1.0);
     }
 
     public void toggleCollect() {

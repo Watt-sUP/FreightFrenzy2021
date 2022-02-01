@@ -1,20 +1,21 @@
 package org.firstinspires.ftc.teamcode.Colector;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.hardware.Config;
+import org.firstinspires.ftc.teamcode.hardware.Cupa;
 
 @TeleOp(name="Servo Position Tester Glisiere", group = "Testing")
 public class Tester_pozitii extends LinearOpMode {
-    Servo servoTest;
 
-    double servoPosition = 0.04;
+    private boolean isHeld = false;
     @Override
     public void runOpMode() throws InterruptedException {
-        Servo servoTest = hardwareMap.servo.get(Config.cupa);
+        Cupa cupa = new Cupa(hardwareMap, telemetry);
         DcMotor motorTest = hardwareMap.dcMotor.get(Config.glisiera);
         motorTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
@@ -32,14 +33,14 @@ public class Tester_pozitii extends LinearOpMode {
                 motorTest.setPower(0.15);
             }
 
-            if(gamepad1.y) {
-                if (servoPosition == 0.04) servoPosition = 0.70;
-                else servoPosition = 0.04;
-                servoTest.setPosition(servoPosition);
+            if(gamepad1.y && !isHeld) {
+                cupa.toggleCupa();
+                isHeld = true;
             }
+            else if(!gamepad1.y) isHeld = false;
             idle();
             telemetry.addData("Current Ticks:", currentTicks);
-            telemetry.addData("ServoPosition:", servoPosition);
+            telemetry.addData("ServoPosition:", cupa.getServoPosition());
             telemetry.update();
         }
         motorTest.setPower(0.0);

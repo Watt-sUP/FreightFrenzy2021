@@ -28,17 +28,17 @@ public class Cupa {
         return servo.getPosition();
     }
 
-    public void down() {
+    private void down() {
         servo.setPosition(downPosition);
         state = State.Down;
     }
 
-    public void up() {
+    private void up() {
         servo.setPosition(upPosition);
         state = State.Up;
     }
 
-    public void mid() {
+    private void mid() {
         servo.setPosition(midPosition);
         state = State.Middle;
     }

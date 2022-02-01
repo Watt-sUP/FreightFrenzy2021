@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Ruleta;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Ruleta;
 
 @TeleOp(name = "Ruleta", group = "Ruleta")
+@Disabled
 public class RuletaOpmode extends LinearOpMode {
 
     @Override

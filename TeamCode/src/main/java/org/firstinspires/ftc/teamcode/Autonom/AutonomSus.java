@@ -15,7 +15,7 @@ public class AutonomSus extends LinearOpMode {
     private Servo servoCupa;
     private DcMotor rate;
     private Runner runner;
-    private final int[] positions = new int[]{0, -500, -1100, -1700, -1900};
+    private final int[] positions = new int[]{0, 800, 1650, 2150, 2700};
 
     public void glisiera(int position) {
         motorGlisiere.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
