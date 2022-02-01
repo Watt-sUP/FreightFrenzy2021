@@ -151,7 +151,13 @@ public class Runner {
         int target =(int) (distance * MOTOR_TICK_COUNT / wheelCircumference);
         setTargetPositions(target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setPower(1);
+        setPower(0.3);
+        while(leftBack.isBusy()) {
+            if(leftBack.getCurrentPosition() % 20 == 0)
+            {
+                setPower(leftBack.getPower() + 0.1);
+            }
+        }
     }
 
     public void walkSlow(int distance) {
@@ -160,6 +166,12 @@ public class Runner {
         setTargetPositions(target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(0.25);
+        while(leftBack.isBusy()) {
+            if(leftBack.getCurrentPosition() % 20 == 0)
+            {
+                setPower(leftBack.getPower() + 0.1);
+            }
+        }
     }
 
     public double getHeading() {
@@ -179,14 +191,14 @@ public class Runner {
         double dist = getAngleDistance(getHeading(), degrees);
         rotateP(dist);
     }
-
+    /*
     public void reset(DcMotor.RunMode mode) {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(mode);
     }
-
+    */
     public void rotateP(double degrees) {
-        reset(DcMotor.RunMode.RUN_TO_POSITION);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double accepted = 0.5;
         double needAngle = AngleUnit.normalizeDegrees(getHeading() + degrees);
         double lastPower = 0.0;
@@ -244,20 +256,16 @@ public class Runner {
         pw.rap(rap);
         setPower(pw);
     }
-    /*
-    public void moveLeftRight(int distance)
+
+    public void strafe(int distance)
     {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int target =(int) (distance * MOTOR_TICK_COUNT / wheelCircumference);
         setTargetPositions(target, -target, -target, target);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(1);
-        while(leftFront.isBusy() && rightFront.isBusy()) {
-            telemetry.addData("Status", "Walking using encoders");
-            telemetry.update();
-        }
     }
-    */
+
     public int distanceToTicks(double dist) {
         double ans = (dist * MOTOR_TICK_COUNT) / wheelCircumference;
         return (int) ans;
@@ -274,8 +282,9 @@ public class Runner {
         if(type != AutonomousMoveType.FORWARD && type != AutonomousMoveType.BACKWARD)   return;
         int ticks = distanceToTicks(distance);
         if(type == AutonomousMoveType.BACKWARD)    ticks = -ticks;
-        reset(DcMotor.RunMode.RUN_TO_POSITION);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setTargetPositions(ticks, ticks, ticks, ticks);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
         move();
     }
 
@@ -284,8 +293,9 @@ public class Runner {
         if(type != AutonomousMoveType.LEFT && type != AutonomousMoveType.RIGHT) return;
         int ticks = distanceToTicksLeftRight(distance);
         if(type == AutonomousMoveType.LEFT) ticks = -ticks;
-        reset(DcMotor.RunMode.RUN_TO_POSITION);
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setTargetPositions(ticks, -ticks, -ticks, ticks);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double startAngle = getHeading();
         move();
         //rotateTo(startAngle);
@@ -308,7 +318,7 @@ public class Runner {
 
             power = Math.min(power, lastPower + maxDifference);
             power = Math.max(power, lastPower - maxDifference);
-            power = Math.max(power, 0.05);
+            power = Math.max(power, 0.3);
             lastPower = power;
 
             setPower(power);

@@ -1,23 +1,22 @@
 package org.firstinspires.ftc.teamcode.Autonom;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.hardware.Config;
 
-@Autonomous(name = "Autonom partea de sus 3 cuburi", group = "Autonom")
+@Autonomous(name = "Autonom partea de sus Experimental", group = "Autonom")
 public class AutonomSus2 extends LinearOpMode {
 
     private DcMotor leftFront, leftBack, rightFront, rightBack, motorGlisiere, motorMatura;
     private Servo servoCupa;
     private DcMotor rate;
     private double MOTOR_TICK_COUNT = 537.7;
-    private double WHEEL_DIAMETER = 101.6;
-    private double circumference = Math.PI * WHEEL_DIAMETER;
+    private double circumference = Math.PI * 101.6;
 
     public void runForTicks(int LF, int LB, int RF, int RB) {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -62,10 +61,10 @@ public class AutonomSus2 extends LinearOpMode {
         leftBack.setTargetPosition(target);
         rightFront.setTargetPosition(target);
         rightBack.setTargetPosition(target);
-        leftFront.setPower(1);
-        leftBack.setPower(1);
-        rightFront.setPower(1);
-        rightBack.setPower(1);
+        leftFront.setPower(0.3);
+        leftBack.setPower(0.3);
+        rightFront.setPower(0.3);
+        rightBack.setPower(0.3);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -73,6 +72,18 @@ public class AutonomSus2 extends LinearOpMode {
         while(leftFront.isBusy()&&rightFront.isBusy()){
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();
+            if(leftFront.getCurrentPosition() % 50 == 0 || leftFront.getCurrentPosition() % -50 == 0) {
+                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.1);
+                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.1);
+                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.1);
+                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.1);
+            }
+            if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
+                leftFront.setPower(0.2);
+                leftBack.setPower(0.2);
+                rightFront.setPower(0.2);
+                rightBack.setPower(0.2);
+            }
         }
         leftFront.setPower(0);
         leftBack.setPower(0);
@@ -109,8 +120,6 @@ public class AutonomSus2 extends LinearOpMode {
     }
 
     public void turn(int angle){
-        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
-
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -153,10 +162,10 @@ public class AutonomSus2 extends LinearOpMode {
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftFront.setPower(1);
-        leftBack.setPower(1);
-        rightFront.setPower(1);
-        rightBack.setPower(1);
+        leftFront.setPower(0.5);
+        leftBack.setPower(0.5);
+        rightFront.setPower(0.5);
+        rightBack.setPower(0.5);
         while(leftFront.isBusy()&&rightFront.isBusy()){
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();
@@ -181,15 +190,13 @@ public class AutonomSus2 extends LinearOpMode {
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        MOTOR_TICK_COUNT = leftFront.getMotorType().getTicksPerRev();
-
         waitForStart();
 
         //runForTicks(0, 0, 500, 500);
         walk(450);
 
         motorGlisiere.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorGlisiere.setTargetPosition(-1700);
+        motorGlisiere.setTargetPosition(2150);
         motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorGlisiere.setPower(1);
 
@@ -228,7 +235,7 @@ public class AutonomSus2 extends LinearOpMode {
         turn(-945);
         walk(320);
         motorGlisiere.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorGlisiere.setTargetPosition(-1700);
+        motorGlisiere.setTargetPosition(2150);
         motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorGlisiere.setPower(1);
 
@@ -244,41 +251,18 @@ public class AutonomSus2 extends LinearOpMode {
         motorGlisiere.setTargetPosition(0);
         motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorGlisiere.setPower(0.8);
-        walk(-450);
-        turn(945);
+        walk(-300);
+        strafe(-800);
+        turn(1890);
+        strafe(800);
+        strafe(-200);
+        walkSlow(200);
+        rate.setPower(0.65);
+        sleep(3500);
         strafe(-300);
-        motorMatura.setPower(1.0);
-        walk(-1300);
-        sleep(1000);
-        walkSlow(300);
-        motorMatura.setPower(-1.0);
-        sleep(1000);
-        walk(1150);
-        strafe(300);
         turn(-945);
-        walk(320);
-        motorGlisiere.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorGlisiere.setTargetPosition(-1700);
-        motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorGlisiere.setPower(1);
-
-        sleep(200);
-        servoCupa.setPosition(0.70);
-        sleep(2000);
-        servoCupa.setPosition(0.04);
-
-        motorGlisiere.setPower(0);
-
-        sleep(1000);
-
-        motorGlisiere.setTargetPosition(0);
-        motorGlisiere.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorGlisiere.setPower(0.8);
-        walk(-450);
-        turn(945);
         strafe(-300);
-        walk(-1300);
-        sleep(800);
+        walk(-2260);
         while (opModeIsActive() && motorGlisiere.isBusy()) idle();
     }
 }
