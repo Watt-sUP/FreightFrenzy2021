@@ -32,10 +32,10 @@ public class AutonomSus2 extends LinearOpMode {
         leftBack.setTargetPosition(target);
         rightFront.setTargetPosition(target);
         rightBack.setTargetPosition(target);
-        leftFront.setPower(0.3);
-        leftBack.setPower(0.3);
-        rightFront.setPower(0.3);
-        rightBack.setPower(0.3);
+        leftFront.setPower(0.35);
+        leftBack.setPower(0.35);
+        rightFront.setPower(0.35);
+        rightBack.setPower(0.35);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -44,16 +44,16 @@ public class AutonomSus2 extends LinearOpMode {
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();
             if(leftFront.getCurrentPosition() % 50 == 0 || leftFront.getCurrentPosition() % -50 == 0) {
-                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.2);
-                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.2);
-                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.2);
-                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.2);
+                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.25);
+                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.25);
+                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.25);
+                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.25);
             }
             if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
-                leftFront.setPower(0.2);
-                leftBack.setPower(0.2);
-                rightFront.setPower(0.2);
-                rightBack.setPower(0.2);
+                leftFront.setPower(0.4);
+                leftBack.setPower(0.4);
+                rightFront.setPower(0.4);
+                rightBack.setPower(0.4);
             }
         }
         leftFront.setPower(0);
@@ -192,7 +192,7 @@ public class AutonomSus2 extends LinearOpMode {
         strafe(300);
         turn(-945);
         walk(320);
-        glisiere.setToPosition(4);
+        glisiere.setToPosition(3);
 
         sleep(200);
         cupa.toggleCupa();
