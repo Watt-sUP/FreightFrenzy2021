@@ -12,12 +12,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Runner {
-    private DcMotor leftFront, leftBack, rightFront, rightBack;
+    public DcMotor leftFront, leftBack, rightFront, rightBack;
     private BNO055IMU imu;
     private double MOTOR_TICK_COUNT;
     private double faceAngle;
     private double wheelAngle = Math.PI / 4;
-    private final double wheelDiameter = 97;
+    private final double wheelDiameter = 96;
     private final double wheelCircumference = wheelDiameter * Math.PI;
 
     public enum AutonomousMoveType { FORWARD, BACKWARD, LEFT, RIGHT, ROTATE }
