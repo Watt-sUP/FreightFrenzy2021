@@ -1,17 +1,15 @@
-package org.firstinspires.ftc.teamcode.Autonom;
+package org.firstinspires.ftc.teamcode.autonom;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
+import org.firstinspires.ftc.teamcode.hardware.Runner;
 
 @Autonomous(name = "Autonom partea de sus Experimental", group = "Autonom")
 public class AutonomSus2 extends LinearOpMode {
@@ -219,5 +217,7 @@ public class AutonomSus2 extends LinearOpMode {
         turn(-945);
         strafe(-300);
         walk(-2260);
+        Runner runner = new Runner(hardwareMap);
+        runner.moveLeftRight(20, Runner.AutonomousMoveType.LEFT);
     }
 }

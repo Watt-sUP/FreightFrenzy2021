@@ -296,9 +296,7 @@ public class Runner {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setTargetPositions(ticks, -ticks, -ticks, ticks);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        double startAngle = getHeading();
         move();
-        //rotateTo(startAngle);
     }
 
     public void move()

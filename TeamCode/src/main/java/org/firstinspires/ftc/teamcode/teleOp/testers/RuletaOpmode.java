@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Ruleta;
+package org.firstinspires.ftc.teamcode.teleOp.testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

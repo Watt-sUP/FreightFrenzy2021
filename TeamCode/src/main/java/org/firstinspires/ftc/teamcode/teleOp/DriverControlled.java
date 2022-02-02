@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.Colector;
+package org.firstinspires.ftc.teamcode.teleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.Maturica;
 import org.firstinspires.ftc.teamcode.hardware.Rata;
 
 @TeleOp(name = "Cod Principal", group = "Testing")
-public class GlisiereOpmode extends LinearOpMode {
+public class DriverControlled extends LinearOpMode {
 
     /*
         CR bogdan: acest opmode este prea lung si ar trebui sa facem obiecte pentru fiecare
