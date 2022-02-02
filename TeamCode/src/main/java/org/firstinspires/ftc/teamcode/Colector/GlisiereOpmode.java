@@ -195,34 +195,26 @@ public class GlisiereOpmode extends LinearOpMode {
 
 
             //Rata
-            if (gamepad1.b && isHeldRata == 0) {
+            if (gamepad1.x && isHeldRata == 0) {
                 isHeldRata = 1;
                 if (stateRata == -1) {
                     stateRata = 0;
                     rata.rotate(0.0);
                 } else {
                     stateRata = -1;
-                    rata.rotate(-0.35);
-                }
-            } else if (gamepad1.x && isHeldRata == 0) {
-                isHeldRata = 1;
-                if (stateRata == 1) {
-                    stateRata = 0;
-                    rata.rotate(0.0);
-                } else {
-                    stateRata = 1;
                     rata.rotate(0.35);
                 }
-            } else if (!gamepad1.x && !gamepad1.b) isHeldRata = 0;
+            } else if (!gamepad1.x) isHeldRata = 0;
 
             if(rata.motor.isBusy()) {
-                if(rata.motor.getCurrentPosition() % 50 == 0 && rata.motor.getPower() < 1.0) {
+                if(rata.motor.getCurrentPosition() % 50 <= 10 && rata.motor.getPower() < 1.0) {
                     rata.rotate(Math.abs(rata.motor.getPower() + 0.07) * -1.0);
-                }
+               }
             }
 
             idle();
             telemetry.addData("Elapsed time:",timp.toString());
+            telemetry.addData("Putere rata:", rata.motor.getPower());
             telemetry.update();
         }
         glisiere.motor.setPower(0);
