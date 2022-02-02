@@ -212,11 +212,11 @@ public class AutonomSus extends LinearOpMode {
         walk(-450);
         turn(945);
         strafe(-300);
-        motorMatura.setPower(1.0);
+        motorMatura.setPower(-1.0);
         walk(-1300);
         sleep(1000);
         walkSlow(300);
-        motorMatura.setPower(-1.0);
+        motorMatura.setPower(1.0);
         sleep(1000);
         walk(1150);
         strafe(300);

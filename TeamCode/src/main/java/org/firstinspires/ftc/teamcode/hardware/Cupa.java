@@ -8,8 +8,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Cupa {
     private Telemetry telemetry;
     private Servo servo;
-    private double downPosition = 0.05, upPosition = 0.7;
-    private double midPosition = 0.1; //Placeholder
+    private double downPosition = 0.03, upPosition = 0.7;
+    private double midPosition = 0.2; //Placeholder
     private State state;
 
     private enum State {

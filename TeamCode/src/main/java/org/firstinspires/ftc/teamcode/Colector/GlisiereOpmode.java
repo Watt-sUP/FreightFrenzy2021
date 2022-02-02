@@ -37,9 +37,7 @@ public class GlisiereOpmode extends LinearOpMode {
 
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
-    private double pow = 0.1;
-    boolean isHeldMaturica = false;
-    private boolean faceIsHeld = false, faceChanged, isCupaHeld = false, isHeldGlisiere = false;
+    private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isHeldGlisiere = false, isHeldMaturica = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
     private int isHeldRata, stateRata = 0;
