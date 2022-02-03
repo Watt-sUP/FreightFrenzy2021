@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -44,6 +45,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.hardware.Config;
+import org.firstinspires.ftc.teamcode.hardware.Cupa;
+import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -93,16 +96,19 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.1;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.65;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
     private DcMotor leftFront, leftBack, rightFront, rightBack;
+    private DcMotor motorMatura;
     private BNO055IMU gyro;
     private double MOTOR_TICK_COUNT;
+    private DcMotor rate;
+    private double circumference = 96.0 * Math.PI;
     @Override
     public void runOpMode() {
 
@@ -125,7 +131,14 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        motorMatura = hardwareMap.get(DcMotorEx.class, Config.matura);
+        rate = hardwareMap.dcMotor.get(Config.rate);
+
         MOTOR_TICK_COUNT = leftFront.getMotorType().getTicksPerRev();
+
+        Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
+        Cupa cupa = new Cupa(hardwareMap, telemetry);
+
 
         gyro = hardwareMap.get(BNO055IMU.class, Config.imu);
 
@@ -164,7 +177,9 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
-            telemetry.addData("Heading:", getHeading());
+            telemetry.addData("Unghi1 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+            telemetry.addData("Unghi2 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle);
+            telemetry.addData("Unghi3 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle);
             telemetry.update();
         }
 
@@ -172,24 +187,221 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Put a hold after each turn
-        gyroDrive(DRIVE_SPEED, 10.0, 0.0);    // Drive FWD 48 inches
-        gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
+        //gyroDrive(DRIVE_SPEED, 1.0, 0.0);    // Drive FWD 48 inches
+        //gyroTurn( TURN_SPEED, 45.0);         // Turn  CCW to -45 Degrees
+        //gyroHold( TURN_SPEED, 45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
         //gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
-        //gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
-        //gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
+        //gyroTurn( TURN_SPEED,  -45.0);         // Turn  CW  to  45 Degrees
+        //gyroHold( TURN_SPEED,  -45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
         //gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
         //gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
         //gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
+
+        walk(450);
+
+        glisiere.setToPosition(3);
+
+        sleep(200);
+        cupa.toggleCupa();
+        sleep(2000);
+        cupa.toggleCupa();
+
+        glisiere.motor.setPower(0);
+
+        sleep(1000);
+        glisiere.setToPosition(0);
+
+        walk(-450);
+        reset();
+
+        gyroTurn(TURN_SPEED, 85.0);
+        strafe(-300);
+        motorMatura.setPower(-1.0);
+        walk(-1290);
+        sleep(1000);
+        glisiere.setToPosition(1);
+        motorMatura.setPower(1.0);
+        walk(1450);
+        strafe(300);
+        reset();
+        gyroTurn(TURN_SPEED, -5.0);
+        //turn(-945);
+        walk(320);
+        glisiere.setToPosition(3);
+
+        sleep(200);
+        cupa.toggleCupa();
+        sleep(2000);
+        cupa.toggleCupa();
+
+        glisiere.motor.setPower(0);
+
+        sleep(1000);
+
+        glisiere.setToPosition(0);
+
+        walk(-500);
+        reset();
+        gyroTurn(TURN_SPEED, -90);
+        walk(1000);
+        //turn(1890);
+        gyroTurn(TURN_SPEED, -180);
+        strafe(100);
+
+        rate.setPower(0.7);
+
+        sleep(3500);
+        strafe(-300);
+        reset();
+        gyroTurn(TURN_SPEED, -90);
+        turn(-945);
+        strafe(-300);
+        walk(-2260);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
     public double getHeading() {
-        return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
+        return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
+    private void reset() {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void walk(int distance) {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
+        double rate = 1 / target;
+        leftFront.setTargetPosition(target);
+        leftBack.setTargetPosition(target);
+        rightFront.setTargetPosition(target);
+        rightBack.setTargetPosition(target);
+        leftFront.setPower(0.35);
+        leftBack.setPower(0.35);
+        rightFront.setPower(0.35);
+        rightBack.setPower(0.35);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(leftFront.isBusy()&&rightFront.isBusy()){
+            telemetry.addData("Status", "Walking using encoders");
+            telemetry.update();
+            if(leftFront.getCurrentPosition() % 25 == 0 || leftFront.getCurrentPosition() % -25 == 0) {
+                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.3);
+                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.3);
+                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.3);
+                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.3);
+            }
+            if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
+                leftFront.setPower(0.4);
+                leftBack.setPower(0.4);
+                rightFront.setPower(0.4);
+                rightBack.setPower(0.4);
+            }
+        }
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    public void walkSlow(int distance) {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
+        leftFront.setTargetPosition(target);
+        leftBack.setTargetPosition(target);
+        rightFront.setTargetPosition(target);
+        rightBack.setTargetPosition(target);
+        leftFront.setPower(0.25);
+        leftBack.setPower(0.25);
+        rightFront.setPower(0.25);
+        rightBack.setPower(0.25);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(leftFront.isBusy()&&rightFront.isBusy()){
+            telemetry.addData("Status", "Walking using encoders");
+            telemetry.update();
+        }
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    public void turn(int angle){
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int  target = (int) (angle * circumference / 360);
+        leftFront.setTargetPosition(target);
+        leftBack.setTargetPosition(target);
+        rightFront.setTargetPosition(-target);
+        rightBack.setTargetPosition(-target);
+        leftFront.setPower(1);
+        leftBack.setPower(1);
+        rightFront.setPower(1);
+        rightBack.setPower(1);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(leftFront.isBusy()&&rightFront.isBusy()) {
+            telemetry.addData("Status", "Turning to left");
+            telemetry.update();
+        }
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    public void strafe(int distance)
+    {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
+        leftFront.setTargetPosition(target);
+        leftBack.setTargetPosition(-target);
+        rightFront.setTargetPosition(-target);
+        rightBack.setTargetPosition(target);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setPower(0.5);
+        leftBack.setPower(0.5);
+        rightFront.setPower(0.5);
+        rightBack.setPower(0.5);
+        while(leftFront.isBusy()&&rightFront.isBusy()){
+            telemetry.addData("Status", "Walking using encoders");
+            telemetry.update();
+        }
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
 
     /**
     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
@@ -375,12 +587,13 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         }
 
         // Send desired speeds to motors.
-        leftFront.setPower(leftSpeed);
-        leftBack.setPower(leftSpeed);
-        rightFront.setPower(rightSpeed);
-        rightBack.setPower(rightSpeed);
+        leftFront.setPower(-leftSpeed);
+        leftBack.setPower(-leftSpeed);
+        rightFront.setPower(-rightSpeed);
+        rightBack.setPower(-rightSpeed);
 
         // Display it for the driver.
+        telemetry.addData("Heading", getHeading());
         telemetry.addData("Target", "%5.2f", angle);
         telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
         telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);

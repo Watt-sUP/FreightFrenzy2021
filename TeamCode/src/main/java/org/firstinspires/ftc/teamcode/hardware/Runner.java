@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Runner {
     public DcMotor leftFront, leftBack, rightFront, rightBack;
-    private BNO055IMU imu;
+    public BNO055IMU imu;
     private double MOTOR_TICK_COUNT;
     private double faceAngle;
     private Telemetry telemetry;

@@ -22,7 +22,7 @@ public class HeaderTester extends LinearOpMode {
         Runner runner = new Runner(hardwareMap, telemetry);
         waitForStart();
         while (opModeIsActive()) {
-            telemetry.addData("Heading:", runner.getHeading());
+            telemetry.addData("Heading:", runner.imu.getAngularOrientation());
             telemetry.update();
         };
     }
