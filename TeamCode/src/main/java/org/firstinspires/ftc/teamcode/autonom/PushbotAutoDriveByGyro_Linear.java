@@ -97,7 +97,7 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.1;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.65;     // Nominal half speed for better accuracy.
+    static final double     TURN_SPEED              = 0.4;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
@@ -203,50 +203,49 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
         sleep(200);
         cupa.toggleCupa();
-        sleep(2000);
+        sleep(1000);
         cupa.toggleCupa();
 
-        glisiere.motor.setPower(0);
+//        glisiere.motor.setPower(0);
 
-        sleep(1000);
+//        sleep(1000);
         glisiere.setToPosition(0);
 
         walk(-450);
         reset();
 
-        gyroTurn(TURN_SPEED, 85.0);
+        gyroTurn(TURN_SPEED, 90.0);
         strafe(-300);
         motorMatura.setPower(-1.0);
-        walk(-1290);
-        sleep(1000);
+        walk(-1600);
         glisiere.setToPosition(1);
         motorMatura.setPower(1.0);
-        walk(1450);
+        glisiere.setToPosition(3);
+        walk(1600);
         strafe(300);
         reset();
-        gyroTurn(TURN_SPEED, -5.0);
+        gyroTurn(TURN_SPEED, 0.0);
         //turn(-945);
         walk(320);
-        glisiere.setToPosition(3);
+
 
         sleep(200);
         cupa.toggleCupa();
-        sleep(2000);
+        sleep(1000);
         cupa.toggleCupa();
 
-        glisiere.motor.setPower(0);
-
-        sleep(1000);
-
         glisiere.setToPosition(0);
-
-        walk(-500);
+        reset();
+//        gyroTurn(TURN_SPEED, 5.0);
+        walk(-350);
         reset();
         gyroTurn(TURN_SPEED, -90);
-        walk(1000);
+        sleep(1000);
+        walk(-1000);
         //turn(1890);
+        reset();
         gyroTurn(TURN_SPEED, -180);
-        strafe(100);
+        strafe(200);
 
         rate.setPower(0.7);
 

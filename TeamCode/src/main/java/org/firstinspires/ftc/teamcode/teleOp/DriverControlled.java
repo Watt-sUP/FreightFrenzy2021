@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 import org.firstinspires.ftc.teamcode.hardware.Maturica;
 import org.firstinspires.ftc.teamcode.hardware.Rata;
+import org.firstinspires.ftc.teamcode.hardware.Ruleta;
 
 @TeleOp(name = "Cod Principal", group = "Testing")
 public class DriverControlled extends LinearOpMode {
@@ -48,23 +49,13 @@ public class DriverControlled extends LinearOpMode {
         Maturica maturica = new Maturica(hardwareMap, telemetry);
         Cupa cupa = new Cupa(hardwareMap, telemetry);
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
+        Ruleta ruleta = new Ruleta(hardwareMap, telemetry);
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
         DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
         DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
 
-        CRServo servoRuletaX;
-        CRServo servoRuletaY;
-        CRServo servoRuletaEx;
-
-        servoRuletaX = hardwareMap.crservo.get(Config.rul_orizontal);
-        servoRuletaY = hardwareMap.crservo.get(Config.rul_vertical);
-        servoRuletaEx = hardwareMap.crservo.get(Config.rul_fata);
-
-        servoRuletaX.resetDeviceConfigurationForOpMode();
-        servoRuletaY.resetDeviceConfigurationForOpMode();
-        servoRuletaEx.resetDeviceConfigurationForOpMode();
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -130,23 +121,7 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Ruleta
-            if(gamepad2.left_stick_x < -0.05 || gamepad2.left_stick_x > 0.05) {
-                servoRuletaX.setPower(-gamepad2.left_stick_x / 2);
-            }
-            else if(gamepad2.left_stick_x < 0.05 && gamepad2.left_stick_x > -0.05)
-                servoRuletaX.setPower(0.0);
-
-            if(gamepad2.left_stick_y < -0.05 || gamepad2.left_stick_y > 0.05) {
-                servoRuletaY.setPower(-gamepad2.left_stick_y);
-            }
-            else if(gamepad2.left_stick_y < 0.05 && gamepad2.left_stick_y > -0.05)
-                servoRuletaY.setPower(0.0);
-
-            if(gamepad2.right_stick_y < -0.05 || gamepad2.right_stick_y > 0.05) {
-                servoRuletaEx.setPower(gamepad2.right_stick_y / 2);
-            }
-            else if(gamepad2.right_stick_y < 0.05 && gamepad2.right_stick_y > -0.05)
-                servoRuletaEx.setPower(0.0);
+            ruleta.move(-gamepad2.left_stick_y,-gamepad2.left_stick_x / 2,gamepad2.right_stick_y / 2);
 
 
 
