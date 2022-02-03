@@ -41,11 +41,11 @@ public class AutonomSus2 extends LinearOpMode {
         while(leftFront.isBusy()&&rightFront.isBusy()){
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();
-            if(leftFront.getCurrentPosition() % 50 == 0 || leftFront.getCurrentPosition() % -50 == 0) {
-                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.25);
-                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.25);
-                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.25);
-                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.25);
+            if(leftFront.getCurrentPosition() % 25 == 0 || leftFront.getCurrentPosition() % -25 == 0) {
+                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.3);
+                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.3);
+                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.3);
+                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.3);
             }
             if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
                 leftFront.setPower(0.4);
@@ -168,7 +168,7 @@ public class AutonomSus2 extends LinearOpMode {
         //runForTicks(0, 0, 500, 500);
         walk(450);
 
-        glisiere.setToPosition(4);
+        glisiere.setToPosition(3);
 
         sleep(200);
         cupa.toggleCupa();
@@ -184,7 +184,7 @@ public class AutonomSus2 extends LinearOpMode {
         turn(945);
         strafe(-300);
         motorMatura.setPower(-1.0);
-        walk(-1370);
+        walk(-1250);
         sleep(1000);
         walk(1450);
         strafe(300);
@@ -206,18 +206,18 @@ public class AutonomSus2 extends LinearOpMode {
         walk(-300);
         strafe(-800);
         turn(1890);
-        strafe(800);
+        strafe(1000);
         strafe(-200);
-        walkSlow(200);
+        walkSlow(100);
 
-        rate.setPower(0.55);
+        rate.setPower(0.7);
 
         sleep(3500);
         strafe(-300);
         turn(-945);
         strafe(-300);
         walk(-2260);
-        Runner runner = new Runner(hardwareMap);
+        Runner runner = new Runner(hardwareMap, telemetry);
         runner.moveLeftRight(20, Runner.AutonomousMoveType.LEFT);
     }
 }

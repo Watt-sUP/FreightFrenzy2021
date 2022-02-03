@@ -16,6 +16,7 @@ public class Runner {
     private BNO055IMU imu;
     private double MOTOR_TICK_COUNT;
     private double faceAngle;
+    private Telemetry telemetry;
     private double wheelAngle = Math.PI / 4;
     private final double wheelDiameter = 96;
     private final double wheelCircumference = wheelDiameter * Math.PI;
@@ -69,7 +70,7 @@ public class Runner {
     }
 
 
-    public Runner(HardwareMap hardwareMap) {
+    public Runner(HardwareMap hardwareMap, Telemetry telemetry) {
         leftFront = hardwareMap.dcMotor.get(Config.left_front);
         leftBack = hardwareMap.dcMotor.get(Config.left_back);
         rightFront = hardwareMap.dcMotor.get(Config.right_front);
@@ -98,8 +99,13 @@ public class Runner {
 
         ElapsedTime timer = new ElapsedTime();
 
+        this.telemetry = telemetry;
+        timer.reset();
         imu.initialize(parameters);
-
+        while (!imu.isGyroCalibrated() && timer.milliseconds() < 1000) {
+            telemetry.addData("Gyro", "Calibrating...");
+            telemetry.update();
+        }
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
@@ -175,7 +181,7 @@ public class Runner {
     }
 
     public double getHeading() {
-        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XZY, AngleUnit.DEGREES).firstAngle;
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
     }
 
     public double getAngleDistance(double start, double fin) {
@@ -222,7 +228,7 @@ public class Runner {
             power = -power;
             if (distance < 0) power = -power;
 
-            angleMove(0, 0, power);
+            setPower(power, power, -power, -power);
         }
         stop();
     }
@@ -231,14 +237,14 @@ public class Runner {
         angle += faceAngle;
         angle += wheelAngle;
 
-        double lf = speed * Math.sin(-angle) - rot;
-        double rf = speed * Math.cos(-angle) + rot;
-        double lb = speed * Math.cos(-angle) - rot;
-        double rb = speed * Math.sin(-angle) + rot;
-        lf = -lf;
-        rf = -rf;
-        lb = -lb;
-        rb = -rb;
+        double lf = speed * Math.sin(-angle) - rot; // -power
+        double rf = speed * Math.cos(-angle) + rot; // 1+power
+        double lb = speed * Math.cos(-angle) - rot; // 1-power
+        double rb = speed * Math.sin(-angle) + rot; // power
+        lf = -lf; // power
+        rf = -rf; //-1
+        lb = -lb; //power-1
+        rb = -rb; //-power
 
         MotorPowers mpw = new MotorPowers(lf, lb, rf, rb);
 
@@ -340,6 +346,7 @@ public class Runner {
         sum += Math.abs(rightBack.getCurrentPosition() - rightBack.getTargetPosition());
         return sum / 4;
     }
+
 
 
 }

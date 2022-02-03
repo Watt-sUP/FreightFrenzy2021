@@ -17,7 +17,7 @@ public class MoveTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Runner runner = new Runner(hardwareMap);
+        Runner runner = new Runner(hardwareMap, telemetry);
         waitForStart();
         runner.moveForwardBackward(300, Runner.AutonomousMoveType.FORWARD);
         runner.moveForwardBackward(300, Runner.AutonomousMoveType.BACKWARD);

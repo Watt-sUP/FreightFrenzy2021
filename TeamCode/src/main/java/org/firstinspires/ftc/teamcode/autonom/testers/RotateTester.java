@@ -17,9 +17,9 @@ public class RotateTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Runner runner = new Runner(hardwareMap);
+        Runner runner = new Runner(hardwareMap, telemetry);
         waitForStart();
-        runner.rotate(90);
+        runner.rotate(-90);
         while (opModeIsActive()) {
             telemetry.addData("Heading:", runner.getHeading());
             telemetry.update();
