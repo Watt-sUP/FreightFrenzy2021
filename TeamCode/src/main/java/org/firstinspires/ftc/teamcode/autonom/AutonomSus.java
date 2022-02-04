@@ -81,7 +81,7 @@ import org.firstinspires.ftc.teamcode.hardware.Glisiere;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Un autonom frumos", group="Autonom")
+@Autonomous(name="Un autonom frumos sus", group="Autonom")
 //@Disabled
 public class AutonomSus extends LinearOpMode {
 
@@ -100,7 +100,7 @@ public class AutonomSus extends LinearOpMode {
     static final double     TURN_SPEED              = 0.45;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = 0.03;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
     private DcMotor leftFront, leftBack, rightFront, rightBack;
@@ -212,17 +212,17 @@ public class AutonomSus extends LinearOpMode {
         glisiere.setToPosition(0);
 
         reset();
-        gyroTurn(TURN_SPEED, 103.0);
+        gyroTurn(TURN_SPEED, 108.0);
         motorMatura.setPower(-1.0);
-        walkSlow(-700);
+        walk(-800);
         sleep(1500);
         reset();
-        gyroTurn(TURN_SPEED, 60.0);
-        walkSlow(200);
+        gyroTurn(TURN_SPEED, 65.0);
+        walkSlow(220);
 
         glisiere.setToPosition(3);
 
-        sleep(200);
+        sleep(600);
         cupa.toggleCupa();
         sleep(1000);
         cupa.toggleCupa();
@@ -232,6 +232,8 @@ public class AutonomSus extends LinearOpMode {
 //        sleep(1000);
         glisiere.setToPosition(0);
         reset();
+        walkSlow(-50);
+        reset();
         gyroTurn(TURN_SPEED, 90.0);
         strafe(-1100);
         motorMatura.setPower(-1.0);
@@ -240,15 +242,15 @@ public class AutonomSus extends LinearOpMode {
         glisiere.setToPosition(1);
         motorMatura.setPower(1.0);
         glisiere.setToPosition(3);
-        walk(1650);
+        walk(1500);
         strafe(300);
         reset();
         gyroTurn(TURN_SPEED, 0.0);
         //turn(-945);
-        walk(320);
+        walk(370);
 
 
-        sleep(200);
+        sleep(600);
         cupa.toggleCupa();
         sleep(1000);
         cupa.toggleCupa();
@@ -352,7 +354,7 @@ public class AutonomSus extends LinearOpMode {
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int  target = (int) (angle * circumference / 360);
+        int  target = (int) (angle * 392 * Math.PI / 360);
         leftFront.setTargetPosition(target);
         leftBack.setTargetPosition(target);
         rightFront.setTargetPosition(-target);

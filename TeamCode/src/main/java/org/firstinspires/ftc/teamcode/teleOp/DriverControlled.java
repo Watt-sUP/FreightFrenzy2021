@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.Maturica;
 import org.firstinspires.ftc.teamcode.hardware.Rata;
 import org.firstinspires.ftc.teamcode.hardware.Ruleta;
 
-@TeleOp(name = "Cod Principal", group = "Testing")
+@TeleOp(name = "OpMode Principal", group = "Testing")
 public class DriverControlled extends LinearOpMode {
 
     /*
@@ -37,7 +37,8 @@ public class DriverControlled extends LinearOpMode {
 
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
-    private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isHeldGlisiere = false, isHeldMaturica = false;
+    private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false;
+    private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
     private int isHeldRata, stateRata = 0;
@@ -50,6 +51,8 @@ public class DriverControlled extends LinearOpMode {
         Cupa cupa = new Cupa(hardwareMap, telemetry);
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
         Ruleta ruleta = new Ruleta(hardwareMap, telemetry);
+        ElapsedTime timerGli = new ElapsedTime();
+        ElapsedTime timerCol = new ElapsedTime();
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
@@ -62,7 +65,8 @@ public class DriverControlled extends LinearOpMode {
 
         waitForStart();
         timp.reset();
-
+        timerGli.reset();
+        timerCol.reset();
         while (opModeIsActive()) {
 
 
@@ -71,6 +75,7 @@ public class DriverControlled extends LinearOpMode {
             double acceleration = gamepad1.left_stick_y;
             double strafe = gamepad1.left_stick_x * -1.1;
             double rotation = gamepad1.right_stick_x;
+
 
             double powerLimit = 1.0;
             if (gamepad1.right_trigger >= 0.3) {
@@ -121,7 +126,7 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Ruleta
-            ruleta.move(-gamepad2.left_stick_y,-gamepad2.left_stick_x / 2,gamepad2.right_stick_y / 2);
+            ruleta.move(gamepad2.left_stick_y,gamepad2.left_stick_x,gamepad2.right_stick_y);
 
 
 
@@ -138,34 +143,48 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Glisiere
-            if (gamepad2.x && !isHeldGlisiere) {
+           if (gamepad2.x && !isHeldGlisiere) {
                 glisiere.setToPosition(0);
                 isHeldGlisiere = true;
             }
             if (gamepad2.right_trigger > 0.3 && !isHeldGlisiere) {
                 glisiere.setToPosition(1);
+                maturica.toggleEject();
                 isHeldGlisiere = true;
             } else if (gamepad2.left_trigger > 0.3 && !isHeldGlisiere) {
                 glisiere.setToPosition(2);
+                maturica.toggleEject();
                 isHeldGlisiere = true;
             } else if (gamepad2.right_bumper && !isHeldGlisiere) {
                 glisiere.setToPosition(3);
+                maturica.toggleEject();
                 isHeldGlisiere = true;
             } else if (gamepad2.left_bumper && !isHeldGlisiere) {
                 glisiere.setToPosition(4);
+                maturica.toggleEject();
                 isHeldGlisiere = true;
             } else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isHeldGlisiere = false;
             telemetry.addData("Glisiera Ticks:", glisiere.getTicks());
 
-
-
             //Cupa
             if (gamepad2.y && !isCupaHeld) {
                 cupa.toggleCupa();
+                timerGli.reset();
                 isCupaHeld = true;
-            } else if (!gamepad2.y) isCupaHeld = false;
-            telemetry.addData("Cupa Position:", cupa.getServoPosition());
-
+                boolTimer = true;
+            }
+            else if (!gamepad2.y) isCupaHeld = false;
+            if(timerGli.milliseconds() >= 1000 &&  boolTimer) {
+                cupa.toggleCupa();
+                boolTimer = false;
+                isTransit = true;
+            }
+            if(timerGli.milliseconds() >= 2022 && isTransit) {
+                glisiere.setToPosition(0);
+                maturica.toggleCollect();
+                isTransit = false;
+                isHeldGlisiere = true;
+            }
 
 
             //Rata

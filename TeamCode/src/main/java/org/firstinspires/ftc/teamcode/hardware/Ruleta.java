@@ -37,22 +37,22 @@ public class Ruleta {
                                    nu sunt apasate suficient (echivalent cu if urile astea)
         */
 
-        if(gamepad2.left_stick_x < -0.05 || gamepad2.left_stick_x > 0.05) {
-            servo_orizontal.setPower(powerOrizontal);
+        if(powerOrizontal < -0.05 || powerOrizontal > 0.05) {
+            servo_orizontal.setPower(-powerOrizontal * 0.5);
         }
-        else if(gamepad2.left_stick_x < 0.05 && gamepad2.left_stick_x > -0.05)
+        else if(powerOrizontal < 0.05 && powerOrizontal > -0.05)
             servo_orizontal.setPower(0.0);
 
-        if(gamepad2.left_stick_y < -0.05 || gamepad2.left_stick_y > 0.05) {
-            servo_vertical.setPower(powerVertical);
+        if(powerVertical < -0.05 || powerVertical > 0.05) {
+            servo_vertical.setPower(-powerVertical);
         }
-        else if(gamepad2.left_stick_y < 0.05 && gamepad2.left_stick_y > -0.05)
+        else if(powerVertical < 0.05 && powerVertical > -0.05)
             servo_vertical.setPower(0.0);
 
-        if(gamepad2.right_stick_y < -0.05 || gamepad2.right_stick_y > 0.05) {
-            servo_fata.setPower(powerFata);
+        if(powerFata < -0.05 || powerFata > 0.05) {
+            servo_fata.setPower(powerFata * 0.5);
         }
-        else if(gamepad2.right_stick_y < 0.05 && gamepad2.right_stick_y > -0.05)
+        else if(powerFata < 0.05 && powerFata > -0.05)
             servo_fata.setPower(0.0);
     }
 }

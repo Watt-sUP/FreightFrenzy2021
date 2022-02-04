@@ -24,6 +24,14 @@ public class Cupa {
         this.telemetry = telemetry;
     }
 
+    public double getDownPosition() {
+        return downPosition;
+    }
+
+    public double getUpPosition() {
+        return upPosition;
+    }
+
     public double getServoPosition() {
         return servo.getPosition();
     }

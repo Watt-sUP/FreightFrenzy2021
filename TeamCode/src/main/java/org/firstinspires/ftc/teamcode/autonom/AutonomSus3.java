@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.autonom.testers;
+package org.firstinspires.ftc.teamcode.autonom;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -81,9 +81,9 @@ import org.firstinspires.ftc.teamcode.hardware.Glisiere;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Rotate giroscop", group="Autonom")
+@Autonomous(name="Un autonom frumos jos", group="Autonom")
 //@Disabled
-public class RotateTester extends LinearOpMode {
+public class AutonomSus3 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -97,10 +97,10 @@ public class RotateTester extends LinearOpMode {
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.1;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.65;     // Nominal half speed for better accuracy.
+    static final double     TURN_SPEED              = 0.45;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = 0.03;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
     private DcMotor leftFront, leftBack, rightFront, rightBack;
@@ -197,18 +197,70 @@ public class RotateTester extends LinearOpMode {
         //gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
         //gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
 
-        int ct = 0;
-        while(ct <= 4) {
-            turn(90);
-            sleep(1000);
-            ct++;
-        }
-        ct = 0;
-        while(ct <= 4) {
-            turn(90);
-            sleep(1000);
-            ct++;
-        }
+        walk(550);
+
+        glisiere.setToPosition(1);
+
+        sleep(1000);
+        cupa.toggleCupa();
+        sleep(1000);
+        cupa.toggleCupa();
+
+//        glisiere.motor.setPower(0);
+
+//        sleep(1000);
+        glisiere.setToPosition(0);
+
+        reset();
+        gyroTurn(TURN_SPEED, 100.0);
+        motorMatura.setPower(-1.0);
+        walk(-200);
+        sleep(1500);
+        reset();
+        gyroTurn(TURN_SPEED, 65.0);
+        walkSlow(120);
+
+        glisiere.setToPosition(3);
+
+        sleep(600);
+        cupa.toggleCupa();
+        sleep(1000);
+        cupa.toggleCupa();
+
+//        glisiere.motor.setPower(0);
+
+//        sleep(1000);
+        glisiere.setToPosition(0);
+        reset();
+        walkSlow(-50);
+        reset();
+        gyroTurn(TURN_SPEED, 90.0);
+        strafe(-1100);
+        motorMatura.setPower(-1.0);
+        walk(-1100);
+        sleep(1000);
+        glisiere.setToPosition(1);
+        motorMatura.setPower(1.0);
+        glisiere.setToPosition(3);
+        walk(1500);
+        strafe(300);
+        reset();
+        gyroTurn(TURN_SPEED, 0.0);
+        //turn(-945);
+        walk(370);
+
+
+        sleep(600);
+        cupa.toggleCupa();
+        sleep(1000);
+        cupa.toggleCupa();
+
+        glisiere.setToPosition(0);
+        walk(-320);
+        reset();
+        gyroTurn(TURN_SPEED, 90.0);
+        strafe(-300);
+        walk(-1500);
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
