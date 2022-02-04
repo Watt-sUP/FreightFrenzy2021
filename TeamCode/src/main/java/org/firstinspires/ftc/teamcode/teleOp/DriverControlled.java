@@ -38,10 +38,11 @@ public class DriverControlled extends LinearOpMode {
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
     private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false;
-    private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false;
+    private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false, isHeldRata = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
-    private int isHeldRata, stateRata = 0;
+    private int powerRata = -1, stateRata = -1;
+    private double duckMotorPower = 0.60;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -188,21 +189,35 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Rata
-            if (gamepad1.x && isHeldRata == 0) {
-                isHeldRata = 1;
-                if (stateRata == -1) {
-                    stateRata = 0;
-                    rata.rotate(0.0);
-                } else {
-                    stateRata = -1;
-                    rata.rotate(0.35);
-                }
-            } else if (!gamepad1.x) isHeldRata = 0;
+            if (gamepad1.x && !isHeldRata) {
+                powerRata *= -1;
 
-            if(rata.motor.isBusy()) {
-                if(rata.motor.getCurrentPosition() % 50 <= 10 && rata.motor.getPower() < 1.0) {
-                    rata.rotate(Math.abs(rata.motor.getPower() + 0.07) * -1.0);
-               }
+                if(powerRata > 0){
+                    rata.rotate(0.75);
+                }
+                else
+                    rata.rotate(0.0);
+
+//            if(rata.motor.isBusy()) {
+//                if(rata.motor.getCurrentPosition() % 50 <= 10 && rata.motor.getPower() < 1.0) {
+//                    rata.rotate(Math.abs(rata.motor.getPower() + 0.07) * -1.0);
+//               }
+            } else isHeldRata = false;
+
+            if (gamepad2.x && !isHeldRata) {
+                powerRata *= -1;
+                isHeldRata = true;
+                if(powerRata > 0){
+                    rata.rotate(duckMotorPower);
+                }
+                else
+                    rata.rotate(0.0);
+            } else isHeldRata = false;
+            if(rata.motor.isBusy()){
+                if(duckMotorPower < 1) {
+                    duckMotorPower += 0.05;
+                    rata.rotate(duckMotorPower);
+                }
             }
 
             idle();

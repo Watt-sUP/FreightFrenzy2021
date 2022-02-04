@@ -52,7 +52,7 @@ public class Ruleta {
         if(powerFata < -0.05 || powerFata > 0.05) {
             servo_fata.setPower(powerFata * 0.5);
         }
-        else if(powerFata < 0.05 && powerFata > -0.05)
+        else if(powerFata <= 0.05 && powerFata >= -0.05)
             servo_fata.setPower(0.0);
     }
 }

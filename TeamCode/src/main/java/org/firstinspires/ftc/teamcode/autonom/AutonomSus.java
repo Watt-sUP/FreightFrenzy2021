@@ -203,18 +203,15 @@ public class AutonomSus extends LinearOpMode {
 
         sleep(1000);
         cupa.toggleCupa();
-        sleep(1000);
+        sleep(800);
         cupa.toggleCupa();
-
-//        glisiere.motor.setPower(0);
-
-//        sleep(1000);
+        sleep(500);
         glisiere.setToPosition(0);
 
         reset();
         gyroTurn(TURN_SPEED, 108.0);
         motorMatura.setPower(-1.0);
-        walk(-800);
+        walk(-700);
         sleep(1500);
         reset();
         gyroTurn(TURN_SPEED, 65.0);
@@ -224,12 +221,12 @@ public class AutonomSus extends LinearOpMode {
 
         sleep(600);
         cupa.toggleCupa();
-        sleep(1000);
+        sleep(800);
         cupa.toggleCupa();
+        sleep(500);
 
 //        glisiere.motor.setPower(0);
 
-//        sleep(1000);
         glisiere.setToPosition(0);
         reset();
         walkSlow(-50);
@@ -247,14 +244,14 @@ public class AutonomSus extends LinearOpMode {
         reset();
         gyroTurn(TURN_SPEED, 0.0);
         //turn(-945);
-        walk(370);
+        walk(320);
 
 
         sleep(600);
         cupa.toggleCupa();
-        sleep(1000);
+        sleep(800);
         cupa.toggleCupa();
-
+        sleep(500);
         glisiere.setToPosition(0);
         walk(-320);
         reset();
