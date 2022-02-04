@@ -121,7 +121,7 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Ruleta
-            ruleta.move(-gamepad2.left_stick_y,-gamepad2.left_stick_x / 2,gamepad2.right_stick_y / 2);
+            ruleta.move(gamepad2.left_stick_y, gamepad2.left_stick_x, gamepad2.right_stick_y);
 
 
 
