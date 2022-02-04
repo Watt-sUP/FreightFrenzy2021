@@ -64,10 +64,16 @@ public class TensorflowConcept extends LinearOpMode {
      *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
      *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
      */
-    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/model_20220203_162041.tflite";
+//    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/model_20220203_162041.tflite";
+//    private static final String[] LABELS = {
+//            "Team Marker"
+//    };
+
+    private static final String TFOD_MODEL_ASSET = "../tse_model_4feb.tflite";
     private static final String[] LABELS = {
-            "Team Marker"
+            "tse"
     };
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
