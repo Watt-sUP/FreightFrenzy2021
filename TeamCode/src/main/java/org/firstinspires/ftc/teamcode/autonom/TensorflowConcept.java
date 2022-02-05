@@ -69,7 +69,7 @@ public class TensorflowConcept extends LinearOpMode {
 //            "Team Marker"
 //    };
 
-    private static final String TFOD_MODEL_ASSET = "../tse_model_4feb.tflite";
+    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/tse_model_4feb.tflite";
     private static final String[] LABELS = {
             "tse"
     };

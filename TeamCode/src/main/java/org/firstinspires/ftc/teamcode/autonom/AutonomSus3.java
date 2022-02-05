@@ -197,39 +197,38 @@ public class AutonomSus3 extends LinearOpMode {
         //gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
         //gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
 
-        walk(550);
+        walk(500);
 
         glisiere.setToPosition(1);
 
         sleep(1000);
         cupa.toggleCupa();
-        sleep(1000);
+        sleep(800);
         cupa.toggleCupa();
-
-//        glisiere.motor.setPower(0);
-
-//        sleep(1000);
+        sleep(500);
         glisiere.setToPosition(0);
-
+        sleep(500);
         reset();
-        gyroTurn(TURN_SPEED, 100.0);
-        motorMatura.setPower(-1.0);
-        walk(-200);
-        sleep(1500);
+        walk(-50);
+        reset();
+        gyroTurn(TURN_SPEED, 112.0);
+        motorMatura.setPower(-0.5);
+        walkToDuck(-700);
+        sleep(300);
         reset();
         gyroTurn(TURN_SPEED, 65.0);
-        walkSlow(120);
+        walkSlow(255);
 
         glisiere.setToPosition(3);
 
         sleep(600);
         cupa.toggleCupa();
-        sleep(1000);
+        sleep(800);
         cupa.toggleCupa();
+        sleep(500);
 
 //        glisiere.motor.setPower(0);
 
-//        sleep(1000);
         glisiere.setToPosition(0);
         reset();
         walkSlow(-50);
@@ -247,20 +246,21 @@ public class AutonomSus3 extends LinearOpMode {
         reset();
         gyroTurn(TURN_SPEED, 0.0);
         //turn(-945);
-        walk(370);
+        walk(350);
 
 
         sleep(600);
         cupa.toggleCupa();
-        sleep(1000);
+        sleep(800);
         cupa.toggleCupa();
-
+        sleep(500);
         glisiere.setToPosition(0);
         walk(-320);
         reset();
         gyroTurn(TURN_SPEED, 90.0);
         strafe(-300);
-        walk(-1500);
+        walk(-1420);
+        motorMatura.setPower(-1.0);
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
@@ -307,6 +307,47 @@ public class AutonomSus3 extends LinearOpMode {
                 leftBack.setPower(Math.abs(leftBack.getPower()) + 0.3);
                 rightFront.setPower(Math.abs(rightFront.getPower()) + 0.3);
                 rightBack.setPower(Math.abs(rightBack.getPower()) + 0.3);
+            }
+            if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
+                leftFront.setPower(0.4);
+                leftBack.setPower(0.4);
+                rightFront.setPower(0.4);
+                rightBack.setPower(0.4);
+            }
+        }
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    public void walkToDuck(int distance) {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
+        double rate = 1 / target;
+        leftFront.setTargetPosition(target);
+        leftBack.setTargetPosition(target);
+        rightFront.setTargetPosition(target);
+        rightBack.setTargetPosition(target);
+        leftFront.setPower(0.2);
+        leftBack.setPower(0.2);
+        rightFront.setPower(0.2);
+        rightBack.setPower(0.2);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(leftFront.isBusy()&&rightFront.isBusy()){
+            telemetry.addData("Status", "Walking using encoders");
+            telemetry.update();
+            if(leftFront.getCurrentPosition() % 25 == 0 || leftFront.getCurrentPosition() % -25 == 0) {
+                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.15);
+                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.15);
+                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.15);
+                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.15);
             }
             if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
                 leftFront.setPower(0.4);

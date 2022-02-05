@@ -38,7 +38,8 @@ public class DriverControlled extends LinearOpMode {
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
     private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false;
-    private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false, isHeldRata = false;
+    private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false;
+    private int isHeldRata = 0;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
     private int powerRata = -1, stateRata = -1;
@@ -189,6 +190,7 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Rata
+            /*
             if (gamepad1.x && !isHeldRata) {
                 powerRata *= -1;
 
@@ -208,6 +210,7 @@ public class DriverControlled extends LinearOpMode {
                 powerRata *= -1;
                 isHeldRata = true;
                 if(powerRata > 0){
+                    duckMotorPower = 0.6;
                     rata.rotate(duckMotorPower);
                 }
                 else
@@ -219,6 +222,17 @@ public class DriverControlled extends LinearOpMode {
                     rata.rotate(duckMotorPower);
                 }
             }
+            */
+            if (gamepad1.x && isHeldRata == 0) {
+                isHeldRata = 1;
+                if (stateRata == -1) {
+                    stateRata = 0;
+                    rata.rotate(0.0);
+                } else {
+                    stateRata = -1;
+                    rata.rotate(0.7);
+                }
+            } else if (!gamepad1.x) isHeldRata = 0;
 
             idle();
             telemetry.addData("Elapsed time:",timp.toString());
