@@ -81,7 +81,7 @@ import org.firstinspires.ftc.teamcode.hardware.Glisiere;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Un autonom frumos jos", group="Autonom")
+@Autonomous(name="Un autonom frumos sus (Demo)", group="Autonom")
 //@Disabled
 public class AutonomSus3 extends LinearOpMode {
 
@@ -199,7 +199,7 @@ public class AutonomSus3 extends LinearOpMode {
 
         walk(500);
 
-        glisiere.setToPosition(1);
+        glisiere.setToPosition(3);
 
         sleep(1000);
         cupa.toggleCupa();

@@ -37,7 +37,7 @@ public class DriverControlled extends LinearOpMode {
 
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
-    private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false;
+    private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isCupaProcessing = false;
     private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false;
     private int isHeldRata = 0;
     private String facingData = "Forwards";
@@ -169,11 +169,12 @@ public class DriverControlled extends LinearOpMode {
             telemetry.addData("Glisiera Ticks:", glisiere.getTicks());
 
             //Cupa
-            if (gamepad2.y && !isCupaHeld) {
+            if (gamepad2.y && !isCupaHeld && !isCupaProcessing) {
                 cupa.toggleCupa();
                 timerGli.reset();
                 isCupaHeld = true;
                 boolTimer = true;
+                isCupaProcessing = true;
             }
             else if (!gamepad2.y) isCupaHeld = false;
             if(timerGli.milliseconds() >= 1000 &&  boolTimer) {
@@ -186,6 +187,7 @@ public class DriverControlled extends LinearOpMode {
                 maturica.toggleCollect();
                 isTransit = false;
                 isHeldGlisiere = true;
+                isCupaProcessing = false;
             }
 
 

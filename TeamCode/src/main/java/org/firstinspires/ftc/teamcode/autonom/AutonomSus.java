@@ -1,38 +1,7 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode.autonom;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -41,48 +10,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 
-/**
- * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that you have a Modern Robotics I2C gyro with the name "gyro"
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *  This code requires that the drive Motors have been configured such that a positive
- *  power command moves them forward, and causes the encoders to count UP.
- *
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- *  In order to calibrate the Gyro correctly, the robot must remain stationary during calibration.
- *  This is performed when the INIT button is pressed on the Driver Station.
- *  This code assumes that the robot is stationary when the INIT button is pressed.
- *  If this is not the case, then the INIT should be performed again.
- *
- *  Note: in this example, all angles are referenced to the initial coordinate frame set during the
- *  the Gyro Calibration process, or whenever the program issues a resetZAxisIntegrator() call on the Gyro.
- *
- *  The angle of movement/rotation is assumed to be a standardized rotation around the robot Z axis,
- *  which means that a Positive rotation is Counter Clock Wise, looking down on the field.
- *  This is consistent with the FTC field coordinate conventions set out in the document:
- *  ftc_app\doc\tutorial\FTC_FieldCoordinateSystemDefinition.pdf
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+import java.util.List;
 
 @Autonomous(name="Un autonom frumos sus", group="Autonom")
-//@Disabled
 public class AutonomSus extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -94,8 +35,6 @@ public class AutonomSus extends LinearOpMode {
     static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_CM * 3.1415);
 
-    // These constants define the desired driving/control characteristics
-    // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.1;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.45;     // Nominal half speed for better accuracy.
 
@@ -109,13 +48,22 @@ public class AutonomSus extends LinearOpMode {
     private double MOTOR_TICK_COUNT;
     private DcMotor rate;
     private double circumference = 96.0 * Math.PI;
+
+    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
+    private static final String[] LABELS = {
+            "Duck"/*,
+            "Team Marker"*/
+    };
+
+    private static final String VUFORIA_KEY = Config.VuforiaKey;
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+    private enum Locations {Top, Middle, Bottom};
+    private Locations teamMarkerLocation = null;
+
     @Override
     public void runOpMode() {
 
-        /*
-         * Initialize the standard drive system variables.
-         * The init() method of the hardware class does most of the work here
-         */
         leftFront = hardwareMap.dcMotor.get(Config.left_front);
         leftBack = hardwareMap.dcMotor.get(Config.left_back);
         rightFront = hardwareMap.dcMotor.get(Config.right_front);
@@ -133,6 +81,14 @@ public class AutonomSus extends LinearOpMode {
 
         motorMatura = hardwareMap.get(DcMotorEx.class, Config.matura);
         rate = hardwareMap.dcMotor.get(Config.rate);
+
+        initVuforia();
+        initTfod();
+
+        if (tfod != null) {
+            tfod.activate();
+            tfod.setZoom(1.5, 16.0/9.0);
+        }
 
         MOTOR_TICK_COUNT = leftFront.getMotorType().getTicksPerRev();
 
@@ -152,6 +108,7 @@ public class AutonomSus extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
 
         timer.reset();
+
         gyro.initialize(parameters);
         while (!gyro.isGyroCalibrated() && timer.milliseconds() < 1000) {
             telemetry.addData("Gyro", "Calibrating...");
@@ -160,14 +117,13 @@ public class AutonomSus extends LinearOpMode {
             idle();
         }
 
-        // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        telemetry.addData(">", "Robot Ready.");    //
+        telemetry.addData(">", "Robot Ready.");
         telemetry.update();
 
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -175,46 +131,71 @@ public class AutonomSus extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Wait for the game to start (Display Gyro value), and reset gyro before we move..
+        int pos = 0;
         while (!isStarted()) {
-            telemetry.addData("Unghi1 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
-            telemetry.addData("Unghi2 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle);
-            telemetry.addData("Unghi3 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle);
-            telemetry.update();
+
+            if (tfod != null) {
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                    int i = 0;
+                    teamMarkerLocation = Locations.Bottom;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel() == "Duck") {
+                            telemetry.addData("Team Marker:", "Detected");
+                            if (((recognition.getRight() - recognition.getLeft()) / 2 + recognition.getLeft()) < (recognition.getImageWidth() / 2))
+                                teamMarkerLocation = Locations.Middle;
+                            else if (((recognition.getRight() - recognition.getLeft()) / 2 + recognition.getLeft()) >= (recognition.getImageWidth() / 2))
+                                teamMarkerLocation = Locations.Top;
+                            break;
+                        }
+                        if (recognition.getLabel() != "Duck")
+                            telemetry.addData("Team Marker:", "Not detected");
+                        i++;
+                    }
+                    telemetry.addData("Marker Location:", teamMarkerLocation.toString());
+                    telemetry.update();
+                }
+            }
         }
 
+        if(teamMarkerLocation == Locations.Bottom) pos = 1;
+        else if(teamMarkerLocation == Locations.Middle) pos = 2;
+        else pos = 3;
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // Put a hold after each turn
-        //gyroDrive(DRIVE_SPEED, 1.0, 0.0);    // Drive FWD 48 inches
-        //gyroTurn( TURN_SPEED, 45.0);         // Turn  CCW to -45 Degrees
-        //gyroHold( TURN_SPEED, 45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-        //gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
-        //gyroTurn( TURN_SPEED,  -45.0);         // Turn  CW  to  45 Degrees
-        //gyroHold( TURN_SPEED,  -45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
-        //gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
-        //gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
-        //gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
+        strafe(380);
+        if(pos == 1)
+            walk(550);
+        else if( pos == 2)
+            walk(500);
+        else
+            walk(475);
 
-        walk(500);
-
-        glisiere.setToPosition(3);
+        glisiere.setToPosition(pos);
 
         sleep(1000);
         cupa.toggleCupa();
         sleep(800);
         cupa.toggleCupa();
-        sleep(500);
+        sleep(600);
         glisiere.setToPosition(0);
         sleep(500);
         reset();
-        walk(-50);
+        if(pos == 1)
+            walk(-100);
+        else if( pos == 2)
+            walk(-75);
+        else
+            walk(-50);
         reset();
-        gyroTurn(TURN_SPEED, 112.0);
+        if(pos == 1)
+            gyroTurn(TURN_SPEED, 112.0);
+        else
+            gyroTurn(TURN_SPEED, 109.0);
         motorMatura.setPower(-0.5);
         walkToDuck(-700);
-        sleep(300);
+        sleep(100);
         reset();
         gyroTurn(TURN_SPEED, 65.0);
         walkSlow(255);
@@ -236,8 +217,8 @@ public class AutonomSus extends LinearOpMode {
         gyroTurn(TURN_SPEED, 90.0);
         strafe(-1100);
         motorMatura.setPower(-1.0);
-        walk(-1100);
-        sleep(1000);
+        run(-1100);
+        sleep(300);
         glisiere.setToPosition(1);
         motorMatura.setPower(1.0);
         glisiere.setToPosition(3);
@@ -255,18 +236,37 @@ public class AutonomSus extends LinearOpMode {
         cupa.toggleCupa();
         sleep(500);
         glisiere.setToPosition(0);
-        walk(-320);
+        run(-320);
         reset();
         gyroTurn(TURN_SPEED, 90.0);
-        strafe(-300);
-        walk(-1420);
-        motorMatura.setPower(-1.0);
+        strafeFast(-300);
+        run(-1420);
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
     public double getHeading() {
         return gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+    }
+
+    private void initVuforia() {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+    }
+
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.5f;
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.inputSize = 320;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 
     private void reset() {
@@ -286,15 +286,14 @@ public class AutonomSus extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
-        double rate = 1 / target;
         leftFront.setTargetPosition(target);
         leftBack.setTargetPosition(target);
         rightFront.setTargetPosition(target);
         rightBack.setTargetPosition(target);
-        leftFront.setPower(0.35);
-        leftBack.setPower(0.35);
-        rightFront.setPower(0.35);
-        rightBack.setPower(0.35);
+        leftFront.setPower(0.55);
+        leftBack.setPower(0.55);
+        rightFront.setPower(0.55);
+        rightBack.setPower(0.55);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -303,10 +302,10 @@ public class AutonomSus extends LinearOpMode {
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();
             if(leftFront.getCurrentPosition() % 25 == 0 || leftFront.getCurrentPosition() % -25 == 0) {
-                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.3);
-                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.3);
-                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.3);
-                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.3);
+                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.25);
+                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.25);
+                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.25);
+                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.25);
             }
             if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
                 leftFront.setPower(0.4);
@@ -327,7 +326,6 @@ public class AutonomSus extends LinearOpMode {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
-        double rate = 1 / target;
         leftFront.setTargetPosition(target);
         leftBack.setTargetPosition(target);
         rightFront.setTargetPosition(target);
@@ -433,10 +431,67 @@ public class AutonomSus extends LinearOpMode {
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftFront.setPower(0.5);
-        leftBack.setPower(0.5);
-        rightFront.setPower(0.5);
-        rightBack.setPower(0.5);
+        leftFront.setPower(0.8);
+        leftBack.setPower(0.8);
+        rightFront.setPower(0.8);
+        rightBack.setPower(0.8);
+        while(leftFront.isBusy()&&rightFront.isBusy()){
+            telemetry.addData("Status", "Walking using encoders");
+            telemetry.update();
+        }
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    public void strafeFast(int distance)
+    {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
+        leftFront.setTargetPosition(target);
+        leftBack.setTargetPosition(-target);
+        rightFront.setTargetPosition(-target);
+        rightBack.setTargetPosition(target);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setPower(1);
+        leftBack.setPower(1);
+        rightFront.setPower(1);
+        rightBack.setPower(1);
+        while(leftFront.isBusy()&&rightFront.isBusy()){
+            telemetry.addData("Status", "Walking using encoders");
+            telemetry.update();
+        }
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+    }
+
+    public void run(int distance) {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int target =(int) (distance * MOTOR_TICK_COUNT / (circumference * 3));
+        leftFront.setTargetPosition(target);
+        leftBack.setTargetPosition(target);
+        rightFront.setTargetPosition(target);
+        rightBack.setTargetPosition(target);
+        leftFront.setPower(1);
+        leftBack.setPower(1);
+        rightFront.setPower(1);
+        rightBack.setPower(1);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while(leftFront.isBusy()&&rightFront.isBusy()){
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();
