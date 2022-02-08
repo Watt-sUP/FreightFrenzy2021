@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@TeleOp(name = "Concept:TensorFlow Object Detection", group = "Concept")
 public class TensorflowConcept extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
