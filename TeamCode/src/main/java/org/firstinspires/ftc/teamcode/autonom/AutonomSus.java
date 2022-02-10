@@ -51,8 +51,7 @@ public class AutonomSus extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
-            "Duck",
-            "Team Marker"
+            "Duck"
     };
 
     private static final String VUFORIA_KEY = Config.VuforiaKey;
@@ -87,14 +86,14 @@ public class AutonomSus extends LinearOpMode {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.5, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         MOTOR_TICK_COUNT = leftFront.getMotorType().getTicksPerRev();
 
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
         Cupa cupa = new Cupa(hardwareMap, telemetry);
-
+        cupa.servo.setPosition(0.0);
 
         gyro = hardwareMap.get(BNO055IMU.class, Config.imu);
 
@@ -144,10 +143,12 @@ public class AutonomSus extends LinearOpMode {
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel() == "Duck") {
                             telemetry.addData("Team Marker:", "Detected");
-                            if (((recognition.getRight() - recognition.getLeft()) / 2 + recognition.getLeft()) < (recognition.getImageWidth() / 2))
-                                teamMarkerLocation = Locations.Middle;
-                            else if (((recognition.getRight() - recognition.getLeft()) / 2 + recognition.getLeft()) >= (recognition.getImageWidth() / 2))
-                                teamMarkerLocation = Locations.Top;
+                            if(((recognition.getTop() + recognition.getBottom()) / 2) < (recognition.getImageHeight() * 0.33)) {
+                                if (((recognition.getRight() + recognition.getLeft()) / 2) < (recognition.getImageWidth() / 5))
+                                    teamMarkerLocation = Locations.Middle;
+                                else if (((recognition.getRight() + recognition.getLeft()) / 2) >= (recognition.getImageWidth() / 5))
+                                    teamMarkerLocation = Locations.Top;
+                            }
                             break;
                         }
                         if (recognition.getLabel() != "Duck")
@@ -155,92 +156,212 @@ public class AutonomSus extends LinearOpMode {
                         i++;
                     }
                     telemetry.addData("Marker Location:", teamMarkerLocation.toString());
+                    telemetry.addData("Unghi1 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+                    telemetry.addData("Unghi2 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle);
+                    telemetry.addData("Unghi3 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle);
                     telemetry.update();
                 }
             }
         }
-
-        if(teamMarkerLocation == Locations.Bottom) pos = 1;
-        else if(teamMarkerLocation == Locations.Middle) pos = 2;
-        else pos = 3;
-
-        strafe(380);
-        if(pos == 1)
-            walk(550);
-        else if( pos == 2)
+        if(teamMarkerLocation == Locations.Bottom) {
             walk(500);
-        else
-            walk(475);
 
-        glisiere.setToPosition(pos);
+            glisiere.setToPosition(1);
 
-        sleep(1000);
-        cupa.toggleCupa();
-        sleep(800);
-        cupa.toggleCupa();
-        sleep(600);
-        glisiere.setToPosition(0);
-        sleep(500);
-        reset();
-        if(pos == 1)
-            walk(-100);
-        else if( pos == 2)
-            walk(-75);
-        else
+            sleep(1000);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+            glisiere.setToPosition(0);
+            sleep(500);
+            reset();
             walk(-50);
-        reset();
-        if(pos == 1)
+            reset();
             gyroTurn(TURN_SPEED, 112.0);
-        else
-            gyroTurn(TURN_SPEED, 109.0);
-        motorMatura.setPower(-0.5);
-        walkToDuck(-700);
-        sleep(100);
-        reset();
-        gyroTurn(TURN_SPEED, 65.0);
-        walkSlow(255);
+            motorMatura.setPower(-0.5);
+            walkToDuck(-700);
+            sleep(300);
+            reset();
+            gyroTurn(TURN_SPEED, 65.0);
+            walkSlow(255);
 
-        glisiere.setToPosition(3);
+            glisiere.setToPosition(3);
 
-        sleep(600);
-        cupa.toggleCupa();
-        sleep(800);
-        cupa.toggleCupa();
-        sleep(500);
+            sleep(600);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
 
 //        glisiere.motor.setPower(0);
 
-        glisiere.setToPosition(0);
-        reset();
-        walkSlow(-50);
-        reset();
-        gyroTurn(TURN_SPEED, 90.0);
-        strafe(-1100);
-        motorMatura.setPower(-1.0);
-        run(-1100);
-        sleep(300);
-        glisiere.setToPosition(1);
-        motorMatura.setPower(1.0);
-        glisiere.setToPosition(3);
-        walk(1500);
-        strafe(300);
-        reset();
-        gyroTurn(TURN_SPEED, 0.0);
-        //turn(-945);
-        walk(350);
+            glisiere.setToPosition(0);
+            reset();
+            walkSlow(-50);
+            reset();
+            gyroTurn(TURN_SPEED, 90.0);
+            strafe(-1100);
+            motorMatura.setPower(-1.0);
+            walk(-1100);
+            sleep(500);
+            glisiere.setToPosition(1);
+            motorMatura.setPower(1.0);
+            glisiere.setToPosition(3);
+            walk(1500);
+            strafe(300);
+            reset();
+            gyroTurn(TURN_SPEED, 0.0);
+            //turn(-945);
+            walk(350);
 
 
-        sleep(600);
-        cupa.toggleCupa();
-        sleep(800);
-        cupa.toggleCupa();
-        sleep(500);
-        glisiere.setToPosition(0);
-        run(-320);
-        reset();
-        gyroTurn(TURN_SPEED, 90.0);
-        strafeFast(-300);
-        run(-1420);
+            sleep(600);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+            glisiere.setToPosition(0);
+            walk(-320);
+            reset();
+            gyroTurn(TURN_SPEED, 90.0);
+            strafe(-300);
+            walk(-1420);
+            motorMatura.setPower(-1.0);
+        }
+        else if(teamMarkerLocation == Locations.Middle) {
+            walk(500);
+
+            glisiere.setToPosition(2);
+
+            sleep(1000);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+            glisiere.setToPosition(0);
+            sleep(500);
+            reset();
+            walk(-50);
+            reset();
+            gyroTurn(TURN_SPEED, 112.0);
+            motorMatura.setPower(-0.5);
+            walkToDuck(-700);
+            sleep(300);
+            reset();
+            gyroTurn(TURN_SPEED, 65.0);
+            walkSlow(255);
+
+            glisiere.setToPosition(3);
+
+            sleep(600);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+
+//        glisiere.motor.setPower(0);
+
+            glisiere.setToPosition(0);
+            reset();
+            walkSlow(-50);
+            reset();
+            gyroTurn(TURN_SPEED, 90.0);
+            strafe(-1100);
+            motorMatura.setPower(-1.0);
+            walk(-1100);
+            sleep(500);
+            glisiere.setToPosition(1);
+            motorMatura.setPower(1.0);
+            glisiere.setToPosition(3);
+            walk(1500);
+            strafe(300);
+            reset();
+            gyroTurn(TURN_SPEED, 0.0);
+            //turn(-945);
+            walk(350);
+
+
+            sleep(600);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+            glisiere.setToPosition(0);
+            walk(-320);
+            reset();
+            gyroTurn(TURN_SPEED, 90.0);
+            strafe(-300);
+            walk(-1420);
+            motorMatura.setPower(-1.0);
+        }
+        else {
+            walk(500);
+
+            glisiere.setToPosition(3);
+
+            sleep(1000);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+            glisiere.setToPosition(0);
+            sleep(500);
+            reset();
+            walk(-50);
+            reset();
+            gyroTurn(TURN_SPEED, 112.0);
+            motorMatura.setPower(-0.5);
+            walkToDuck(-700);
+            sleep(300);
+            reset();
+            gyroTurn(TURN_SPEED, 65.0);
+            walkSlow(255);
+
+            glisiere.setToPosition(3);
+
+            sleep(600);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+
+//        glisiere.motor.setPower(0);
+
+            glisiere.setToPosition(0);
+            reset();
+            walkSlow(-50);
+            reset();
+            gyroTurn(TURN_SPEED, 90.0);
+            strafe(-1100);
+            motorMatura.setPower(-1.0);
+            walk(-1100);
+            sleep(500);
+            glisiere.setToPosition(1);
+            motorMatura.setPower(1.0);
+            glisiere.setToPosition(3);
+            walk(1500);
+            strafe(300);
+            reset();
+            gyroTurn(TURN_SPEED, 0.0);
+            //turn(-945);
+            walk(350);
+
+
+            sleep(600);
+            cupa.toggleCupa();
+            sleep(800);
+            cupa.toggleCupa();
+            sleep(500);
+            glisiere.setToPosition(0);
+            walk(-320);
+            reset();
+            gyroTurn(TURN_SPEED, 90.0);
+            strafe(-300);
+            walk(-1420);
+            motorMatura.setPower(-1.0);
+        }
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
@@ -502,18 +623,6 @@ public class AutonomSus extends LinearOpMode {
         rightBack.setPower(0);
     }
 
-    /**
-     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Driver stops the opmode running.
-     *
-     * @param speed      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
-     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     */
     public void gyroDrive ( double speed,
                             double distance,
                             double angle) {
@@ -604,17 +713,6 @@ public class AutonomSus extends LinearOpMode {
         }
     }
 
-    /**
-     *  Method to spin on central axis to point in a new direction.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the heading (angle)
-     *  2) Driver stops the opmode running.
-     *
-     * @param speed Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     */
     public void gyroTurn (  double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
@@ -624,16 +722,6 @@ public class AutonomSus extends LinearOpMode {
         }
     }
 
-    /**
-     *  Method to obtain & hold a heading for a finite amount of time
-     *  Move will stop once the requested time has elapsed
-     *
-     * @param speed      Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     * @param holdTime   Length of time (in seconds) to hold the specified heading.
-     */
     public void gyroHold( double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
@@ -653,16 +741,6 @@ public class AutonomSus extends LinearOpMode {
         rightBack.setPower(0);
     }
 
-    /**
-     * Perform one cycle of closed loop heading control.
-     *
-     * @param speed     Desired speed of turn.
-     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
-     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                  If a relative angle is required, add/subtract from current heading.
-     * @param PCoeff    Proportional Gain coefficient
-     * @return
-     */
     boolean onHeading(double speed, double angle, double PCoeff) {
         double   error ;
         double   steer ;
@@ -700,12 +778,6 @@ public class AutonomSus extends LinearOpMode {
         return onTarget;
     }
 
-    /**
-     * getError determines the error between the target angle and the robot's current heading
-     * @param   targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
-     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
-     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
-     */
     public double getError(double targetAngle) {
 
         double robotError;
@@ -717,12 +789,6 @@ public class AutonomSus extends LinearOpMode {
         return robotError;
     }
 
-    /**
-     * returns desired steering force.  +/- 1 range.  +ve = steer left
-     * @param error   Error angle in robot relative degrees
-     * @param PCoeff  Proportional Gain Coefficient
-     * @return
-     */
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }

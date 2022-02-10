@@ -65,6 +65,8 @@ public class DriverControlled extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        cupa.servo.setPosition(0.0);
+
         waitForStart();
         timp.reset();
         timerGli.reset();
