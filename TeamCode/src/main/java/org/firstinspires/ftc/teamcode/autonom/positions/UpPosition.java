@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.autonom;
+package org.firstinspires.ftc.teamcode.autonom.positions;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -48,9 +48,9 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 
-@Autonomous(name="Un autonom frumos sus (Demo)", group="Autonom")
-//@Disabled
-public class AutonomSus3 extends LinearOpMode {
+@Autonomous(name="Pozitia sus", group="Autonom")
+@Disabled
+public class UpPosition extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware

@@ -27,10 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.autonom;
+package org.firstinspires.ftc.teamcode.autonom.positions;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -48,9 +47,9 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 
-@Autonomous(name="Un autonom frumos sus (Demo)", group="Autonom")
-//@Disabled
-public class AutonomSus3 extends LinearOpMode {
+@Autonomous(name="Pozitia jos", group="Autonom")
+@Disabled
+public class DownPosition extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -166,7 +165,7 @@ public class AutonomSus3 extends LinearOpMode {
 
         walk(500);
 
-        glisiere.setToPosition(3);
+        glisiere.setToPosition(1);
 
         sleep(1000);
         cupa.toggleCupa();

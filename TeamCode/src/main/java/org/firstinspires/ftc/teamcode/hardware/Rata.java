@@ -9,11 +9,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Rata {
     private Telemetry telemetry;
     public DcMotor motor;
+    private double currentPower;
 
     public Rata(HardwareMap hardwareMap, Telemetry telemetry) {
         motor = hardwareMap.dcMotor.get(Config.rate);
-        //motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         this.telemetry = telemetry;

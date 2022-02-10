@@ -37,9 +37,9 @@ public class DriverControlled extends LinearOpMode {
 
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
-    private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isCupaProcessing = false;
+    private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isCupaProcessing = false, isDown = true;
     private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false;
-    private int isHeldRata = 0;
+    private boolean isHeldRata = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
     private int powerRata = -1, stateRata = -1;
@@ -131,7 +131,6 @@ public class DriverControlled extends LinearOpMode {
             ruleta.move(gamepad2.left_stick_y,gamepad2.left_stick_x,gamepad2.right_stick_y);
 
 
-
             //Maturica
             if (gamepad2.b && !isHeldMaturica) {
                 isHeldMaturica = true;
@@ -147,29 +146,34 @@ public class DriverControlled extends LinearOpMode {
             //Glisiere
            if (gamepad2.x && !isHeldGlisiere) {
                 glisiere.setToPosition(0);
+                isDown = true;
                 isHeldGlisiere = true;
             }
             if (gamepad2.right_trigger > 0.3 && !isHeldGlisiere) {
                 glisiere.setToPosition(1);
                 maturica.toggleEject();
+                isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_trigger > 0.3 && !isHeldGlisiere) {
                 glisiere.setToPosition(2);
                 maturica.toggleEject();
+                isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.right_bumper && !isHeldGlisiere) {
                 glisiere.setToPosition(3);
                 maturica.toggleEject();
+                isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_bumper && !isHeldGlisiere) {
                 glisiere.setToPosition(4);
                 maturica.toggleEject();
+                isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isHeldGlisiere = false;
             telemetry.addData("Glisiera Ticks:", glisiere.getTicks());
 
             //Cupa
-            if (gamepad2.y && !isCupaHeld && !isCupaProcessing) {
+            if (gamepad2.y && !isCupaHeld && !isCupaProcessing && !isDown) {
                 cupa.toggleCupa();
                 timerGli.reset();
                 isCupaHeld = true;
@@ -177,13 +181,14 @@ public class DriverControlled extends LinearOpMode {
                 isCupaProcessing = true;
             }
             else if (!gamepad2.y) isCupaHeld = false;
-            if(timerGli.milliseconds() >= 1000 &&  boolTimer) {
+            if(timerGli.milliseconds() >= 850 &&  boolTimer) {
                 cupa.toggleCupa();
                 boolTimer = false;
                 isTransit = true;
             }
-            if(timerGli.milliseconds() >= 2022 && isTransit) {
+            if(timerGli.milliseconds() >= 1000 && isTransit) {
                 glisiere.setToPosition(0);
+                isDown = true;
                 maturica.toggleCollect();
                 isTransit = false;
                 isHeldGlisiere = true;
@@ -192,53 +197,31 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Rata
-            /*
+
+            double startingPower = 0;
+            long start_time = System.nanoTime();
+
             if (gamepad1.x && !isHeldRata) {
-                powerRata *= -1;
-
-                if(powerRata > 0){
-                    rata.rotate(0.75);
-                }
-                else
-                    rata.rotate(0.0);
-
-//            if(rata.motor.isBusy()) {
-//                if(rata.motor.getCurrentPosition() % 50 <= 10 && rata.motor.getPower() < 1.0) {
-//                    rata.rotate(Math.abs(rata.motor.getPower() + 0.07) * -1.0);
-//               }
-            } else isHeldRata = false;
-
-            if (gamepad2.x && !isHeldRata) {
-                powerRata *= -1;
                 isHeldRata = true;
-                if(powerRata > 0){
-                    duckMotorPower = 0.6;
-                    rata.rotate(duckMotorPower);
-                }
-                else
-                    rata.rotate(0.0);
-            } else isHeldRata = false;
-            if(rata.motor.isBusy()){
-                if(duckMotorPower < 1) {
-                    duckMotorPower += 0.05;
-                    rata.rotate(duckMotorPower);
-                }
-            }
-            */
-            if (gamepad1.x && isHeldRata == 0) {
-                isHeldRata = 1;
+                startingPower = 0.7;
                 if (stateRata == -1) {
                     stateRata = 0;
                     rata.rotate(0.0);
                 } else {
                     stateRata = -1;
-                    rata.rotate(0.7);
+                    rata.rotate(startingPower);
                 }
-            } else if (!gamepad1.x) isHeldRata = 0;
+            } else if (!gamepad1.x) isHeldRata = false;
+
+            if(rata.motor.isBusy() && stateRata == -1) {
+                long end_time = System.nanoTime();
+                double difference = (end_time - start_time) / 1e6;
+
+                if(difference >= 500 && difference <= 1500 && (difference - 1000) > 0) rata.rotate(startingPower + ((difference - 1000) / 30));
+            }
 
             idle();
             telemetry.addData("Elapsed time:",timp.toString());
-            telemetry.addData("Putere rata:", rata.motor.getPower());
             telemetry.update();
         }
         glisiere.motor.setPower(0);

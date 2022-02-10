@@ -26,6 +26,10 @@ public class Glisiere {
         else motor.setPower(0.8);
     }
 
+    public double getPosition() {
+        return motor.getCurrentPosition();
+    }
+
     public int getTicks() {
         return motor.getCurrentPosition();
     }
