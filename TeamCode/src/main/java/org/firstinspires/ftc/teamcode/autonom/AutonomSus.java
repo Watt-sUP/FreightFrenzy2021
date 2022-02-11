@@ -49,9 +49,9 @@ public class AutonomSus extends LinearOpMode {
     private DcMotor rate;
     private double circumference = 96.0 * Math.PI;
 
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
+    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelyellow_2.tflite";
     private static final String[] LABELS = {
-            "Duck"
+            "Team Marker"
     };
 
     private static final String VUFORIA_KEY = Config.VuforiaKey;
@@ -59,6 +59,7 @@ public class AutonomSus extends LinearOpMode {
     private TFObjectDetector tfod;
     private enum Locations {Top, Middle, Bottom};
     private Locations teamMarkerLocation = null;
+    private double confidence;
 
     @Override
     public void runOpMode() {
@@ -136,26 +137,32 @@ public class AutonomSus extends LinearOpMode {
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    telemetry.addData("# Object(s) Detected", updatedRecognitions.size());
 
+                    confidence = 0.0;
                     int i = 0;
                     teamMarkerLocation = Locations.Bottom;
                     for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel() == "Duck") {
+                        if (recognition.getLabel() == "Team Marker") {
                             telemetry.addData("Team Marker:", "Detected");
-                            if(((recognition.getTop() + recognition.getBottom()) / 2) < (recognition.getImageHeight() * 0.33)) {
-                                if (((recognition.getRight() + recognition.getLeft()) / 2) < (recognition.getImageWidth() / 5))
+                            if(((recognition.getBottom() - recognition.getTop())) < (recognition.getImageHeight() * 0.5)) {
+                                if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() / 5) && recognition.getConfidence() > confidence) {
                                     teamMarkerLocation = Locations.Middle;
-                                else if (((recognition.getRight() + recognition.getLeft()) / 2) >= (recognition.getImageWidth() / 5))
+                                    confidence = recognition.getConfidence();
+                                }
+                                else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() >= (recognition.getImageWidth() / 5) && recognition.getConfidence() > confidence) {
                                     teamMarkerLocation = Locations.Top;
+                                    confidence = recognition.getConfidence();
+                                }
                             }
                             break;
                         }
-                        if (recognition.getLabel() != "Duck")
+                        if (recognition.getLabel() != "Team Marker")
                             telemetry.addData("Team Marker:", "Not detected");
                         i++;
                     }
                     telemetry.addData("Marker Location:", teamMarkerLocation.toString());
+                    if(teamMarkerLocation != Locations.Bottom) telemetry.addData("Localization Confidence ", (int) confidence * 100);
                     telemetry.addData("Unghi1 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
                     telemetry.addData("Unghi2 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle);
                     telemetry.addData("Unghi3 :", gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).thirdAngle);
@@ -163,16 +170,19 @@ public class AutonomSus extends LinearOpMode {
                 }
             }
         }
-        if(teamMarkerLocation == Locations.Bottom) {
-            walk(500);
 
+        if(tfod != null) tfod.shutdown();
+        if(teamMarkerLocation == Locations.Bottom) {
+            walk(600);
+            reset();
+            //gyroTurn(TURN_SPEED, -10.0);
             glisiere.setToPosition(1);
 
             sleep(1000);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
             glisiere.setToPosition(0);
             sleep(500);
             reset();
@@ -180,19 +190,19 @@ public class AutonomSus extends LinearOpMode {
             reset();
             gyroTurn(TURN_SPEED, 112.0);
             motorMatura.setPower(-0.5);
-            walkToDuck(-700);
+            walkToDuck(-450);
             sleep(300);
             reset();
             gyroTurn(TURN_SPEED, 65.0);
-            walkSlow(255);
+            walkSlow(5);
 
             glisiere.setToPosition(3);
 
             sleep(600);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
 
 //        glisiere.motor.setPower(0);
 
@@ -218,15 +228,15 @@ public class AutonomSus extends LinearOpMode {
 
             sleep(600);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
             glisiere.setToPosition(0);
             walk(-320);
             reset();
             gyroTurn(TURN_SPEED, 90.0);
             strafe(-300);
-            walk(-1420);
+            walk(-1500);
             motorMatura.setPower(-1.0);
         }
         else if(teamMarkerLocation == Locations.Middle) {
@@ -236,9 +246,9 @@ public class AutonomSus extends LinearOpMode {
 
             sleep(1000);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
             glisiere.setToPosition(0);
             sleep(500);
             reset();
@@ -246,19 +256,19 @@ public class AutonomSus extends LinearOpMode {
             reset();
             gyroTurn(TURN_SPEED, 112.0);
             motorMatura.setPower(-0.5);
-            walkToDuck(-700);
+            walkToDuck(-600);
             sleep(300);
             reset();
             gyroTurn(TURN_SPEED, 65.0);
-            walkSlow(255);
+            walkSlow(155);
 
             glisiere.setToPosition(3);
 
             sleep(600);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
 
 //        glisiere.motor.setPower(0);
 
@@ -284,9 +294,9 @@ public class AutonomSus extends LinearOpMode {
 
             sleep(600);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
             glisiere.setToPosition(0);
             walk(-320);
             reset();
@@ -297,14 +307,15 @@ public class AutonomSus extends LinearOpMode {
         }
         else {
             walk(500);
-
+            reset();
+            gyroTurn(TURN_SPEED, -10.0);
             glisiere.setToPosition(3);
 
             sleep(1000);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
             glisiere.setToPosition(0);
             sleep(500);
             reset();
@@ -312,7 +323,7 @@ public class AutonomSus extends LinearOpMode {
             reset();
             gyroTurn(TURN_SPEED, 112.0);
             motorMatura.setPower(-0.5);
-            walkToDuck(-700);
+            walkToDuck(-750);
             sleep(300);
             reset();
             gyroTurn(TURN_SPEED, 65.0);
@@ -322,9 +333,9 @@ public class AutonomSus extends LinearOpMode {
 
             sleep(600);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
 
 //        glisiere.motor.setPower(0);
 
@@ -350,9 +361,9 @@ public class AutonomSus extends LinearOpMode {
 
             sleep(600);
             cupa.toggleCupa();
-            sleep(800);
+            sleep(400);
             cupa.toggleCupa();
-            sleep(500);
+            sleep(200);
             glisiere.setToPosition(0);
             walk(-320);
             reset();
@@ -383,11 +394,11 @@ public class AutonomSus extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.3f;
+        tfodParameters.minResultConfidence = 0.7f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        tfod.loadModelFromFile(TFOD_MODEL_ASSET, LABELS);
     }
 
     private void reset() {
@@ -411,10 +422,10 @@ public class AutonomSus extends LinearOpMode {
         leftBack.setTargetPosition(target);
         rightFront.setTargetPosition(target);
         rightBack.setTargetPosition(target);
-        leftFront.setPower(0.55);
-        leftBack.setPower(0.55);
-        rightFront.setPower(0.55);
-        rightBack.setPower(0.55);
+        leftFront.setPower(0.35);
+        leftBack.setPower(0.35);
+        rightFront.setPower(0.35);
+        rightBack.setPower(0.35);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -423,10 +434,10 @@ public class AutonomSus extends LinearOpMode {
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();
             if(leftFront.getCurrentPosition() % 25 == 0 || leftFront.getCurrentPosition() % -25 == 0) {
-                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.25);
-                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.25);
-                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.25);
-                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.25);
+                leftFront.setPower(Math.abs(leftFront.getPower()) + 0.3);
+                leftBack.setPower(Math.abs(leftBack.getPower()) + 0.3);
+                rightFront.setPower(Math.abs(rightFront.getPower()) + 0.3);
+                rightBack.setPower(Math.abs(rightBack.getPower()) + 0.3);
             }
             if(Math.abs(leftFront.getCurrentPosition()) % - Math.abs(target) <= 20) {
                 leftFront.setPower(0.4);
@@ -552,10 +563,10 @@ public class AutonomSus extends LinearOpMode {
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftFront.setPower(0.8);
-        leftBack.setPower(0.8);
-        rightFront.setPower(0.8);
-        rightBack.setPower(0.8);
+        leftFront.setPower(0.75);
+        leftBack.setPower(0.75);
+        rightFront.setPower(0.75);
+        rightBack.setPower(0.75);
         while(leftFront.isBusy()&&rightFront.isBusy()){
             telemetry.addData("Status", "Walking using encoders");
             telemetry.update();

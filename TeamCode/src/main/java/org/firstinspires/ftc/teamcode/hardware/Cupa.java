@@ -8,13 +8,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Cupa {
     private Telemetry telemetry;
     public Servo servo;
-    private double downPosition = 0, upPosition = 0.5;
+    private double downPosition = 0, upPosition = 0.5, upMorePosition = 0.75;
     private double midPosition = 0.2; //Placeholder
     private State state;
 
     private enum State {
         Down,
-        Up
+        Up,
+        UpMore
     }
 
     public Cupa(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -37,8 +38,19 @@ public class Cupa {
         state = State.Up;
     }
 
+    private void upMore() {
+        servo.setPosition(upMorePosition);
+        state = State.UpMore;
+    }
+
+
     public void toggleCupa() {
         if(state == State.Up) down();
+        else up();
+    }
+
+    public void toggleCupaMore() {
+        if(state == State.UpMore) down();
         else up();
     }
 

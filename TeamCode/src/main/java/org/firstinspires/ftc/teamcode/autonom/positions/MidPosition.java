@@ -167,13 +167,13 @@ public class MidPosition extends LinearOpMode {
 
         glisiere.setToPosition(2);
 
-        sleep(1000);
+     //   sleep(1000);
         cupa.toggleCupa();
-        sleep(800);
+        sleep(600);
         cupa.toggleCupa();
-        sleep(500);
+     //   sleep(500);
         glisiere.setToPosition(0);
-        sleep(500);
+     //   sleep(500);
         reset();
         walk(-50);
         reset();
@@ -189,9 +189,9 @@ public class MidPosition extends LinearOpMode {
 
         sleep(600);
         cupa.toggleCupa();
-        sleep(800);
+        sleep(600);
         cupa.toggleCupa();
-        sleep(500);
+     //   sleep(500);
 
 //        glisiere.motor.setPower(0);
 
@@ -217,9 +217,9 @@ public class MidPosition extends LinearOpMode {
 
         sleep(600);
         cupa.toggleCupa();
-        sleep(800);
+        sleep(600);
         cupa.toggleCupa();
-        sleep(500);
+     //   sleep(500);
         glisiere.setToPosition(0);
         walk(-320);
         reset();
