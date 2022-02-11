@@ -94,7 +94,7 @@ public class AutonomSus extends LinearOpMode {
 
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
         Cupa cupa = new Cupa(hardwareMap, telemetry);
-        cupa.servo.setPosition(0.0);
+        cupa.servo.setPosition(0.01);
 
         gyro = hardwareMap.get(BNO055IMU.class, Config.imu);
 
@@ -173,27 +173,27 @@ public class AutonomSus extends LinearOpMode {
 
         if(tfod != null) tfod.shutdown();
         if(teamMarkerLocation == Locations.Bottom) {
-            walk(600);
             reset();
-            //gyroTurn(TURN_SPEED, -10.0);
+            gyroTurn(TURN_SPEED, -10.0);
+            walk(580);
             glisiere.setToPosition(1);
 
             sleep(1000);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
             glisiere.setToPosition(0);
             sleep(500);
             reset();
             walk(-50);
             reset();
-            gyroTurn(TURN_SPEED, 112.0);
+            gyroTurn(TURN_SPEED, 106.0);
             motorMatura.setPower(-0.5);
             walkToDuck(-450);
             sleep(300);
             reset();
-            gyroTurn(TURN_SPEED, 65.0);
+            gyroTurn(TURN_SPEED, 50.0);
             walkSlow(5);
 
             glisiere.setToPosition(3);
@@ -201,7 +201,7 @@ public class AutonomSus extends LinearOpMode {
             sleep(600);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
 
 //        glisiere.motor.setPower(0);
@@ -229,7 +229,7 @@ public class AutonomSus extends LinearOpMode {
             sleep(600);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
             glisiere.setToPosition(0);
             walk(-320);
@@ -242,12 +242,14 @@ public class AutonomSus extends LinearOpMode {
         else if(teamMarkerLocation == Locations.Middle) {
             walk(500);
 
+            reset();
+            gyroTurn(TURN_SPEED, -10);
             glisiere.setToPosition(2);
 
-            sleep(1000);
+            sleep(800);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
             glisiere.setToPosition(0);
             sleep(500);
@@ -267,7 +269,7 @@ public class AutonomSus extends LinearOpMode {
             sleep(600);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
 
 //        glisiere.motor.setPower(0);
@@ -295,7 +297,7 @@ public class AutonomSus extends LinearOpMode {
             sleep(600);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
             glisiere.setToPosition(0);
             walk(-320);
@@ -313,15 +315,15 @@ public class AutonomSus extends LinearOpMode {
 
             sleep(1000);
             cupa.toggleCupa();
-            sleep(400);
-            cupa.toggleCupa();
+            sleep(500);
+            cupa.toggleCupaMore();
             sleep(200);
             glisiere.setToPosition(0);
             sleep(500);
             reset();
             walk(-50);
             reset();
-            gyroTurn(TURN_SPEED, 112.0);
+            gyroTurn(TURN_SPEED, 105.0);
             motorMatura.setPower(-0.5);
             walkToDuck(-750);
             sleep(300);
@@ -334,7 +336,7 @@ public class AutonomSus extends LinearOpMode {
             sleep(600);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
 
 //        glisiere.motor.setPower(0);
@@ -362,14 +364,14 @@ public class AutonomSus extends LinearOpMode {
             sleep(600);
             cupa.toggleCupa();
             sleep(400);
-            cupa.toggleCupa();
+            cupa.toggleCupaMore();
             sleep(200);
             glisiere.setToPosition(0);
             walk(-320);
             reset();
             gyroTurn(TURN_SPEED, 90.0);
             strafe(-300);
-            walk(-1420);
+            walk(-1500);
             motorMatura.setPower(-1.0);
         }
 
