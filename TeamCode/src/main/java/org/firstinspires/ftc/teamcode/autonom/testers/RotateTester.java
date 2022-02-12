@@ -82,7 +82,7 @@ import org.firstinspires.ftc.teamcode.hardware.Glisiere;
  */
 
 @Autonomous(name="Rotate giroscop", group="Autonom")
-//@Disabled
+@Disabled
 public class RotateTester extends LinearOpMode {
 
     /* Declare OpMode members. */

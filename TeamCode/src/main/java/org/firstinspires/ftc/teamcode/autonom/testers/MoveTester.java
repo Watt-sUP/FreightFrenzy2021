@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonom.testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Runner;
 
 @Autonomous(name = "Move Tester", group = "Autonom")
+@Disabled
 public class MoveTester extends LinearOpMode {
 
     private Runner runner;

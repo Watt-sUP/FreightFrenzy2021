@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonom;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 import java.util.List;
 
 @Autonomous(name="Autonom cu tensor", group="Autonom")
+@Disabled
 public class AutonomSus2 extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Runner;
 
 @Autonomous(name = "Header Tester", group = "Autonom")
-//@Disabled
+@Disabled
 public class HeaderTester extends LinearOpMode {
 
     private Runner runner;

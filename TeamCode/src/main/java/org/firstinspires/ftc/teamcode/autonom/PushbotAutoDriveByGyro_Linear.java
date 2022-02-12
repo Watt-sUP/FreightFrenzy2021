@@ -82,7 +82,7 @@ import org.firstinspires.ftc.teamcode.hardware.Glisiere;
  */
 
 @Autonomous(name="Experiment giroscop", group="Autonom")
-//@Disabled
+@Disabled
 public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
