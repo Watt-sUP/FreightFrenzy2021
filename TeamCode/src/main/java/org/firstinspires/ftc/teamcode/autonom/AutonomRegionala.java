@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 import java.util.List;
 
 @Autonomous(name="Un autonom frumos (regionala)", group="Autonom")
-public class AutonomSus extends LinearOpMode {
+public class AutonomRegionala extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware

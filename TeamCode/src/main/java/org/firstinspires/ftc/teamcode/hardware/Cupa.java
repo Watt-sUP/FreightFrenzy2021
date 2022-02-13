@@ -9,7 +9,6 @@ public class Cupa {
     private Telemetry telemetry;
     public Servo servo;
     private double downPosition = 0.01, upPosition = 0.5, upMorePosition = 0.7;
-    private double midPosition = 0.2; //Placeholder
     private State state;
 
     private enum State {
