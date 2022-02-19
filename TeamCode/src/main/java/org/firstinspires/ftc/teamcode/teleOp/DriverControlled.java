@@ -2,12 +2,10 @@ package org.firstinspires.ftc.teamcode.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
 
 import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
@@ -42,8 +40,8 @@ public class DriverControlled extends LinearOpMode {
     private boolean isHeldRata = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
-    private int powerRata = -1, stateRata = -1;
-    private double duckMotorPower = 0.60;
+    private double powerRata = -1;
+    private int stateRata = -1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -86,8 +84,6 @@ public class DriverControlled extends LinearOpMode {
                 powerLimit = 0.3;
             } else if (gamepad1.left_trigger >= 0.3) {
                 powerLimit = 0.5;
-            } else if (gamepad1.right_trigger < 0.3 && gamepad1.left_trigger < 0.3) {
-                powerLimit = 1.0;
             }
             telemetry.addData("Power Limit:", powerLimit);
 
@@ -146,7 +142,7 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Glisiere
-           if (gamepad2.x && !isHeldGlisiere) {
+            if (gamepad2.x && !isHeldGlisiere) {
                 glisiere.setToPosition(0);
                 isDown = true;
                 isHeldGlisiere = true;
@@ -219,7 +215,8 @@ public class DriverControlled extends LinearOpMode {
                 long end_time = System.nanoTime();
                 double difference = (end_time - start_time) / 1e6;
 
-                if(difference >= 500 && difference <= 1500 && (difference - 1000) > 0) rata.rotate(startingPower + ((difference - 1000) / 30));
+                powerRata = startingPower + ((difference - 1000) / 30);
+                if(difference >= 500 && difference <= 1500 && (difference - 1000) > 0) rata.rotate(powerRata);
             }
 
             idle();
