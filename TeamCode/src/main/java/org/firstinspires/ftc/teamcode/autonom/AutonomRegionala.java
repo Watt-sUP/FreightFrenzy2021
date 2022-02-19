@@ -212,7 +212,7 @@ public class AutonomRegionala extends LinearOpMode {
             reset();
             gyroTurn(TURN_SPEED, 90.0);
             strafe(-1100);
-            motorMatura.setPower(-1.0);
+            motorMatura.setPower(-0.5);
             walk(-1100);
             sleep(500);
             glisiere.setToPosition(1);
@@ -235,7 +235,7 @@ public class AutonomRegionala extends LinearOpMode {
             walk(-320);
             reset();
             gyroTurn(TURN_SPEED, 90.0);
-            strafe(-300);
+            strafe(-325);
             walk(-1500);
             motorMatura.setPower(-1.0);
         }
@@ -281,7 +281,7 @@ public class AutonomRegionala extends LinearOpMode {
             reset();
             gyroTurn(TURN_SPEED, 90.0);
             strafe(-1100);
-            motorMatura.setPower(-1.0);
+            motorMatura.setPower(-0.5);
             walk(-1100);
             sleep(500);
             glisiere.setToPosition(1);
@@ -349,7 +349,7 @@ public class AutonomRegionala extends LinearOpMode {
             reset();
             gyroTurn(TURN_SPEED, 90.0);
             strafe(-1100);
-            motorMatura.setPower(-1.0);
+            motorMatura.setPower(-0.5);
             walk(-1100);
             sleep(500);
             glisiere.setToPosition(1);
