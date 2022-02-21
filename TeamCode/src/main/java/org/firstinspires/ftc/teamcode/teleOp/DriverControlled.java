@@ -40,8 +40,6 @@ public class DriverControlled extends LinearOpMode {
     private boolean isHeldRata = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
-    private double powerRata = -1;
-    private int stateRata = -1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -197,6 +195,8 @@ public class DriverControlled extends LinearOpMode {
             //Rata
 
             double startingPower = 0;
+            double powerRata;
+            int stateRata = -1;
             long start_time = System.nanoTime();
 
             if (gamepad1.x && !isHeldRata) {
