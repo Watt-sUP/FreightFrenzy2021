@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
+import org.firstinspires.ftc.teamcode.hardware.DeadWheels;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 
 import java.util.List;
@@ -68,7 +69,7 @@ public class AutonomRegionala extends LinearOpMode {
         leftBack = hardwareMap.dcMotor.get(Config.left_back);
         rightFront = hardwareMap.dcMotor.get(Config.right_front);
         rightBack = hardwareMap.dcMotor.get(Config.right_back);
-
+        DeadWheels wheels = new DeadWheels(hardwareMap, telemetry);
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -130,6 +131,8 @@ public class AutonomRegionala extends LinearOpMode {
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        wheels.setDown();
 
         int pos = 0;
         while (!isStarted()) {
@@ -212,7 +215,7 @@ public class AutonomRegionala extends LinearOpMode {
             reset();
             gyroTurn(TURN_SPEED, 90.0);
             strafe(-1100);
-            motorMatura.setPower(-0.5);
+            motorMatura.setPower(-0.7);
             walk(-1100);
             sleep(500);
             glisiere.setToPosition(1);
@@ -376,7 +379,6 @@ public class AutonomRegionala extends LinearOpMode {
             walk(-1500);
             motorMatura.setPower(-1.0);
         }
-
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
