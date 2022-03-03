@@ -6,9 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
-
-import java.util.List;
 
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
@@ -23,7 +20,6 @@ public class LocalizationTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
@@ -43,11 +39,6 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
-            List<Double> pos = ((StandardTrackingWheelLocalizer)(drive.getLocalizer())).getWheelPositions();
-            telemetry.addData("left", pos.get(0));
-            telemetry.addData("right", pos.get(1));
-            telemetry.addData("front", pos.get(2));
-            telemetry.addData("distance", StandardTrackingWheelLocalizer.encoderTicksToInches(StandardTrackingWheelLocalizer.leftEncoder.getCurrentPosition()));
             telemetry.update();
         }
     }

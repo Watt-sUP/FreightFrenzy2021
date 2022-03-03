@@ -69,7 +69,7 @@ public class AutonomRegionala extends LinearOpMode {
         leftBack = hardwareMap.dcMotor.get(Config.left_back);
         rightFront = hardwareMap.dcMotor.get(Config.right_front);
         rightBack = hardwareMap.dcMotor.get(Config.right_back);
-        DeadWheels wheels = new DeadWheels(hardwareMap, telemetry);
+        DeadWheels wheels = new DeadWheels(hardwareMap);
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);

@@ -39,7 +39,7 @@ public class DriverControlled extends LinearOpMode {
     //Declaratii
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
     private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isCupaProcessing = false, isDown = true;
-    private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isTransit = false;
+    private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isMagnet = false, isHeldDeget = false;
     private boolean isHeldRata = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
@@ -55,7 +55,7 @@ public class DriverControlled extends LinearOpMode {
         Cupa cupa = new Cupa(hardwareMap, telemetry);
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
         Ruleta ruleta = new Ruleta(hardwareMap, telemetry);
-        DeadWheels wheels = new DeadWheels(hardwareMap, telemetry);
+        DeadWheels wheels = new DeadWheels(hardwareMap);
         ElapsedTime timerGli = new ElapsedTime();
         ElapsedTime timerCol = new ElapsedTime();
 
@@ -150,20 +150,24 @@ public class DriverControlled extends LinearOpMode {
 
 
             //Ruleta
-            ruleta.move(gamepad2.left_stick_y,gamepad2.left_stick_x,gamepad2.right_stick_y);
+            ruleta.move(gamepad2.left_stick_y,gamepad2.left_stick_x);
 
+            if (gamepad2.right_stick_y > 0.03 && !isMagnet) {
+                isMagnet = true;
+                ruleta.toggleCupa();
+            } else if(gamepad2.right_stick_y < 0.03) isMagnet = false;
 
             //Maturica
-            if (gamepad2.b && !isHeldMaturica) {
-                isHeldMaturica = true;
-                maturica.toggleEject();
-            } else if (gamepad2.a && !isHeldMaturica) {
+            if (gamepad2.a && !isHeldMaturica) {
                 isHeldMaturica = true;
                 maturica.toggleCollect();
-            } else if (!gamepad2.a && !gamepad2.b) isHeldMaturica = false;
+            } else if (!gamepad2.a) isHeldMaturica = false;
             telemetry.addData("Maturica Status:", maturica.getMaturaData());
 
-
+            if (gamepad2.b && !isHeldDeget) {
+                isHeldDeget = true;
+                cupa.toggleDeget();
+            } else if (!gamepad2.b) isHeldDeget = false;
 
             //Glisiere
            if (gamepad2.x && !isHeldGlisiere) {
@@ -195,27 +199,13 @@ public class DriverControlled extends LinearOpMode {
             telemetry.addData("Glisiera Ticks:", glisiere.getTicks());
 
             //Cupa
-            if (gamepad2.y && !isCupaHeld && !isCupaProcessing && !isDown) {
+            if (gamepad2.y && !isCupaHeld) {
                 cupa.toggleCupa();
-                timerGli.reset();
                 isCupaHeld = true;
                 boolTimer = true;
                 isCupaProcessing = true;
             }
             else if (!gamepad2.y) isCupaHeld = false;
-            if(timerGli.milliseconds() >= 850 &&  boolTimer) {
-                cupa.toggleCupa();
-                boolTimer = false;
-                isTransit = true;
-            }
-            if(timerGli.milliseconds() >= 1000 && isTransit) {
-                glisiere.setToPosition(0);
-                isDown = true;
-                maturica.toggleCollect();
-                isTransit = false;
-                isHeldGlisiere = true;
-                isCupaProcessing = false;
-            }
 
 
             //Rata

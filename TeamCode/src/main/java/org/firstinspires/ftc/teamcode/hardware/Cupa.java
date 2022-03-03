@@ -8,8 +8,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Cupa {
     private Telemetry telemetry;
     public Servo servo;
-    private double downPosition = 0.01, upPosition = 0.5, upMorePosition = 0.7;
+    private double downPosition = 0, upPosition = 0.5, upMorePosition = 0.7;
+    private static double stransPos = 0.2, desfacutPos = 0.7;
     private State state;
+    private StateDeget stateDeget;
+    private Servo deget;
 
     private enum State {
         Down,
@@ -17,10 +20,18 @@ public class Cupa {
         UpMore
     }
 
+    private enum StateDeget {
+        Strans,
+        Desfacut
+    }
+
     public Cupa(HardwareMap hardwareMap, Telemetry telemetry) {
         servo = hardwareMap.servo.get(Config.cupa);
         state = State.Down;
+        stateDeget = StateDeget.Desfacut;
         this.telemetry = telemetry;
+        deget = hardwareMap.servo.get(Config.deget);
+        deget.setPosition(desfacutPos);
     }
 
     public double getServoPosition() {
@@ -42,6 +53,20 @@ public class Cupa {
         state = State.UpMore;
     }
 
+    public void strange() {
+        deget.setPosition(stransPos);
+        stateDeget = StateDeget.Strans;
+    }
+
+    public void desface() {
+        deget.setPosition(desfacutPos);
+        stateDeget = StateDeget.Desfacut;
+    }
+
+    public void toggleDeget() {
+        if(stateDeget == StateDeget.Desfacut) strange();
+        else desface();
+    }
 
     public void toggleCupa() {
         if(state == State.Up || state == State.UpMore) down();
