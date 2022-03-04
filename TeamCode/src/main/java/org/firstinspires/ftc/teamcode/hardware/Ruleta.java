@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Ruleta {
 
-    private Telemetry telemetry;
     private StateCupa stare;
-    Gamepad gamepad2;
 
     CRServo servo_orizontal;
     CRServo servo_vertical;
@@ -22,7 +18,7 @@ public class Ruleta {
         eject
     }
 
-    public Ruleta(HardwareMap hardwareMap, Telemetry telemetry)
+    public Ruleta(HardwareMap hardwareMap)
     {
 
         servo_orizontal = hardwareMap.crservo.get(Config.brat_orizontal);
@@ -33,7 +29,8 @@ public class Ruleta {
         servo_vertical.resetDeviceConfigurationForOpMode();
         servo_fata.resetDeviceConfigurationForOpMode();
 
-        this.telemetry = telemetry;
+        stare = StateCupa.eject;
+
 
     }
 
@@ -65,10 +62,12 @@ public class Ruleta {
     }
 
     public void eject() {
-        servo_fata.setPosition(0.0);
+        servo_fata.setPosition(0.5);
+        stare = StateCupa.eject;
     }
 
     public void collect() {
         servo_fata.setPosition(1.0);
+        stare = StateCupa.collect;
     }
 }

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Cupa {
     private Telemetry telemetry;
     public Servo servo;
-    private double downPosition = 0, upPosition = 0.5, upMorePosition = 0.7;
+    private double downPosition = 0, upPosition = 0.8, upMorePosition = 0.7;
     private static double stransPos = 0.2, desfacutPos = 0.7;
     private State state;
     private StateDeget stateDeget;

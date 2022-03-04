@@ -54,7 +54,7 @@ public class DriverControlled extends LinearOpMode {
         Maturica maturica = new Maturica(hardwareMap, telemetry);
         Cupa cupa = new Cupa(hardwareMap, telemetry);
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
-        Ruleta ruleta = new Ruleta(hardwareMap, telemetry);
+        Ruleta ruleta = new Ruleta(hardwareMap);
         DeadWheels wheels = new DeadWheels(hardwareMap);
         ElapsedTime timerGli = new ElapsedTime();
         ElapsedTime timerCol = new ElapsedTime();

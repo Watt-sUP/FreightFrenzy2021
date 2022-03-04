@@ -17,8 +17,8 @@ public class RuletaOpmode extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            Ruleta ruleta = new Ruleta(hardwareMap, telemetry);
-            ruleta.move(-gamepad2.left_stick_y,-gamepad2.left_stick_x / 2,gamepad2.right_stick_y / 2);
+            Ruleta ruleta = new Ruleta(hardwareMap);
+            //ruleta.move();
 
             telemetry.addData("Pozitie x", gamepad2.left_stick_x);
             telemetry.addData("Pozitie y", gamepad2.left_stick_y);
