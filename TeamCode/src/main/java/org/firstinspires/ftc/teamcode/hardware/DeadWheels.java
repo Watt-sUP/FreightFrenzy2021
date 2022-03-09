@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class DeadWheels {
     private Servo roataStanga, roataMijloc, roataDreapta;
-    private double downPosition = 0.16, upPosition = 0.75;
+    private double downPosition = 0.1, upPosition = 0.6;
 
     public DeadWheels(HardwareMap hardwareMap) {
         roataStanga = hardwareMap.servo.get(Config.servoStanga);
@@ -16,9 +16,9 @@ public class DeadWheels {
     }
 
     public void setDown() {
-        roataDreapta.setPosition(downPosition - 0.02);
-        roataMijloc.setPosition(downPosition + 0.125);
-        roataStanga.setPosition(downPosition);
+        roataDreapta.setPosition(downPosition - 0.015);
+        roataMijloc.setPosition(downPosition - 0.065);
+        roataStanga.setPosition(downPosition + 0.09);
     }
 
     public void setUp() {

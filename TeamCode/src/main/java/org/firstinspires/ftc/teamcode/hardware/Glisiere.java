@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Glisiere {
     private Telemetry telemetry;
     public DcMotor motor;
-    private int[] positions = {0, 725, 1300, 2000, 2500, 2000};
+    private int[] positions = {0, 150, 1300, 2500, 3000};
 
     public Glisiere(HardwareMap hardwareMap, Telemetry telemetry) {
         motor = hardwareMap.dcMotor.get(Config.glisiera);

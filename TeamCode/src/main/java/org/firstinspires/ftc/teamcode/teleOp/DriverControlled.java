@@ -40,9 +40,11 @@ public class DriverControlled extends LinearOpMode {
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
     private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isCupaProcessing = false, isDown = true;
     private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isMagnet = false, isHeldDeget = false;
-    private boolean isHeldRata = false;
+    private boolean isHeldRata = false, cupaMore = false, first = false, activat = false, dezactivat = false;
+    private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private String facingData = "Forwards";
     private final ElapsedTime timp = new ElapsedTime();
+    private final ElapsedTime timpCupa = new ElapsedTime();
     private int powerRata = -1, stateRata = -1;
     private double duckMotorPower = 0.60;
     private boolean isDpadUpPressed = false, isDpadDownPressed = false;
@@ -68,11 +70,11 @@ public class DriverControlled extends LinearOpMode {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        cupa.servo.setPosition(0.0);
 
         wheels.setUp();
         waitForStart();
         timp.reset();
+        timpCupa.reset();
         timerGli.reset();
         timerCol.reset();
         while (opModeIsActive()) {
@@ -171,26 +173,36 @@ public class DriverControlled extends LinearOpMode {
 
             //Glisiere
            if (gamepad2.x && !isHeldGlisiere) {
+                cupaMore = false;
+                first = false;
                 glisiere.setToPosition(0);
                 isDown = true;
                 isHeldGlisiere = true;
             }
             if (gamepad2.right_trigger > 0.3 && !isHeldGlisiere) {
+                cupaMore = false;
+                first = true;
                 glisiere.setToPosition(1);
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_trigger > 0.3 && !isHeldGlisiere) {
+                cupaMore = true;
+                first = false;
                 glisiere.setToPosition(2);
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.right_bumper && !isHeldGlisiere) {
+                cupaMore = false;
+                first = false;
                 glisiere.setToPosition(3);
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_bumper && !isHeldGlisiere) {
+                cupaMore = false;
+                first = false;
                 glisiere.setToPosition(4);
                 maturica.toggleEject();
                 isDown = false;
@@ -199,14 +211,43 @@ public class DriverControlled extends LinearOpMode {
             telemetry.addData("Glisiera Ticks:", glisiere.getTicks());
 
             //Cupa
-            if (gamepad2.y && !isCupaHeld) {
-                cupa.toggleCupa();
+            if (gamepad2.y && !isCupaHeld && !faza_3) {
+                if(!first)
+                    cupa.toggleCupa(cupaMore);
+                else {
+                    glisiere.setToPosition(2);
+                    timpCupa.reset();
+                    faza_1 = true;
+                }
                 isCupaHeld = true;
                 boolTimer = true;
                 isCupaProcessing = true;
             }
             else if (!gamepad2.y) isCupaHeld = false;
 
+            if(timpCupa.milliseconds() >= 800 && faza_1) {
+                cupa.servo.setPosition(0.5);
+                faza_1 = false;
+                faza_2 = true;
+            }
+
+            if(timpCupa.milliseconds() >= 1600 && faza_2) {
+                glisiere.setToPosition(1);
+                faza_2 = false;
+                faza_3 = true;
+            }
+
+            if(gamepad2.y && !isCupaHeld && faza_3) {
+                glisiere.setToPosition(2);
+                timpCupa.reset();
+                faza_3 = false;
+                faza_4 = true;
+            } else if(!gamepad2.y) isCupaHeld = false;
+
+            if(timpCupa.milliseconds() >= 800 && faza_4) {
+                cupa.servo.setPosition(0.97);
+                faza_4 = false;
+            }
 
             //Rata
 

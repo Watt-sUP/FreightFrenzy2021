@@ -34,7 +34,7 @@ public class Tester_pozitii extends LinearOpMode {
             }
 
             if(gamepad1.y && !isHeld) {
-                cupa.toggleCupa();
+                cupa.toggleCupa(false);
                 isHeld = true;
             }
             else if(!gamepad1.y) isHeld = false;

@@ -17,8 +17,8 @@ public class Config {
     public static final String brat_vertical = "brat_vertical";
     public static final String brat_orizontal = "brat_orizontal";
 
-    public static final String servoStanga = "leftServo";
-    public static final String servoDreapta = "rightServo";
+    public static final String servoStanga = "rightServo";
+    public static final String servoDreapta = "leftServo";
     public static final String servoMijloc = "frontServo";
 
     public static final String imu = "imu";

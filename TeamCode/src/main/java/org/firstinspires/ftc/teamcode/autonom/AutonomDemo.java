@@ -46,6 +46,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
+import org.firstinspires.ftc.teamcode.hardware.DeadWheels;
 import org.firstinspires.ftc.teamcode.hardware.Glisiere;
 
 @Autonomous(name="Un autonom frumos sus (Demo)", group="Autonom")
@@ -83,6 +84,9 @@ public class AutonomDemo extends LinearOpMode {
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
          */
+        DeadWheels wheels = new DeadWheels(hardwareMap);
+        wheels.setDown();
+
         leftFront = hardwareMap.dcMotor.get(Config.left_front);
         leftBack = hardwareMap.dcMotor.get(Config.left_back);
         rightFront = hardwareMap.dcMotor.get(Config.right_front);
@@ -169,9 +173,9 @@ public class AutonomDemo extends LinearOpMode {
         glisiere.setToPosition(3);
 
         sleep(1000);
-        cupa.toggleCupa();
+        cupa.toggleCupa(false);
         sleep(800);
-        cupa.toggleCupa();
+        cupa.toggleCupa(false);
         sleep(500);
         glisiere.setToPosition(0);
         sleep(500);
@@ -189,9 +193,9 @@ public class AutonomDemo extends LinearOpMode {
         glisiere.setToPosition(3);
 
         sleep(600);
-        cupa.toggleCupa();
+        cupa.toggleCupa(false);
         sleep(800);
-        cupa.toggleCupa();
+        cupa.toggleCupa(false);
         sleep(500);
 
 //        glisiere.motor.setPower(0);
@@ -217,9 +221,9 @@ public class AutonomDemo extends LinearOpMode {
 
 
         sleep(600);
-        cupa.toggleCupa();
+        cupa.toggleCupa(false);
         sleep(800);
-        cupa.toggleCupa();
+        cupa.toggleCupa(false);
         sleep(500);
         glisiere.setToPosition(0);
         walk(-320);
