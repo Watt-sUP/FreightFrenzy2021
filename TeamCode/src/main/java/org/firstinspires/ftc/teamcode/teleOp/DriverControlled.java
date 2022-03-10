@@ -40,13 +40,10 @@ public class DriverControlled extends LinearOpMode {
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
     private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isCupaProcessing = false, isDown = true;
     private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isMagnet = false, isHeldDeget = false;
-    private boolean isHeldRata = false, cupaMore = false, first = false, activat = false, dezactivat = false;
+    private boolean isHeldRata = false, first = false, isGlisieraProcessing = false, isGlisieraProcessing2 = false, more = false ;
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private String facingData = "Forwards";
-    private final ElapsedTime timp = new ElapsedTime();
-    private final ElapsedTime timpCupa = new ElapsedTime();
-    private int powerRata = -1, stateRata = -1;
-    private double duckMotorPower = 0.60;
+    private int stateRata = -1;
     private boolean isDpadUpPressed = false, isDpadDownPressed = false;
 
     @Override
@@ -58,8 +55,10 @@ public class DriverControlled extends LinearOpMode {
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
         Ruleta ruleta = new Ruleta(hardwareMap);
         DeadWheels wheels = new DeadWheels(hardwareMap);
+        ElapsedTime timp = new ElapsedTime();
+        ElapsedTime timpCupa = new ElapsedTime();
         ElapsedTime timerGli = new ElapsedTime();
-        ElapsedTime timerCol = new ElapsedTime();
+        ElapsedTime timerPro = new ElapsedTime();
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
@@ -76,7 +75,7 @@ public class DriverControlled extends LinearOpMode {
         timp.reset();
         timpCupa.reset();
         timerGli.reset();
-        timerCol.reset();
+        timerPro.reset();
         while (opModeIsActive()) {
 
 
@@ -171,49 +170,62 @@ public class DriverControlled extends LinearOpMode {
                 cupa.toggleDeget();
             } else if (!gamepad2.b) isHeldDeget = false;
 
+
             //Glisiere
            if (gamepad2.x && !isHeldGlisiere) {
-                cupaMore = false;
                 first = false;
                 glisiere.setToPosition(0);
                 isDown = true;
                 isHeldGlisiere = true;
             }
             if (gamepad2.right_trigger > 0.3 && !isHeldGlisiere) {
-                cupaMore = false;
                 first = true;
                 glisiere.setToPosition(1);
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_trigger > 0.3 && !isHeldGlisiere) {
-                cupaMore = true;
                 first = false;
                 glisiere.setToPosition(2);
+                more = true;
+                timerPro.reset();
+                isGlisieraProcessing = true;
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.right_bumper && !isHeldGlisiere) {
-                cupaMore = false;
                 first = false;
                 glisiere.setToPosition(3);
+                more = true;
+                timerPro.reset();
+                isGlisieraProcessing = true;
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_bumper && !isHeldGlisiere) {
-                cupaMore = false;
                 first = false;
                 glisiere.setToPosition(4);
+                more = true;
+                timerPro.reset();
+                isGlisieraProcessing = true;
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_trigger < 0.3 && gamepad2.right_trigger < 0.3 && !gamepad2.left_bumper && !gamepad2.right_bumper && !gamepad2.x) isHeldGlisiere = false;
             telemetry.addData("Glisiera Ticks:", glisiere.getTicks());
 
+            if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
+                cupa.toggleCupa(more);
+                isGlisieraProcessing = false;
+            }
+
             //Cupa
             if (gamepad2.y && !isCupaHeld && !faza_3) {
-                if(!first)
-                    cupa.toggleCupa(cupaMore);
+                if(!first) {
+                    cupa.toggleCupa(more);
+                    isCupaProcessing = true;
+                    timerGli.reset();
+                }
                 else {
                     glisiere.setToPosition(2);
                     timpCupa.reset();
@@ -224,6 +236,20 @@ public class DriverControlled extends LinearOpMode {
                 isCupaProcessing = true;
             }
             else if (!gamepad2.y) isCupaHeld = false;
+
+            if(timerGli.milliseconds() >= 200 && isCupaProcessing && !more) {
+                glisiere.setToPosition(0);
+                isDown = true;
+                maturica.toggleCollect();
+                isCupaProcessing = false;
+            }
+
+            if(timerGli.milliseconds() >= 400 && isCupaProcessing && more) {
+                glisiere.setToPosition(0);
+                isDown = true;
+                maturica.toggleCollect();
+                isCupaProcessing = false;
+            }
 
             if(timpCupa.milliseconds() >= 800 && faza_1) {
                 cupa.servo.setPosition(0.5);
@@ -248,6 +274,13 @@ public class DriverControlled extends LinearOpMode {
                 cupa.servo.setPosition(0.97);
                 faza_4 = false;
             }
+
+            telemetry.addData("First:", first);
+            telemetry.addData("Faza 1:", faza_1);
+            telemetry.addData("Faza 2:", faza_2);
+            telemetry.addData("Faza 3:", faza_3);
+            telemetry.addData("Faza 4:", faza_4);
+
 
             //Rata
 
