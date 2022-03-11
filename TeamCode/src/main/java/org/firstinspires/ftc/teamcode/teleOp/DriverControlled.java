@@ -5,10 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Cupa;
 import org.firstinspires.ftc.teamcode.hardware.DeadWheels;
@@ -55,6 +57,7 @@ public class DriverControlled extends LinearOpMode {
         Glisiere glisiere = new Glisiere(hardwareMap, telemetry);
         Ruleta ruleta = new Ruleta(hardwareMap);
         DeadWheels wheels = new DeadWheels(hardwareMap);
+        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, Config.distance);
         ElapsedTime timp = new ElapsedTime();
         ElapsedTime timpCupa = new ElapsedTime();
         ElapsedTime timerGli = new ElapsedTime();
@@ -170,6 +173,14 @@ public class DriverControlled extends LinearOpMode {
                 cupa.toggleDeget();
             } else if (!gamepad2.b) isHeldDeget = false;
 
+            if(distance.getDistance(DistanceUnit.CM) <= 3.5 && isDown) {
+                cupa.toggleDeget();
+                glisiere.setToPosition(3);
+                timerPro.reset();
+                isGlisieraProcessing = true;
+                first = false;
+                isDown = false;
+            }
 
             //Glisiere
            if (gamepad2.x && !isHeldGlisiere) {
@@ -233,7 +244,6 @@ public class DriverControlled extends LinearOpMode {
                 }
                 isCupaHeld = true;
                 boolTimer = true;
-                isCupaProcessing = true;
             }
             else if (!gamepad2.y) isCupaHeld = false;
 

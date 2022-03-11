@@ -21,6 +21,8 @@ public class Config {
     public static final String servoDreapta = "leftServo";
     public static final String servoMijloc = "frontServo";
 
+    public static final String distance = "distance";
+
     public static final String imu = "imu";
 
     public static final String deget = "deget";
