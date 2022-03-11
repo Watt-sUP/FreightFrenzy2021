@@ -42,7 +42,7 @@ public class DriverControlled extends LinearOpMode {
     //CR-someday Cosmin: optimizare declarari, sunt prea multe intr-un loc si ar putea fi separate
     private boolean faceIsHeld = false, faceChanged = false, isCupaHeld = false, isCupaProcessing = false, isDown = true;
     private boolean isHeldGlisiere = false, isHeldMaturica = false, boolTimer = false, isMagnet = false, isHeldDeget = false;
-    private boolean isHeldRata = false, first = false, isGlisieraProcessing = false, isGlisieraProcessing2 = false, more = false ;
+    private boolean isHeldRata = false, first = false, isGlisieraProcessing = false, isGlisieraProcessing2 = false;
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private String facingData = "Forwards";
     private int stateRata = -1;
@@ -173,6 +173,7 @@ public class DriverControlled extends LinearOpMode {
                 cupa.toggleDeget();
             } else if (!gamepad2.b) isHeldDeget = false;
 
+            //Senzor
             if(distance.getDistance(DistanceUnit.CM) <= 3.5 && isDown) {
                 cupa.toggleDeget();
                 glisiere.setToPosition(3);
@@ -198,27 +199,18 @@ public class DriverControlled extends LinearOpMode {
             } else if (gamepad2.left_trigger > 0.3 && !isHeldGlisiere) {
                 first = false;
                 glisiere.setToPosition(2);
-                more = true;
-                timerPro.reset();
-                isGlisieraProcessing = true;
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.right_bumper && !isHeldGlisiere) {
                 first = false;
                 glisiere.setToPosition(3);
-                more = true;
-                timerPro.reset();
-                isGlisieraProcessing = true;
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
             } else if (gamepad2.left_bumper && !isHeldGlisiere) {
                 first = false;
                 glisiere.setToPosition(4);
-                more = true;
-                timerPro.reset();
-                isGlisieraProcessing = true;
                 maturica.toggleEject();
                 isDown = false;
                 isHeldGlisiere = true;
@@ -226,14 +218,15 @@ public class DriverControlled extends LinearOpMode {
             telemetry.addData("Glisiera Ticks:", glisiere.getTicks());
 
             if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
-                cupa.toggleCupa(more);
+                cupa.toggleCupa();
                 isGlisieraProcessing = false;
             }
+
 
             //Cupa
             if (gamepad2.y && !isCupaHeld && !faza_3) {
                 if(!first) {
-                    cupa.toggleCupa(more);
+                    cupa.toggleCupa();
                     isCupaProcessing = true;
                     timerGli.reset();
                 }
@@ -247,14 +240,8 @@ public class DriverControlled extends LinearOpMode {
             }
             else if (!gamepad2.y) isCupaHeld = false;
 
-            if(timerGli.milliseconds() >= 200 && isCupaProcessing && !more) {
-                glisiere.setToPosition(0);
-                isDown = true;
-                maturica.toggleCollect();
-                isCupaProcessing = false;
-            }
 
-            if(timerGli.milliseconds() >= 400 && isCupaProcessing && more) {
+            if(timerGli.milliseconds() >= 400 && isCupaProcessing) {
                 glisiere.setToPosition(0);
                 isDown = true;
                 maturica.toggleCollect();
@@ -284,12 +271,6 @@ public class DriverControlled extends LinearOpMode {
                 cupa.servo.setPosition(0.97);
                 faza_4 = false;
             }
-
-            telemetry.addData("First:", first);
-            telemetry.addData("Faza 1:", faza_1);
-            telemetry.addData("Faza 2:", faza_2);
-            telemetry.addData("Faza 3:", faza_3);
-            telemetry.addData("Faza 4:", faza_4);
 
 
             //Rata

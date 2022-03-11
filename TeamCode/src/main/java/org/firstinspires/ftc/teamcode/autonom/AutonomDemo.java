@@ -173,9 +173,9 @@ public class AutonomDemo extends LinearOpMode {
         glisiere.setToPosition(3);
 
         sleep(1000);
-        cupa.toggleCupa(false);
+        cupa.toggleCupa();
         sleep(800);
-        cupa.toggleCupa(false);
+        cupa.toggleCupa();
         sleep(500);
         glisiere.setToPosition(0);
         sleep(500);
@@ -193,9 +193,9 @@ public class AutonomDemo extends LinearOpMode {
         glisiere.setToPosition(3);
 
         sleep(600);
-        cupa.toggleCupa(false);
+        cupa.toggleCupa();
         sleep(800);
-        cupa.toggleCupa(false);
+        cupa.toggleCupa();
         sleep(500);
 
 //        glisiere.motor.setPower(0);
@@ -221,9 +221,9 @@ public class AutonomDemo extends LinearOpMode {
 
 
         sleep(600);
-        cupa.toggleCupa(false);
+        cupa.toggleCupa();
         sleep(800);
-        cupa.toggleCupa(false);
+        cupa.toggleCupa();
         sleep(500);
         glisiere.setToPosition(0);
         walk(-320);

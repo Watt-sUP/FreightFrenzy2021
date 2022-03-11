@@ -230,7 +230,7 @@ public class AutonomRegionala extends LinearOpMode {
 
 
             sleep(600);
-            cupa.toggleCupa(false);
+            cupa.toggleCupa();
             sleep(400);
             cupa.toggleCupaMore();
             sleep(200);
@@ -251,7 +251,7 @@ public class AutonomRegionala extends LinearOpMode {
 
 
             //sleep(800);
-            cupa.toggleCupa(false);
+            cupa.toggleCupa();
             sleep(400);
             cupa.toggleCupaMore();
             sleep(200);
@@ -271,7 +271,7 @@ public class AutonomRegionala extends LinearOpMode {
             glisiere.setToPosition(3);
 
             sleep(600);
-            cupa.toggleCupa(false);
+            cupa.toggleCupa();
             sleep(400);
             cupa.toggleCupaMore();
             sleep(200);
@@ -299,7 +299,7 @@ public class AutonomRegionala extends LinearOpMode {
 
 
             sleep(600);
-            cupa.toggleCupa(false);
+            cupa.toggleCupa();
             sleep(400);
             cupa.toggleCupaMore();
             sleep(200);
@@ -319,7 +319,7 @@ public class AutonomRegionala extends LinearOpMode {
 
 
             //sleep(1000);
-            cupa.toggleCupa(false);
+            cupa.toggleCupa();
             sleep(500);
             cupa.toggleCupaMore();
             sleep(200);
@@ -339,7 +339,7 @@ public class AutonomRegionala extends LinearOpMode {
             glisiere.setToPosition(3);
 
             sleep(600);
-            cupa.toggleCupa(false);
+            cupa.toggleCupa();
             sleep(400);
             cupa.toggleCupaMore();
             sleep(200);
@@ -367,7 +367,7 @@ public class AutonomRegionala extends LinearOpMode {
 
 
             sleep(600);
-            cupa.toggleCupa(false);
+            cupa.toggleCupa();
             sleep(400);
             cupa.toggleCupaMore();
             sleep(200);
