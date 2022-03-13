@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Cupa {
-    private Telemetry telemetry;
     public Servo servo;
     private double downPosition = 0.6, upPosition = 0.97, upMorePosition = 0.55; //0.05
     private static double stransPos = 0.5, desfacutPos = 0.8;
@@ -25,12 +24,11 @@ public class Cupa {
         Desfacut
     }
 
-    public Cupa(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Cupa(HardwareMap hardwareMap) {
         servo = hardwareMap.servo.get(Config.cupa);
         state = State.Up;
         servo.setPosition(upPosition);
         stateDeget = StateDeget.Desfacut;
-        this.telemetry = telemetry;
         deget = hardwareMap.servo.get(Config.deget);
         deget.setPosition(desfacutPos);
     }

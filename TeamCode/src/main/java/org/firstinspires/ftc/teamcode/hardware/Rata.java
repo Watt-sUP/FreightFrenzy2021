@@ -7,15 +7,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Rata {
-    private Telemetry telemetry;
     public DcMotor motor;
     private double currentPower;
 
-    public Rata(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Rata(HardwareMap hardwareMap) {
         motor = hardwareMap.dcMotor.get(Config.rate);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        this.telemetry = telemetry;
     }
 
     public void rotate(double power) {

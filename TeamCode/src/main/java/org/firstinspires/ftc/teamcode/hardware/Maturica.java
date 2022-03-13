@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Maturica {
-    private Telemetry telemetry;
     public DcMotor motor;
 
     public enum State {
@@ -18,11 +17,10 @@ public class Maturica {
 
     private State state;
 
-    public Maturica(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Maturica(HardwareMap hardwareMap) {
         motor = hardwareMap.dcMotor.get(Config.matura);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        this.telemetry = telemetry;
         state = State.Idle;
     }
 

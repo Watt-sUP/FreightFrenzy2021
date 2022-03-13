@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  */
 @Config
 @Autonomous(group = "drive")
-public class Roadrunner extends LinearOpMode {
+public class AutonomRR extends LinearOpMode {
 
     public static double DISTANCE = 50;
 

@@ -7,17 +7,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Glisiere {
-    private Telemetry telemetry;
     public DcMotor motor;
     private int[] positions = {0, 150, 1300, 2400, 3000};
 
-    public Glisiere(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Glisiere(HardwareMap hardwareMap) {
         motor = hardwareMap.dcMotor.get(Config.glisiera);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setTargetPosition(0);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.telemetry = telemetry;
     }
 
     public void setToPosition(int position) {
