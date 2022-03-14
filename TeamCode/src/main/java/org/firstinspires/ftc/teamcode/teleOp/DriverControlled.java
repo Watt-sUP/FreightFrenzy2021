@@ -2,19 +2,24 @@ package org.firstinspires.ftc.teamcode.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.gamepad.Axis;
 import org.firstinspires.ftc.teamcode.gamepad.Button;
 import org.firstinspires.ftc.teamcode.gamepad.GamepadEx;
+import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
 @TeleOp(name = "OpMode", group = "Testing")
 public class DriverControlled extends LinearOpMode {
 
     //Declaratii
-    private boolean isCupaProcessing = false, isDown = true;
+    private boolean faceIsHeld = false, faceChanged = false, isCupaProcessing = false, isDown = true;
     private boolean first = false, isGlisieraProcessing = false;
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private Mugurel robot;
@@ -31,6 +36,16 @@ public class DriverControlled extends LinearOpMode {
         timerGli = new ElapsedTime();
         timerPro = new ElapsedTime();
 
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
+        DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
+
+
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
         robot.wheels.setUp();
         waitForStart();
         timpCupa.reset();
@@ -42,7 +57,52 @@ public class DriverControlled extends LinearOpMode {
             andrei.update();
             cristi.update();
 
-            move(andrei.left_x, andrei.left_y, andrei.right_x, andrei.right_trigger.toButton(0.3), andrei.left_trigger.toButton(0.3), andrei.dpad_left, andrei.dpad_left);
+            double acceleration = gamepad1.left_stick_y;
+            double strafe = gamepad1.left_stick_x * -1.1;
+            double rotation = gamepad1.right_stick_x;
+            telemetry.addData("Acceleration", acceleration);
+            telemetry.addData("Strafe", strafe);
+            telemetry.addData("Rotation", rotation);
+
+            double powerLimit = 1.0;
+            if (andrei.right_trigger.toButton(0.3).pressed()) {
+                powerLimit = 0.3;
+            } else if (andrei.left_trigger.toButton(0.3).pressed()) {
+                powerLimit = 0.5;
+            } else {
+                powerLimit = 1.0;
+            }
+
+            if (andrei.y.pressed())
+                faceChanged = !faceChanged;
+
+            if (!faceChanged) {
+
+                frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+                rotation = rotation * (-1);
+            } else {
+                frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            }
+
+            double denominator = Math.max(Math.abs(acceleration) + Math.abs(strafe) + Math.abs(rotation), 1);
+            double frontLeftPower = (acceleration + strafe + rotation) / denominator;
+            double backLeftPower = (acceleration - strafe + rotation) / denominator;
+            double frontRightPower = (acceleration - strafe - rotation) / denominator;
+            double backRightPower = (acceleration + strafe - rotation) / denominator;
+
+            frontLeftMotor.setPower(Range.clip(frontLeftPower, -powerLimit, powerLimit));
+            backLeftMotor.setPower(Range.clip(backLeftPower, -powerLimit, powerLimit));
+            frontRightMotor.setPower(Range.clip(frontRightPower, -powerLimit, powerLimit));
+            backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
+
+
             ruleta(cristi.left_y, cristi.left_x, cristi.right_y.toButton(0.03));
             maturica(cristi.a);
             deget(cristi.b);
@@ -56,20 +116,6 @@ public class DriverControlled extends LinearOpMode {
             telemetry.update();
         }
         robot.glisiere.motor.setPower(0);
-    }
-
-    private void move(Axis lx, Axis ly, Axis rx, Button smallPower, Button mediumPower, Button dl, Button dr) {
-        double modifier = 1.0;
-        if (smallPower != null && smallPower.raw) modifier = 0.23;
-        if (mediumPower != null && mediumPower.raw)  modifier = 0.5;
-
-        final double drive_y = robot.runner.scalePower(ly.raw);
-        final double drive_x = robot.runner.scalePower(lx.raw);
-        final double turn = -robot.runner.scalePower(rx.raw);
-
-        if (dr != null && dr.raw) robot.runner.moveWithAngle(-1,0,0, modifier);
-        else if (dl != null && dl.raw) robot.runner.moveWithAngle(1,0,0, modifier);
-        else robot.runner.moveWithAngle(drive_x, drive_y, turn, modifier);
     }
 
     private void deget(Button deget) {
@@ -203,5 +249,8 @@ public class DriverControlled extends LinearOpMode {
             isGlisieraProcessing = false;
         }
     }
+
+
+
 }
 

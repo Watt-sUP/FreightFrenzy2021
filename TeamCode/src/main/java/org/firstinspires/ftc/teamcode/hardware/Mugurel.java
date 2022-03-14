@@ -22,12 +22,6 @@ public class Mugurel {
         glisiere = new Glisiere(hm);
         ruleta = new Ruleta(hm);
         wheels = new DeadWheels(hm);
-        runner = new Runner(
-                hm.get(DcMotor.class, Config.left_front),
-                hm.get(DcMotor.class, Config.right_front),
-                hm.get(DcMotor.class, Config.left_back),
-                hm.get(DcMotor.class, Config.right_back)
-        );
         distance = hm.get(DistanceSensor.class, Config.distance);
     }
 }
