@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 public class DriverControlled extends LinearOpMode {
 
     //Declaratii
-    private boolean faceIsHeld = false, faceChanged = false, isCupaProcessing = false, isDown = true;
+    private boolean faceChanged = false, isCupaProcessing = false, isDown = true;
     private boolean first = false, isGlisieraProcessing = false;
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private Mugurel robot;
@@ -103,7 +103,7 @@ public class DriverControlled extends LinearOpMode {
             backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
 
 
-            ruleta(cristi.left_y, cristi.left_x, cristi.right_y.toButton(0.03));
+            brat(gamepad2.left_stick_y, gamepad2.left_stick_x, cristi.right_y.toButton(0.03));
             maturica(cristi.a);
             deget(cristi.b);
             rata(andrei.x);
@@ -128,10 +128,10 @@ public class DriverControlled extends LinearOpMode {
             robot.maturica.toggleCollect();
     }
 
-    private void ruleta(Axis ly, Axis lx, Button magnet) {
-        robot.ruleta.move(ly.raw, lx.raw);
+    private void brat(double ly, double lx, Button magnet) {
+        robot.brat.move(ly, lx);
         if (magnet.pressed())
-            robot.ruleta.toggleCupa();
+            robot.brat.toggleCupa();
     }
 
     private void rata(Button rata) {
@@ -249,8 +249,6 @@ public class DriverControlled extends LinearOpMode {
             isGlisieraProcessing = false;
         }
     }
-
-
 
 }
 

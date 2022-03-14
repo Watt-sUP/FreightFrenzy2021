@@ -1,32 +1,33 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class Ruleta {
+public class Brat {
 
     private StateCupa stare;
 
-    CRServo servo_orizontal;
-    CRServo servo_vertical;
-    Servo servo_fata;
+    public CRServo servo_orizontal;
+    public DcMotor motor_vertical;
+    public Servo servo_fata;
 
     private enum StateCupa {
         collect,
         eject
     }
 
-    public Ruleta(HardwareMap hardwareMap)
+    public Brat(HardwareMap hardwareMap)
     {
 
         servo_orizontal = hardwareMap.crservo.get(Config.brat_orizontal);
-        servo_vertical = hardwareMap.crservo.get(Config.brat_vertical);
+        motor_vertical = hardwareMap.dcMotor.get(Config.brat_vertical);
         servo_fata = hardwareMap.servo.get(Config.servo_cupa);
 
         servo_orizontal.resetDeviceConfigurationForOpMode();
-        servo_vertical.resetDeviceConfigurationForOpMode();
+        motor_vertical.resetDeviceConfigurationForOpMode();
         servo_fata.resetDeviceConfigurationForOpMode();
 
         stare = StateCupa.eject;
@@ -44,10 +45,10 @@ public class Ruleta {
 
 
         if(powerVertical < -0.03 || powerVertical > 0.03) {
-            servo_vertical.setPower(-powerVertical);
+            motor_vertical.setPower(-powerVertical);
         }
         else if(powerVertical < 0.03 && powerVertical > -0.03)
-            servo_vertical.setPower(0.0);
+            motor_vertical.setPower(0.0);
 
         if(powerOrizontal < -0.03 || powerOrizontal > 0.03) {
             servo_orizontal.setPower(-powerOrizontal);

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -10,7 +8,7 @@ public class Mugurel {
     public Maturica maturica;
     public Cupa cupa;
     public Glisiere glisiere;
-    public Ruleta ruleta;
+    public Brat brat;
     public DeadWheels wheels;
     public DistanceSensor distance;
     public Runner runner;
@@ -20,7 +18,7 @@ public class Mugurel {
         maturica = new Maturica(hm);
         cupa = new Cupa(hm);
         glisiere = new Glisiere(hm);
-        ruleta = new Ruleta(hm);
+        brat = new Brat(hm);
         wheels = new DeadWheels(hm);
         distance = hm.get(DistanceSensor.class, Config.distance);
     }
