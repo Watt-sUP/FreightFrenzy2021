@@ -45,10 +45,13 @@ public class Brat {
 
 
         if(powerVertical < -0.03 || powerVertical > 0.03) {
+//            motor_vertical.setPower(-powerVertical * 0.254);
             motor_vertical.setPower(-powerVertical);
         }
+
         else if(powerVertical < 0.03 && powerVertical > -0.03)
             motor_vertical.setPower(0.0);
+
 
         if(powerOrizontal < -0.03 || powerOrizontal > 0.03) {
             servo_orizontal.setPower(-powerOrizontal);
@@ -63,12 +66,12 @@ public class Brat {
     }
 
     public void eject() {
-        servo_fata.setPosition(0.5);
+        servo_fata.setPosition(0);
         stare = StateCupa.eject;
     }
 
     public void collect() {
-        servo_fata.setPosition(1.0);
+        servo_fata.setPosition(0.5);
         stare = StateCupa.collect;
     }
 }

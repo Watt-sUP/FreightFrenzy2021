@@ -19,18 +19,18 @@ public class AutonomRataRed extends LinearOpMode {
 
         Trajectory duck = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
                 .addTemporalMarker(1, () -> robot.cupa.toggleCupa())
-                .lineToLinearHeading(new Pose2d(-19, -39, Math.toRadians(75)))
+                .splineToLinearHeading(new Pose2d(-19, -39), Math.toRadians(75))
                 .addDisplacementMarker(() -> robot.cupa.toggleDeget())
                 .addDisplacementMarker(() -> {
                     robot.cupa.toggleCupa();
                 })
                 .addTemporalMarker(2, () -> robot.glisiere.setToPosition(0))
-                .lineToLinearHeading(new Pose2d(-50, -60, Math.toRadians(270)))
+                .splineToLinearHeading(new Pose2d(-50, -60), Math.toRadians(270))
                 .addDisplacementMarker(() -> robot.rata.rotate(0.7))
                 .build();
 
         Trajectory finish = drive.trajectoryBuilder(duck.end())
-                .lineTo(new Vector2d(-60, -37))
+                .splineTo(new Vector2d(-60, -37), Math.toRadians(0))
                 .build();
 
 

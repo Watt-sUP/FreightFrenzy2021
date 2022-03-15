@@ -19,20 +19,20 @@ public class AutonomCubBlue extends LinearOpMode {
 
         Trajectory delivery = drive.trajectoryBuilder(new Pose2d(12, 62, Math.toRadians(0)))
                 .addTemporalMarker(1, () -> robot.cupa.toggleCupa())
-                .lineToLinearHeading(new Pose2d(-6, 39, Math.toRadians(245)))
+                .splineToLinearHeading(new Pose2d(-6, 39), Math.toRadians(245))
                 .addDisplacementMarker(() -> robot.cupa.toggleDeget())
                 .build();
 
         Trajectory supply = drive.trajectoryBuilder(delivery.end())
                 .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
-                .lineToLinearHeading(new Pose2d(12, 62, Math.toRadians(0)))
+                .splineToLinearHeading(new Pose2d(12, 62), Math.toRadians(0))
                 .addDisplacementMarker( () -> robot.maturica.toggleCollect())
-                .lineTo(new Vector2d(57, 62))
+                .splineTo(new Vector2d(57, 62),Math.toRadians(0))
                 .build();
 
         Trajectory returnToOrigin = drive.trajectoryBuilder(supply.end())
                 .addTemporalMarker(0.3, () -> robot.maturica.toggleEject())
-                .lineTo(new Vector2d(12, 62))
+                .splineTo(new Vector2d(12, 62),Math.toRadians(0))
                 .addDisplacementMarker(() -> robot.cupa.toggleDeget())
                 .build();
 

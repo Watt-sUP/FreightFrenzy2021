@@ -103,7 +103,7 @@ public class DriverControlled extends LinearOpMode {
             backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
 
 
-            brat(gamepad2.left_stick_y, gamepad2.left_stick_x, cristi.right_y.toButton(0.03));
+            brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down);
             maturica(cristi.a);
             deget(cristi.b);
             rata(andrei.x);
@@ -112,6 +112,7 @@ public class DriverControlled extends LinearOpMode {
             senzor(robot.distance);
 
             idle();
+
             telemetry.addData("Elapsed time:",runTime.toString());
             telemetry.update();
         }
@@ -233,8 +234,10 @@ public class DriverControlled extends LinearOpMode {
         }
     }
 
-    private void senzor(DistanceSensor du) {
-        if(du.getDistance(DistanceUnit.CM) <= 4.0 && isDown) {
+    public void senzor(DistanceSensor du) {
+        double distance = du.getDistance(DistanceUnit.CM);
+        telemetry.addData("Distanta senzor:", distance);
+        if(distance <= 4.0 && isDown) {
             robot.maturica.toggleEject();
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(3);
