@@ -4,11 +4,13 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
+@Disabled
 @Autonomous(name = "Autonom cub rosu", group = "autonom")
 public class AutonomCubRed extends LinearOpMode {
 
@@ -16,6 +18,10 @@ public class AutonomCubRed extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Mugurel robot = new Mugurel(hardwareMap);
+
+        Pose2d startPose = new Pose2d(12, -62, Math.toRadians(90));
+
+        drive.setPoseEstimate(startPose);
 
         Trajectory delivery = drive.trajectoryBuilder(new Pose2d(12, -62, Math.toRadians(0)))
                 .addTemporalMarker(1, () -> robot.cupa.toggleCupa())
@@ -39,18 +45,11 @@ public class AutonomCubRed extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive() && !isStopRequested()) {
-            robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
-            drive.followTrajectory(delivery);
-            robot.cupa.toggleCupa();
-            drive.followTrajectory(supply);
-            sleep(300);
-            drive.followTrajectory(returnToOrigin);
-            robot.glisiere.setToPosition(3);
-            drive.followTrajectory(delivery);
-            robot.cupa.toggleCupa();
-            drive.followTrajectory(supply);
-        }
+        drive.followTrajectory(delivery);
+        drive.followTrajectory(supply);
+        sleep(300);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        drive.followTrajectory(supply);
     }
 }

@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 public class DriverControlled extends LinearOpMode {
 
     //Declaratii
-    private boolean faceChanged = false, isCupaProcessing = false, isDown = true;
+    private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
     private boolean first = false, isGlisieraProcessing = false;
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private Mugurel robot;
@@ -60,21 +60,21 @@ public class DriverControlled extends LinearOpMode {
             double acceleration = gamepad1.left_stick_y;
             double strafe = gamepad1.left_stick_x * -1.1;
             double rotation = gamepad1.right_stick_x;
-            telemetry.addData("Acceleration", acceleration);
-            telemetry.addData("Strafe", strafe);
-            telemetry.addData("Rotation", rotation);
+            telemetry.addData("Brat position:", robot.brat.getPosition());
 
             double powerLimit = 1.0;
-            if (andrei.right_trigger.toButton(0.3).pressed()) {
+            if (gamepad1.left_trigger >= 0.3) {
                 powerLimit = 0.3;
-            } else if (andrei.left_trigger.toButton(0.3).pressed()) {
+            } else if (gamepad1.right_trigger >= 0.3) {
                 powerLimit = 0.5;
             } else {
                 powerLimit = 1.0;
             }
 
-            if (andrei.y.pressed())
+            if (gamepad1.y && !faceIsHeld) {
+                faceIsHeld = true;
                 faceChanged = !faceChanged;
+            } else if (!gamepad1.y) faceIsHeld = false;
 
             if (!faceChanged) {
 
@@ -106,7 +106,7 @@ public class DriverControlled extends LinearOpMode {
             brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down);
             maturica(cristi.a);
             deget(cristi.b);
-            rata(andrei.x);
+            rata(gamepad1.x);
             glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper);
             cupa(cristi.y);
             senzor(robot.distance);
@@ -135,11 +135,11 @@ public class DriverControlled extends LinearOpMode {
             robot.brat.toggleCupa();
     }
 
-    private void rata(Button rata) {
+    private void rata(boolean rata) {
         double startingPower = 0;
         long start_time = System.nanoTime();
 
-        if (rata.pressed()) {
+        if (rata) {
             startingPower = 0.7;
             if (stateRata == -1) {
                 stateRata = 0;

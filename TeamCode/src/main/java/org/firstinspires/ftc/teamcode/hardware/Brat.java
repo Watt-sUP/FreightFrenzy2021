@@ -30,9 +30,15 @@ public class Brat {
         motor_vertical.resetDeviceConfigurationForOpMode();
         servo_fata.resetDeviceConfigurationForOpMode();
 
+        motor_vertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         stare = StateCupa.eject;
 
 
+    }
+
+    public double getPosition() {
+        return motor_vertical.getCurrentPosition();
     }
 
     public void move(double powerVertical, double powerOrizontal)

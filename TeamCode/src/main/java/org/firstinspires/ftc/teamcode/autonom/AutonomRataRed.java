@@ -4,11 +4,13 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
+//@Disabled
 @Autonomous(name = "Autonom rata rosu", group = "autonom")
 public class AutonomRataRed extends LinearOpMode {
 
@@ -17,31 +19,40 @@ public class AutonomRataRed extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Mugurel robot = new Mugurel(hardwareMap);
 
-        Trajectory duck = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
+        Pose2d startPosition = new Pose2d(-35.5, -62, Math.toRadians(90));
+
+        drive.setPoseEstimate(startPosition);
+
+        Trajectory cube = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
                 .addTemporalMarker(1, () -> robot.cupa.toggleCupa())
-                .splineToLinearHeading(new Pose2d(-19, -39), Math.toRadians(75))
-                .addDisplacementMarker(() -> robot.cupa.toggleDeget())
-                .addDisplacementMarker(() -> {
-                    robot.cupa.toggleCupa();
-                })
-                .addTemporalMarker(2, () -> robot.glisiere.setToPosition(0))
-                .splineToLinearHeading(new Pose2d(-50, -60), Math.toRadians(270))
+                .lineToLinearHeading(new Pose2d(-28, -55, Math.toRadians(50)))
+                .build();
+
+         Trajectory duck = drive.trajectoryBuilder(cube.end())
+                .lineToLinearHeading(new Pose2d(-55, -57, Math.toRadians(270)))
                 .addDisplacementMarker(() -> robot.rata.rotate(0.7))
                 .build();
 
         Trajectory finish = drive.trajectoryBuilder(duck.end())
-                .splineTo(new Vector2d(-60, -37), Math.toRadians(0))
+                .lineTo(new Vector2d(-60, -37))
                 .build();
 
 
         waitForStart();
 
-        while (opModeIsActive() && !isStopRequested()) {
-            robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
-            drive.followTrajectory(duck);
-            sleep(1000);
-            drive.followTrajectory(finish);
-        }
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(4);
+        drive.followTrajectory(cube);
+        sleep(500);
+        robot.cupa.toggleDeget();
+        sleep(500);
+        robot.cupa.toggleCupa();
+        sleep(500);
+        robot.glisiere.setToPosition(0);
+        sleep(1000);
+        drive.followTrajectory(duck);
+        robot.rata.motor.setPower(1);
+        sleep(3000);
+        drive.followTrajectory(finish);
     }
 }
