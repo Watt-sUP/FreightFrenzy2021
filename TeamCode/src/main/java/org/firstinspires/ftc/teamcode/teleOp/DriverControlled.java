@@ -64,9 +64,9 @@ public class DriverControlled extends LinearOpMode {
 
             double powerLimit = 1.0;
             if (gamepad1.left_trigger >= 0.3) {
-                powerLimit = 0.3;
+                powerLimit = 0.4;
             } else if (gamepad1.right_trigger >= 0.3) {
-                powerLimit = 0.5;
+                powerLimit = 0.3;
             } else {
                 powerLimit = 1.0;
             }
@@ -237,7 +237,7 @@ public class DriverControlled extends LinearOpMode {
     public void senzor(DistanceSensor du) {
         double distance = du.getDistance(DistanceUnit.CM);
         telemetry.addData("Distanta senzor:", distance);
-        if(distance <= 4.0 && isDown) {
+        if(distance <= 5.0 && isDown) {
             robot.maturica.toggleEject();
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(3);

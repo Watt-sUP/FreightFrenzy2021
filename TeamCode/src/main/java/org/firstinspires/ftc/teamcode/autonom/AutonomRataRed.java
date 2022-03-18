@@ -67,11 +67,11 @@ public class AutonomRataRed extends LinearOpMode {
                         if (recognition.getLabel() == "Team Marker") {
                             telemetry.addData("Team Marker:", "Detected");
                             if(((recognition.getBottom() - recognition.getTop())) < (recognition.getImageHeight() * 0.67)) {
-                                if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() / 5) && recognition.getConfidence() > confidence) {
+                                if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() / 2) && recognition.getConfidence() > confidence) {
                                     teamMarkerLocation = Locations.Middle;
                                     confidence = recognition.getConfidence();
                                 }
-                                else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() >= (recognition.getImageWidth() / 5) && recognition.getConfidence() > confidence) {
+                                else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() >= (recognition.getImageWidth() / 2) && recognition.getConfidence() > confidence) {
                                     teamMarkerLocation = Locations.Top;
                                     confidence = recognition.getConfidence();
                                 }
@@ -226,6 +226,7 @@ public class AutonomRataRed extends LinearOpMode {
         tfodParameters.minResultConfidence = 0.5f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
+        tfodParameters.useObjectTracker = false;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromFile(TFOD_MODEL_ASSET, LABELS);
     }

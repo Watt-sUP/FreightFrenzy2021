@@ -7,10 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
-@Disabled
+//@Disabled
 @Autonomous(name = "Autonom cub rosu", group = "autonom")
 public class AutonomCubRed extends LinearOpMode {
 
@@ -23,33 +25,239 @@ public class AutonomCubRed extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
 
-        Trajectory delivery = drive.trajectoryBuilder(new Pose2d(12, -62, Math.toRadians(0)))
-                .addTemporalMarker(1, () -> robot.cupa.toggleCupa())
-                .splineToLinearHeading(new Pose2d(-6, -39), Math.toRadians(115))
-                .addDisplacementMarker(() -> robot.cupa.toggleDeget())
+        /*
+        Cubul de sus
+
+        Trajectory delivery = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
                 .build();
+
+
 
         Trajectory supply = drive.trajectoryBuilder(delivery.end())
-                .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
-                .splineToLinearHeading(new Pose2d(12, -62), Math.toRadians(0))
-                .addDisplacementMarker( () -> robot.maturica.toggleCollect())
-                .splineTo(new Vector2d(57, -62), Math.toRadians(0))
+                .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
+                .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
+                .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
                 .build();
 
-        Trajectory returnToOrigin = drive.trajectoryBuilder(supply.end())
-                .addTemporalMarker(0.3, () -> robot.maturica.toggleEject())
-                .splineTo(new Vector2d(12, -62), Math.toRadians(0))
-                .addDisplacementMarker(() -> robot.cupa.toggleDeget())
+        Trajectory move = drive.trajectoryBuilder(supply.end())
+                .back(35)
                 .build();
 
+        Trajectory returnToOrigin = drive.trajectoryBuilder(move.end())
+                .addTemporalMarker(0.5, () -> robot.maturica.toggleEject())
+                .forward(35)
+                .build();
 
         waitForStart();
 
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
         drive.followTrajectory(delivery);
-        drive.followTrajectory(supply);
+        robot.cupa.toggleDeget();
         sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
         drive.followTrajectory(returnToOrigin);
         drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
         drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+         */
+
+        /*
+        Cub mijloc
+
+        Trajectory deliveryFirst = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(5, -40, Math.toRadians(125)))
+                .build();
+
+        Trajectory supplyFirst = drive.trajectoryBuilder(deliveryFirst.end())
+                .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
+                .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
+                .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
+                .build();
+
+        Trajectory delivery = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
+                .build();
+
+
+        Trajectory supply = drive.trajectoryBuilder(delivery.end())
+                .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
+                .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
+                .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
+                .build();
+
+        Trajectory move = drive.trajectoryBuilder(supply.end())
+                .back(35)
+                .build();
+
+        Trajectory returnToOrigin = drive.trajectoryBuilder(move.end())
+                .addTemporalMarker(0.5, () -> robot.maturica.toggleEject())
+                .forward(35)
+                .build();
+
+        waitForStart();
+
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(2);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.6);
+        drive.followTrajectory(deliveryFirst);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supplyFirst);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+
+        */
+
+        /*
+        Cupa de jos
+        */
+
+        Trajectory deliveryFirst = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(4, -35, Math.toRadians(145)))
+                .build();
+
+        Trajectory supplyFirst = drive.trajectoryBuilder(deliveryFirst.end())
+                .addTemporalMarker(0.1, () -> robot.glisiere.setToPosition(2))
+                .addTemporalMarker(0.4, () -> robot.cupa.servo.setPosition(0.97))
+                .addTemporalMarker(0.8, () -> robot.glisiere.setToPosition(0))
+                .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
+                .build();
+
+        Trajectory delivery = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
+                .build();
+
+
+        Trajectory supply = drive.trajectoryBuilder(delivery.end())
+                .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
+                .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
+                .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
+                .build();
+
+        Trajectory move = drive.trajectoryBuilder(supply.end())
+                .back(35)
+                .build();
+
+        Trajectory returnToOrigin = drive.trajectoryBuilder(move.end())
+                .addTemporalMarker(0.5, () -> robot.maturica.toggleEject())
+                .forward(35)
+                .build();
+
+        waitForStart();
+
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(2);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        sleep(300);
+        robot.glisiere.setToPosition(1);
+        drive.followTrajectory(deliveryFirst);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supplyFirst);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
+        robot.cupa.toggleDeget();
+        robot.glisiere.setToPosition(3);
+        sleep(500);
+        robot.cupa.servo.setPosition(0.5);
+        drive.followTrajectory(returnToOrigin);
+        drive.followTrajectory(delivery);
+        robot.cupa.toggleDeget();
+        sleep(300);
+        robot.maturica.toggleCollect();
+        drive.followTrajectory(supply);
+        drive.followTrajectory(move);
     }
 }
