@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
+import dalvik.system.DelegateLastClassLoader;
+
 @TeleOp(name = "OpMode", group = "Testing")
 public class DriverControlled extends LinearOpMode {
 
@@ -24,7 +26,7 @@ public class DriverControlled extends LinearOpMode {
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private Mugurel robot;
     private int stateRata = -1;
-    private ElapsedTime timpCupa, timerGli, runTime, timerPro;
+    private ElapsedTime timpCupa, timerGli, runTime, timerPro, timerMag;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -35,11 +37,12 @@ public class DriverControlled extends LinearOpMode {
         timpCupa = new ElapsedTime();
         timerGli = new ElapsedTime();
         timerPro = new ElapsedTime();
+        timerMag = new ElapsedTime();
 
-        DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.left_front);
-        DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.left_back);
-        DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.right_front);
-        DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.right_back);
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.right_back);
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.right_front);
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get(Config.left_back);
+        DcMotor backRightMotor = hardwareMap.dcMotor.get(Config.left_front);
 
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -52,6 +55,7 @@ public class DriverControlled extends LinearOpMode {
         timerGli.reset();
         runTime.reset();
         timerPro.reset();
+        timerMag.reset();
         while (opModeIsActive()) {
 
             andrei.update();
@@ -111,6 +115,9 @@ public class DriverControlled extends LinearOpMode {
             cupa(cristi.y);
             senzor(robot.distance);
 
+            if(timerMag.milliseconds() >= 0.5)
+                robot.brat.collect();
+
             idle();
 
             telemetry.addData("Elapsed time:",runTime.toString());
@@ -131,8 +138,10 @@ public class DriverControlled extends LinearOpMode {
 
     private void brat(double ly, double lx, Button magnet) {
         robot.brat.move(ly, lx);
-        if (magnet.pressed())
-            robot.brat.toggleCupa();
+        if (magnet.pressed()) {
+            robot.brat.eject();
+            timerMag.reset();
+        }
     }
 
     private void rata(boolean rata) {

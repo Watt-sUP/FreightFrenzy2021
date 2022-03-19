@@ -28,6 +28,7 @@ public class AutonomCubRed extends LinearOpMode {
         /*
         Cubul de sus
 
+
         Trajectory delivery = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
                 .build();
@@ -94,8 +95,7 @@ public class AutonomCubRed extends LinearOpMode {
         robot.maturica.toggleCollect();
         drive.followTrajectory(supply);
         drive.followTrajectory(move);
-         */
-
+        */
         /*
         Cub mijloc
 
@@ -181,6 +181,7 @@ public class AutonomCubRed extends LinearOpMode {
         Cupa de jos
         */
 
+
         Trajectory deliveryFirst = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(4, -35, Math.toRadians(145)))
                 .build();
@@ -189,7 +190,7 @@ public class AutonomCubRed extends LinearOpMode {
                 .addTemporalMarker(0.1, () -> robot.glisiere.setToPosition(2))
                 .addTemporalMarker(0.4, () -> robot.cupa.servo.setPosition(0.97))
                 .addTemporalMarker(0.8, () -> robot.glisiere.setToPosition(0))
-                .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(12, -64, Math.toRadians(180)))
                 .build();
 
         Trajectory delivery = drive.trajectoryBuilder(startPose)
@@ -200,7 +201,7 @@ public class AutonomCubRed extends LinearOpMode {
         Trajectory supply = drive.trajectoryBuilder(delivery.end())
                 .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
                 .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
-                .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(12, -64, Math.toRadians(180)))
                 .build();
 
         Trajectory move = drive.trajectoryBuilder(supply.end())
@@ -214,6 +215,9 @@ public class AutonomCubRed extends LinearOpMode {
 
         waitForStart();
 
+
+        robot.brat.goToPosition(1600);
+        sleep(1000);
         robot.cupa.toggleDeget();
         robot.glisiere.setToPosition(2);
         sleep(500);
@@ -259,5 +263,7 @@ public class AutonomCubRed extends LinearOpMode {
         robot.maturica.toggleCollect();
         drive.followTrajectory(supply);
         drive.followTrajectory(move);
+
+         /**/
     }
 }

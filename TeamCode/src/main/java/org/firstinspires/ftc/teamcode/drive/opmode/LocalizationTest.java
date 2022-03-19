@@ -26,9 +26,9 @@ public class LocalizationTest extends LinearOpMode {
 
         Encoder leftEncoder, rightEncoder, frontEncoder;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "RF"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "RB"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LB"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LB"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LF"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "RF"));
 
         leftEncoder.setDirection(Encoder.Direction.FORWARD);
         rightEncoder.setDirection(Encoder.Direction.REVERSE);
