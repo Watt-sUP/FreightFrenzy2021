@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 //@Disabled
 @Autonomous(name = "Autonom cub rosu", group = "autonom")
@@ -27,7 +28,7 @@ public class AutonomCubRed extends LinearOpMode {
 
         /*
         Cubul de sus
-
+        */
 
         Trajectory delivery = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
@@ -95,7 +96,7 @@ public class AutonomCubRed extends LinearOpMode {
         robot.maturica.toggleCollect();
         drive.followTrajectory(supply);
         drive.followTrajectory(move);
-        */
+        /**/
         /*
         Cub mijloc
 
@@ -179,7 +180,7 @@ public class AutonomCubRed extends LinearOpMode {
 
         /*
         Cupa de jos
-        */
+
 
 
         Trajectory deliveryFirst = drive.trajectoryBuilder(startPose)
@@ -264,6 +265,6 @@ public class AutonomCubRed extends LinearOpMode {
         drive.followTrajectory(supply);
         drive.followTrajectory(move);
 
-         /**/
+         */
     }
 }

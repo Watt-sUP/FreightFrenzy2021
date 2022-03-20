@@ -253,7 +253,7 @@ public class DriverControlled extends LinearOpMode {
     public void senzor(DistanceSensor du) {
         double distance = du.getDistance(DistanceUnit.CM);
         telemetry.addData("Distanta senzor:", distance);
-        if(distance <= 4.0 && isDown) {
+        if(distance <= 4.5 && isDown) {
             timerMaturica.reset();
             cleaning = true;
             robot.cupa.toggleDeget();
