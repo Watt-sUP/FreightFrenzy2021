@@ -144,7 +144,7 @@ public class DriverControlled extends LinearOpMode {
             magnetic = true;
         }
 
-        if(timerMag.milliseconds() >= 500 && magnetic) {
+        if(timerMag.milliseconds() >= 1000 && magnetic) {
             robot.brat.toggleCupa();
             magnetic = false;
         }
