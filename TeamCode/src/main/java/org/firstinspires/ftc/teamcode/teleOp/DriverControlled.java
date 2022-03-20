@@ -22,11 +22,11 @@ public class DriverControlled extends LinearOpMode {
 
     //Declaratii
     private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
-    private boolean first = false, isGlisieraProcessing = false;
+    private boolean first = false, isGlisieraProcessing = false, cleaning = false;
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private Mugurel robot;
     private int stateRata = -1;
-    private ElapsedTime timpCupa, timerGli, runTime, timerPro, timerMag;
+    private ElapsedTime timpCupa, timerGli, runTime, timerPro, timerMag, timerMaturica;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,6 +38,7 @@ public class DriverControlled extends LinearOpMode {
         timerGli = new ElapsedTime();
         timerPro = new ElapsedTime();
         timerMag = new ElapsedTime();
+        timerMaturica = new ElapsedTime();
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.right_back);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.right_front);
@@ -56,6 +57,7 @@ public class DriverControlled extends LinearOpMode {
         runTime.reset();
         timerPro.reset();
         timerMag.reset();
+        timerMaturica.reset();
         while (opModeIsActive()) {
 
             andrei.update();
@@ -247,7 +249,8 @@ public class DriverControlled extends LinearOpMode {
         double distance = du.getDistance(DistanceUnit.CM);
         telemetry.addData("Distanta senzor:", distance);
         if(distance <= 5.0 && isDown) {
-            robot.maturica.toggleEject();
+            timerMaturica.reset();
+            cleaning = true;
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(3);
             timerPro.reset();
@@ -259,6 +262,11 @@ public class DriverControlled extends LinearOpMode {
         if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
             robot.cupa.toggleCupa();
             isGlisieraProcessing = false;
+        }
+
+        if(timerMaturica.milliseconds() >= 500 && cleaning) {
+            robot.maturica.toggleEject();
+            cleaning = false;
         }
     }
 
