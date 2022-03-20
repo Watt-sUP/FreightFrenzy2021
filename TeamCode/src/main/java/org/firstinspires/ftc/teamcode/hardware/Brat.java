@@ -44,24 +44,17 @@ public class Brat {
 
     public void move(double powerVertical, double powerOrizontal)
     {
-        /*
-                CR-someday bogdan: in clasa de gamepad am putea face axele sa returneze 0 daca
-                                   nu sunt apasate suficient (echivalent cu if urile astea)
-        */
 
+        if(powerVertical < -0.03 || powerVertical > 0.03)
+            motor_vertical.setPower(-powerVertical * 0.5);
 
-
-        if(powerVertical < -0.03 || powerVertical > 0.03) {
-//            motor_vertical.setPower(-powerVertical * 0.254);
-            motor_vertical.setPower(-powerVertical);
-        }
 
         else if(powerVertical < 0.03 && powerVertical > -0.03)
             motor_vertical.setPower(0.0);
 
 
         if(powerOrizontal < -0.03 || powerOrizontal > 0.03) {
-            servo_orizontal.setPower(-powerOrizontal);
+            servo_orizontal.setPower(-powerOrizontal * 0.5);
         }
         else if(powerOrizontal < 0.03 && powerOrizontal > -0.03)
             servo_orizontal.setPower(0.0);

@@ -22,7 +22,7 @@ public class DriverControlled extends LinearOpMode {
 
     //Declaratii
     private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
-    private boolean first = false, isGlisieraProcessing = false, cleaning = false;
+    private boolean first = false, isGlisieraProcessing = false, cleaning = false, magnetic = false;
     private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
     private Mugurel robot;
     private int stateRata = -1;
@@ -117,8 +117,6 @@ public class DriverControlled extends LinearOpMode {
             cupa(cristi.y);
             senzor(robot.distance);
 
-            if(timerMag.milliseconds() >= 0.5)
-                robot.brat.collect();
 
             idle();
 
@@ -143,7 +141,14 @@ public class DriverControlled extends LinearOpMode {
         if (magnet.pressed()) {
             robot.brat.eject();
             timerMag.reset();
+            magnetic = true;
         }
+
+        if(timerMag.milliseconds() >= 500 && magnetic) {
+            robot.brat.collect();
+            magnetic = false;
+        }
+
     }
 
     private void rata(boolean rata) {
@@ -248,7 +253,7 @@ public class DriverControlled extends LinearOpMode {
     public void senzor(DistanceSensor du) {
         double distance = du.getDistance(DistanceUnit.CM);
         telemetry.addData("Distanta senzor:", distance);
-        if(distance <= 5.0 && isDown) {
+        if(distance <= 4.0 && isDown) {
             timerMaturica.reset();
             cleaning = true;
             robot.cupa.toggleDeget();
