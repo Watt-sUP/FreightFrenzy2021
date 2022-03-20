@@ -139,13 +139,13 @@ public class DriverControlled extends LinearOpMode {
     private void brat(double ly, double lx, Button magnet) {
         robot.brat.move(ly, lx);
         if (magnet.pressed()) {
-            robot.brat.eject();
+            robot.brat.toggleCupa();
             timerMag.reset();
             magnetic = true;
         }
 
         if(timerMag.milliseconds() >= 500 && magnetic) {
-            robot.brat.collect();
+            robot.brat.toggleCupa();
             magnetic = false;
         }
 

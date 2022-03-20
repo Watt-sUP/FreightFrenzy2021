@@ -66,7 +66,7 @@ public class Brat {
     }
 
     public void eject() {
-        servo_fata.setPosition(1.0);
+        servo_fata.setPosition(0);
         stare = StateCupa.eject;
     }
 
