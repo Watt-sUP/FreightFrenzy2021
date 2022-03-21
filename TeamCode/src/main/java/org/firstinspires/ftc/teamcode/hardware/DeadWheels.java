@@ -17,7 +17,7 @@ public class DeadWheels {
 
     public void setDown() {
         roataDreapta.setPosition(downPosition - 0.015);
-        roataMijloc.setPosition(downPosition - 0.065);
+        roataMijloc.setPosition(downPosition - 0.085);
         roataStanga.setPosition(downPosition + 0.09);
     }
 

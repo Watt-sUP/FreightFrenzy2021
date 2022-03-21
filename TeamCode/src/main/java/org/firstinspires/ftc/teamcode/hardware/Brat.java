@@ -13,6 +13,9 @@ public class Brat {
     public CRServo servo_orizontal;
     public DcMotor motor_vertical;
     public Servo servo_fata;
+    private int[] poz = {0, 1870, 2130};
+    public boolean isBrat = false;
+    public int pozition = 0;
 
     private enum StateCupa {
         collect,
@@ -42,17 +45,8 @@ public class Brat {
         return motor_vertical.getCurrentPosition();
     }
 
-    public void move(double powerVertical, double powerOrizontal)
+    public void move(double powerOrizontal)
     {
-
-        if(powerVertical < -0.03 || powerVertical > 0.03)
-            motor_vertical.setPower(-powerVertical * 0.5);
-
-
-        else if(powerVertical < 0.03 && powerVertical > -0.03)
-            motor_vertical.setPower(0.0);
-
-
         if(powerOrizontal < -0.03 || powerOrizontal > 0.03) {
             servo_orizontal.setPower(-powerOrizontal * 0.5);
         }
@@ -71,8 +65,23 @@ public class Brat {
     }
 
     public void collect() {
-        servo_fata.setPosition(0.5);
+        servo_fata.setPosition(1);
         stare = StateCupa.collect;
+    }
+
+    public void changePosition(double change) {
+        if(change >= 0.1 && !isBrat) {
+            if(pozition < 2)
+                pozition++;
+            isBrat = true;
+            goToPosition(poz[pozition]);
+        } else if(change <= -0.1 && !isBrat) {
+            if(pozition > 0)
+                pozition--;
+            isBrat = true;
+            goToPosition(poz[pozition]);
+        }
+        else if(change == 0) isBrat = false;
     }
 
     public void goToPosition(int pos)

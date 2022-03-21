@@ -31,7 +31,7 @@ public class AutonomCubRed extends LinearOpMode {
         */
 
         Trajectory delivery = drive.trajectoryBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(-12, -48, Math.toRadians(12)), Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(-12, -48, Math.toRadians(100)), Math.toRadians(45))
                 .build();
 
 

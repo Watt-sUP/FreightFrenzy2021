@@ -23,10 +23,10 @@ public class DriverControlled extends LinearOpMode {
     //Declaratii
     private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
     private boolean first = false, isGlisieraProcessing = false, cleaning = false, magnetic = false;
-    private boolean faza_1 = false, faza_2 = false, faza_3 = false, faza_4 = false;
+    private boolean emergency = false;
     private Mugurel robot;
     private int stateRata = -1;
-    private ElapsedTime timpCupa, timerGli, runTime, timerPro, timerMag, timerMaturica;
+    private ElapsedTime timpCupa, timerGli, runTime, timerPro, timerMag, timerMaturica, timerStop;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,6 +39,7 @@ public class DriverControlled extends LinearOpMode {
         timerPro = new ElapsedTime();
         timerMag = new ElapsedTime();
         timerMaturica = new ElapsedTime();
+        timerStop = new ElapsedTime();
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.right_back);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.right_front);
@@ -58,6 +59,7 @@ public class DriverControlled extends LinearOpMode {
         timerPro.reset();
         timerMag.reset();
         timerMaturica.reset();
+        timerStop.reset();
         while (opModeIsActive()) {
 
             andrei.update();
@@ -111,11 +113,12 @@ public class DriverControlled extends LinearOpMode {
 
             brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down);
             maturica(cristi.a);
-            deget(cristi.b);
+//            deget(cristi.b);
             rata(gamepad1.x);
-            glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper);
+            glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper, cristi.b);
             cupa(cristi.y);
-            senzor(robot.distance);
+//            senzor(robot.distance);
+//            emergency(andrei.a);
 
 
             idle();
@@ -126,18 +129,19 @@ public class DriverControlled extends LinearOpMode {
         robot.glisiere.motor.setPower(0);
     }
 
-    private void deget(Button deget) {
-        if (deget.pressed())
-            robot.cupa.toggleDeget();
-    }
+//    private void deget(Button deget) {
+//        if (deget.pressed())
+//            robot.cupa.toggleDeget();
+//    }
 
     private void maturica(Button maturica) {
         if (maturica.pressed())
             robot.maturica.toggleCollect();
     }
 
-    private void brat(double ly, double lx, Button magnet) {
-        robot.brat.move(ly, lx);
+    private void brat(double verticalMovement, double horizontalMovement, Button magnet) {
+        robot.brat.move(horizontalMovement);
+        robot.brat.changePosition(verticalMovement);
         if (magnet.pressed()) {
             robot.brat.toggleCupa();
             timerMag.reset();
@@ -148,6 +152,7 @@ public class DriverControlled extends LinearOpMode {
             robot.brat.toggleCupa();
             magnetic = false;
         }
+
 
     }
 
@@ -175,7 +180,7 @@ public class DriverControlled extends LinearOpMode {
         }
     }
 
-    private void glisiere(Button poz0, Button poz1, Button poz2, Button poz3, Button poz4) {
+    private void glisiere(Button poz0, Button poz1, Button poz2, Button poz3, Button poz4, Button b) {
         if (poz0.pressed()) {
             first = false;
             robot.glisiere.setToPosition(0);
@@ -184,28 +189,50 @@ public class DriverControlled extends LinearOpMode {
         if (poz1.pressed()) {
             first = true;
             robot.glisiere.setToPosition(1);
-            robot.maturica.toggleEject();
             isDown = false;
         } else if (poz2.pressed()) {
             first = false;
             robot.glisiere.setToPosition(2);
-            robot.maturica.toggleEject();
             isDown = false;
         } else if (poz3.pressed()) {
             first = false;
             robot.glisiere.setToPosition(3);
-            robot.maturica.toggleEject();
             isDown = false;
         } else if (poz4.pressed()) {
             first = false;
             robot.glisiere.setToPosition(4);
-            robot.maturica.toggleEject();
             isDown = false;
+        }
+
+        if(isDown) {
+            if(b.pressed()) {
+                timerMaturica.reset();
+                cleaning = true;
+                robot.cupa.toggleDeget();
+                robot.glisiere.setToPosition(3);
+                timerPro.reset();
+                isGlisieraProcessing = true;
+                first = false;
+                isDown = false;
+            }
+        } else {
+            if(b.pressed())
+                robot.cupa.toggleDeget();
+        }
+
+        if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
+            robot.cupa.toggleCupa();
+            isGlisieraProcessing = false;
+        }
+
+        if(timerMaturica.milliseconds() >= 200 && cleaning) {
+            robot.maturica.toggleEject();
+            cleaning = false;
         }
     }
 
     private void cupa(Button cupa) {
-        if (cupa.pressed() && !faza_3) {
+        if (cupa.pressed()) {
             if(!first) {
                 robot.cupa.toggleCupa();
                 isCupaProcessing = true;
@@ -213,8 +240,7 @@ public class DriverControlled extends LinearOpMode {
             }
             else {
                 robot.glisiere.setToPosition(2);
-                timpCupa.reset();
-                faza_1 = true;
+                first = false;
             }
         }
 
@@ -224,56 +250,46 @@ public class DriverControlled extends LinearOpMode {
             robot.maturica.toggleCollect();
             isCupaProcessing = false;
         }
-
-        if(timpCupa.milliseconds() >= 800 && faza_1) {
-            robot.cupa.servo.setPosition(0.5);
-            faza_1 = false;
-            faza_2 = true;
-        }
-
-        if(timpCupa.milliseconds() >= 1600 && faza_2) {
-            robot.glisiere.setToPosition(1);
-            faza_2 = false;
-            faza_3 = true;
-        }
-
-        if(cupa.pressed() && faza_3) {
-            robot.glisiere.setToPosition(2);
-            timpCupa.reset();
-            faza_3 = false;
-            faza_4 = true;
-        }
-
-        if(timpCupa.milliseconds() >= 800 && faza_4) {
-            robot.cupa.servo.setPosition(0.97);
-            faza_4 = false;
-        }
     }
 
-    public void senzor(DistanceSensor du) {
-        double distance = du.getDistance(DistanceUnit.CM);
-        telemetry.addData("Distanta senzor:", distance);
-        if(distance <= 4.5 && isDown) {
-            timerMaturica.reset();
-            cleaning = true;
+//    public void senzor(DistanceSensor du) {
+//        double distance = du.getDistance(DistanceUnit.CM);
+//        telemetry.addData("Distanta senzor:", distance);
+//        if(distance <= 5 && isDown) {
+//            timerMaturica.reset();
+//            cleaning = true;
+//            robot.cupa.toggleDeget();
+//            robot.glisiere.setToPosition(3);
+//            timerPro.reset();
+//            isGlisieraProcessing = true;
+//            first = false;
+//            isDown = false;
+//        }
+//
+//        if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
+//            robot.cupa.toggleCupa();
+//            isGlisieraProcessing = false;
+//        }
+//
+//        if(timerMaturica.milliseconds() >= 200 && cleaning) {
+//            robot.maturica.toggleEject();
+//            cleaning = false;
+//        }
+//    }
+
+    public void emergency(Button stop) {
+        if(stop.pressed()) {
+            emergency = true;
+            timerStop.reset();
+            robot.glisiere.motor.setPower(0);
             robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
-            timerPro.reset();
-            isGlisieraProcessing = true;
-            first = false;
-            isDown = false;
-        }
-
-        if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
             robot.cupa.toggleCupa();
-            isGlisieraProcessing = false;
         }
 
-        if(timerMaturica.milliseconds() >= 500 && cleaning) {
-            robot.maturica.toggleEject();
-            cleaning = false;
+        if(timerStop.milliseconds() >= 400 && emergency) {
+            robot.glisiere.setToPosition(0);
+            emergency = false;
         }
     }
-
 }
 
