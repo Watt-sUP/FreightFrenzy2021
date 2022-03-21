@@ -73,8 +73,13 @@ public class RataExperimental extends LinearOpMode {
         timer.reset();
 
         while(motor.getCurrentPosition() < needed_ticks) {
+
             double now_velocity = motor.getVelocity();
             double now_time = timer.time(TimeUnit.SECONDS);
+
+            telemetry.addData("now_velocity", now_velocity);
+            telemetry.addData("ticks", motor.getCurrentPosition());
+            telemetry.update();
 
             double l = now_velocity, r = MAX_VELOCITY;
             for(int i = 0; i < 20; i++) {
