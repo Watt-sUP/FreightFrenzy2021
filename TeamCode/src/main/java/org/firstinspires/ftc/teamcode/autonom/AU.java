@@ -30,7 +30,7 @@ public class AU extends LinearOpMode {
 
         Trajectory supply = drive.trajectoryBuilder(delivery.end())
                 .splineToSplineHeading(new Pose2d(25, -65, Math.toRadians(180)), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(55, -65.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(40, -65.5), Math.toRadians(0))
                 .build();
 
         Trajectory reverse = drive.trajectoryBuilder(supply.end())

@@ -31,9 +31,14 @@ public class RataExperimental extends LinearOpMode {
 
         waitForStart();
 
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
         while(opModeIsActive()) {
             if(gamepad1.a) {
+                double start = timer.seconds();
                 score_rata();
+                telemetry.addData("Time", timer.seconds() - start);
+                telemetry.update();
             }
         }
     }
@@ -56,13 +61,13 @@ public class RataExperimental extends LinearOpMode {
 
         final double needed_revolutions = needed_length / wheel_circumference;
         final double TICKS_PER_REVOLUTION = motor.getMotorType().getTicksPerRev();
-        final double MAX_VELOCITY = motor.getMotorType().getAchieveableMaxTicksPerSecond();
+        final double MAX_VELOCITY = 3000;
 
         final double needed_ticks = needed_revolutions * TICKS_PER_REVOLUTION;
 
         final double duck_position = inchToM(3.0);   // meters
 
-        final double miu = 0.3;     // coef frecare
+        final double miu = 0.38;     // coef frecare
         final double ff = miu * 9.81;   // forta frecare
         final double ff2 = ff * ff;
 
@@ -72,24 +77,40 @@ public class RataExperimental extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
 
+        double dt = 0.0001;
+        double last_s = timer.seconds();
+
         while(motor.getCurrentPosition() < needed_ticks) {
 
             double now_velocity = motor.getVelocity();
-            double now_time = timer.time(TimeUnit.SECONDS);
+            double now_time = timer.seconds();
 
             telemetry.addData("now_velocity", now_velocity);
             telemetry.addData("ticks", motor.getCurrentPosition());
+            telemetry.addData("MAX_VELOCITY", MAX_VELOCITY);
+            telemetry.addData("TICKS_PER_REVOLUTION", TICKS_PER_REVOLUTION);
+            telemetry.addData("needed_revs", needed_revolutions);
             telemetry.update();
 
             double l = now_velocity, r = MAX_VELOCITY;
             for(int i = 0; i < 20; i++) {
                 double m = (l + r) / 2.0;
-                double tm = timer.time(TimeUnit.SECONDS);
+                double tm = timer.seconds();
                 double v = m;
 
                 double last_v = now_velocity * motor_to_vel;
                 double now_v = v * motor_to_vel;
-                double acc = (now_v - last_v) / (tm - now_time);
+//                double acc = (now_v - last_v) / (tm - now_time);
+                double acc = (now_v - last_v) / dt;
+
+                telemetry.addData("now_velocity", now_velocity);
+                telemetry.addData("ticks", motor.getCurrentPosition());
+                telemetry.addData("MAX_VELOCITY", MAX_VELOCITY);
+                telemetry.addData("TICKS_PER_REVOLUTION", TICKS_PER_REVOLUTION);
+                telemetry.addData("needed_revs", needed_revolutions);
+                telemetry.addData("acc", acc);
+                telemetry.addData("dt", dt);
+                telemetry.update();
 
                 double inert = acc;
                 double cntrf = now_v * now_v / duck_position;
@@ -102,7 +123,12 @@ public class RataExperimental extends LinearOpMode {
                     r = m;
             }
 
-            motor.setPower(l);
+            motor.setVelocity(l);
+//            motor.setVelocity(MAX_VELOCITY);
+            double now_s = timer.seconds();
+            dt = now_s - last_s;
+            last_s = now_s;
         }
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

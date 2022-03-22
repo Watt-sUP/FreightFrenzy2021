@@ -22,11 +22,12 @@ public class DriverControlled extends LinearOpMode {
 
     //Declaratii
     private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
-    private boolean first = false, isGlisieraProcessing = false, cleaning = false, magnetic = false;
+    private boolean first = false, isGlisieraProcessing = false, cleaning = false, magnetic = false, deget=true;
     private boolean emergency = false;
     private Mugurel robot;
     private int stateRata = -1;
     private ElapsedTime timpCupa, timerGli, runTime, timerPro, timerMag, timerMaturica, timerStop;
+    private ElapsedTime timerCos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,6 +41,7 @@ public class DriverControlled extends LinearOpMode {
         timerMag = new ElapsedTime();
         timerMaturica = new ElapsedTime();
         timerStop = new ElapsedTime();
+        timerCos = new ElapsedTime();
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get(Config.right_back);
         DcMotor backLeftMotor = hardwareMap.dcMotor.get(Config.right_front);
@@ -114,7 +116,7 @@ public class DriverControlled extends LinearOpMode {
             brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down);
             maturica(cristi.a);
 //            deget(cristi.b);
-            rata(gamepad1.x);
+            rata(andrei.x);
             glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper, cristi.b);
             cupa(cristi.y);
 //            senzor(robot.distance);
@@ -156,11 +158,11 @@ public class DriverControlled extends LinearOpMode {
 
     }
 
-    private void rata(boolean rata) {
+    private void rata(Button rata) {
         double startingPower = 0;
         long start_time = System.nanoTime();
 
-        if (rata) {
+        if (rata.pressed()) {
             startingPower = 0.7;
             if (stateRata == -1) {
                 stateRata = 0;
@@ -188,7 +190,7 @@ public class DriverControlled extends LinearOpMode {
         }
         if (poz1.pressed()) {
             first = true;
-            robot.glisiere.setToPosition(1);
+            robot.glisiere.setToPosition(5);
             isDown = false;
         } else if (poz2.pressed()) {
             first = false;
@@ -209,17 +211,23 @@ public class DriverControlled extends LinearOpMode {
                 timerMaturica.reset();
                 cleaning = true;
                 robot.cupa.toggleDeget();
-                robot.glisiere.setToPosition(3);
+ //               robot.glisiere.setToPosition(3);
+                timerCos.reset();
                 timerPro.reset();
                 isGlisieraProcessing = true;
                 first = false;
                 isDown = false;
+                deget = false;
             }
         } else {
             if(b.pressed())
                 robot.cupa.toggleDeget();
         }
-
+        if (timerCos.milliseconds() >= 500 && !deget)
+        {
+            robot.glisiere.setToPosition(3);
+            deget= true;
+        }
         if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
             robot.cupa.toggleCupa();
             isGlisieraProcessing = false;
