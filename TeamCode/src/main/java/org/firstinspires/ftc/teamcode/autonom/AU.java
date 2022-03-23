@@ -24,17 +24,17 @@ public class AU extends LinearOpMode {
 
 
         Trajectory delivery = drive.trajectoryBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(0, -48, Math.toRadians(120)), Math.toRadians(45))
+                .splineToSplineHeading(new Pose2d(0, -48, Math.toRadians(120)), Math.toRadians(120))
                 .build();
 
 
         Trajectory supply = drive.trajectoryBuilder(delivery.end())
-                .splineToSplineHeading(new Pose2d(25, -65, Math.toRadians(180)), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(40, -65.5), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(12, -65, Math.toRadians(180)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(40, -65), Math.toRadians(0))
                 .build();
 
         Trajectory reverse = drive.trajectoryBuilder(supply.end())
-                .splineToConstantHeading(new Vector2d(25, -65), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(20, -65), Math.toRadians(180))
                 .splineToSplineHeading(new Pose2d(0, -48, Math.toRadians(120)), Math.toRadians(120))
                 .build();
 
