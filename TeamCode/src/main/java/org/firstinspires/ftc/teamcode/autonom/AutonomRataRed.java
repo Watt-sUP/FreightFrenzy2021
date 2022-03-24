@@ -22,7 +22,7 @@ import java.util.List;
 @Autonomous(name = "Autonom rata rosu", group = "autonom")
 public class AutonomRataRed extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelyellow_2.tflite";
+    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange.tflite";
     private static final String[] LABELS = {
             "Team Marker"
     };
@@ -30,8 +30,7 @@ public class AutonomRataRed extends LinearOpMode {
     private static final String VUFORIA_KEY = Config.VuforiaKey;
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
-
-    private enum Locations {Top, Middle, Bottom};
+    enum Locations {Top, Middle, Bottom};
     private Locations teamMarkerLocation = null;
     private double confidence;
 
@@ -66,12 +65,16 @@ public class AutonomRataRed extends LinearOpMode {
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel() == "Team Marker") {
                             telemetry.addData("Team Marker:", "Detected");
-                            if(((recognition.getBottom() - recognition.getTop())) < (recognition.getImageHeight() * 0.67)) {
-                                if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() / 2) && recognition.getConfidence() > confidence) {
+                            if(((recognition.getBottom() - recognition.getTop())) < (recognition.getImageHeight() * 0.8)) {
+                                if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() / 3) && recognition.getConfidence() > confidence) {
+                                    teamMarkerLocation = Locations.Bottom;
+                                    confidence = recognition.getConfidence();
+                                }
+                                else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() * 2 / 3) && recognition.getConfidence() > confidence) {
                                     teamMarkerLocation = Locations.Middle;
                                     confidence = recognition.getConfidence();
                                 }
-                                else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() >= (recognition.getImageWidth() / 2) && recognition.getConfidence() > confidence) {
+                                else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() >= (recognition.getImageWidth() * 2 / 3) && recognition.getConfidence() > confidence) {
                                     teamMarkerLocation = Locations.Top;
                                     confidence = recognition.getConfidence();
                                 }
@@ -88,48 +91,39 @@ public class AutonomRataRed extends LinearOpMode {
                 }
             }
         }
+        if(teamMarkerLocation == Locations.Top) {
+            Trajectory cube = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
+                    .lineToLinearHeading(new Pose2d(-30, -40, Math.toRadians(40)))
+                    .build();
 
-        if(tfod != null) tfod.shutdown();
-        /*
-        Cubul de sus
+            Trajectory duck = drive.trajectoryBuilder(cube.end())
+                    .addTemporalMarker(0.5, () -> robot.cupa.toggleCupa())
+                    .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
+                    .lineToLinearHeading(new Pose2d(-65, -55, Math.toRadians(270)))
+                    .build();
 
-        Trajectory cube = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(-30, -40, Math.toRadians(40)))
-                .build();
-
-         Trajectory duck = drive.trajectoryBuilder(cube.end())
-                .addTemporalMarker(0.5, () -> robot.cupa.toggleCupa())
-                .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
-                .lineToLinearHeading(new Pose2d(-65, -55, Math.toRadians(270)))
-                .build();
-
-        Trajectory finish = drive.trajectoryBuilder(duck.end())
-                .lineTo(new Vector2d(-60, -34))
-                .build();
+            Trajectory finish = drive.trajectoryBuilder(duck.end())
+                    .lineTo(new Vector2d(-60, -34))
+                    .build();
 
 
-        waitForStart();
-
-        robot.brat.goToPosition(1600);
-        sleep(1000);
-        robot.cupa.toggleDeget();
-        robot.glisiere.setToPosition(3);
-        sleep(1000);
-        robot.cupa.toggleCupa();
-        drive.followTrajectory(cube);
-        sleep(500);
-        robot.cupa.toggleDeget();
-        sleep(1000);
-        drive.followTrajectory(duck);
-        robot.rata.motor.setPower(0.6);
-        sleep(1000);
-        robot.rata.motor.setPower(0.6);
-        sleep(5000);
-        drive.followTrajectory(finish);
-        */
-        /*
-        Cubul de mijloc
-
+            robot.brat.goToPosition(1600);
+            sleep(1000);
+            robot.cupa.toggleDeget();
+            robot.glisiere.setToPosition(3);
+            sleep(1000);
+            robot.cupa.toggleCupa();
+            drive.followTrajectory(cube);
+            sleep(500);
+            robot.cupa.toggleDeget();
+            sleep(1000);
+            drive.followTrajectory(duck);
+            robot.rata.motor.setPower(0.6);
+            sleep(1000);
+            robot.rata.motor.setPower(0.6);
+            sleep(5000);
+            drive.followTrajectory(finish);
+        } else if(teamMarkerLocation == Locations.Middle) {
 
             Trajectory cube = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
                     .lineToLinearHeading(new Pose2d(-26, -37, Math.toRadians(35)))
@@ -164,11 +158,8 @@ public class AutonomRataRed extends LinearOpMode {
             robot.rata.motor.setPower(0.6);
             sleep(5000);
             drive.followTrajectory(finish);
-            */
+        } else {
 
-            /*
-            Cubul de jos
-             */
             Trajectory cube = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
                     .lineToLinearHeading(new Pose2d(-24, -36, Math.toRadians(37)))
                     .build();
@@ -183,7 +174,6 @@ public class AutonomRataRed extends LinearOpMode {
             Trajectory finish = drive.trajectoryBuilder(duck.end())
                     .lineTo(new Vector2d(-60, -34))
                     .build();
-
 
 
             robot.brat.goToPosition(1600);
@@ -205,7 +195,7 @@ public class AutonomRataRed extends LinearOpMode {
             robot.rata.motor.setPower(0.6);
             sleep(5000);
             drive.followTrajectory(finish);
-
+        }
         }
 
 

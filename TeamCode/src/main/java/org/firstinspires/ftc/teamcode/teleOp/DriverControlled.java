@@ -22,7 +22,7 @@ public class DriverControlled extends LinearOpMode {
 
     //Declaratii
     private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
-    private boolean first = false, isGlisieraProcessing = false, cleaning = false, magnetic = false, deget=true;
+    private boolean first = false, isGlisieraProcessing = false, cleaning = false, magnetic = false, deget =true;
     private boolean emergency = false;
     private Mugurel robot;
     private int stateRata = -1;
@@ -62,6 +62,7 @@ public class DriverControlled extends LinearOpMode {
         timerMag.reset();
         timerMaturica.reset();
         timerStop.reset();
+        timerCos.reset();
         while (opModeIsActive()) {
 
             andrei.update();
@@ -119,7 +120,7 @@ public class DriverControlled extends LinearOpMode {
             rata(andrei.x);
             glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper, cristi.b);
             cupa(cristi.y);
-//            senzor(robot.distance);
+            senzor(robot.distance);
 //            emergency(andrei.a);
 
 
@@ -205,7 +206,7 @@ public class DriverControlled extends LinearOpMode {
             robot.glisiere.setToPosition(4);
             isDown = false;
         }
-
+/*
         if(isDown) {
             if(b.pressed()) {
                 timerMaturica.reset();
@@ -219,10 +220,11 @@ public class DriverControlled extends LinearOpMode {
                 isDown = false;
                 deget = false;
             }
-        } else {
+        } else */
+       // {
             if(b.pressed())
                 robot.cupa.toggleDeget();
-        }
+       // }
         if (timerCos.milliseconds() >= 500 && !deget)
         {
             robot.glisiere.setToPosition(3);
@@ -260,30 +262,37 @@ public class DriverControlled extends LinearOpMode {
         }
     }
 
-//    public void senzor(DistanceSensor du) {
-//        double distance = du.getDistance(DistanceUnit.CM);
-//        telemetry.addData("Distanta senzor:", distance);
-//        if(distance <= 5 && isDown) {
-//            timerMaturica.reset();
-//            cleaning = true;
-//            robot.cupa.toggleDeget();
-//            robot.glisiere.setToPosition(3);
-//            timerPro.reset();
-//            isGlisieraProcessing = true;
-//            first = false;
-//            isDown = false;
-//        }
-//
-//        if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
-//            robot.cupa.toggleCupa();
-//            isGlisieraProcessing = false;
-//        }
-//
-//        if(timerMaturica.milliseconds() >= 200 && cleaning) {
-//            robot.maturica.toggleEject();
-//            cleaning = false;
-//        }
-//    }
+    public void senzor(DistanceSensor du) {
+        double distance = du.getDistance(DistanceUnit.CM);
+        telemetry.addData("Distanta senzor:", distance);
+        if(distance <= 5 && isDown) {
+            timerMaturica.reset();
+            cleaning = true;
+            timerCos.reset();
+            robot.cupa.toggleDeget();
+         //   robot.glisiere.setToPosition(3);
+            timerPro.reset();
+            deget = false;
+            isGlisieraProcessing = true;
+            first = false;
+            isDown = false;
+        }
+        if (timerCos.milliseconds() >= 700 && !deget)
+        {
+            robot.glisiere.setToPosition(3);
+            deget= true;
+        }
+
+        if(timerPro.milliseconds() >= 1000 && isGlisieraProcessing) {
+            robot.cupa.toggleCupa();
+            isGlisieraProcessing = false;
+        }
+
+        if(timerMaturica.milliseconds() >= 200 && cleaning) {
+            robot.maturica.toggleEject();
+            cleaning = false;
+        }
+  }
 
     public void emergency(Button stop) {
         if(stop.pressed()) {
