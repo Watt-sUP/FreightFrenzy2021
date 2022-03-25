@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Rata {
-    public DcMotor motor;
+    public DcMotorEx motor;
     private double currentPower;
 
     public Rata(HardwareMap hardwareMap) {
-        motor = hardwareMap.dcMotor.get(Config.rate);
+        motor = hardwareMap.get(DcMotorEx.class, Config.rate);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 

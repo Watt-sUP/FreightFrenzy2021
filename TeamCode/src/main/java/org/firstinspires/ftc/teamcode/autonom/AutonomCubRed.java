@@ -95,70 +95,61 @@ public class AutonomCubRed extends LinearOpMode {
 
         if(teamMarkerLocation == Locations.Top) {
 
-            Trajectory delivery = drive.trajectoryBuilder(startPose)
+            //Pose2d exit = new Pose2d(12, -66, Math.toRadians(180));
+            Trajectory deliveryFirst = drive.trajectoryBuilder(startPose)
+                    .addDisplacementMarker(() -> {
+                        robot.cupa.toggleDeget();
+                        robot.glisiere.setToPosition(4);
+                    })
+                    .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.5))
                     .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
+                    .addDisplacementMarker(() -> robot.cupa.toggleDeget())
                     .build();
 
 
-            Trajectory supply = drive.trajectoryBuilder(delivery.end())
+            Trajectory supply = drive.trajectoryBuilder(deliveryFirst.end())
                     .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
-                    .addTemporalMarker(0.7, () -> robot.glisiere.setToPosition(0))
+                    .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
                     .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
                     .build();
 
             Trajectory move = drive.trajectoryBuilder(supply.end())
+                    .addDisplacementMarker(() -> robot.maturica.toggleCollect())
                     .back(35)
                     .build();
 
 
-            Trajectory returnToOrigin = drive.trajectoryBuilder(move.end())
-                    .addTemporalMarker(0.5, () -> robot.maturica.toggleEject())
+            Trajectory delivery = drive.trajectoryBuilder(move.end())
+                    .addDisplacementMarker(() -> {
+                        robot.cupa.toggleDeget();
+                        robot.glisiere.setToPosition(4);
+                    })
+                    .addTemporalMarker(0.3, () -> robot.maturica.toggleEject())
+                    .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.5))
                     .forward(35)
+                    .splineTo(new Vector2d(8, -45), Math.toRadians(125))
+                    .addDisplacementMarker(() -> robot.cupa.toggleDeget())
                     .build();
 
 
-            robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
-            sleep(500);
-            robot.cupa.servo.setPosition(0.5);
-            drive.followTrajectory(delivery);
-            robot.cupa.toggleDeget();
-            sleep(300);
-            robot.maturica.toggleCollect();
+            drive.followTrajectory(deliveryFirst);
+            sleep(1000);
             drive.followTrajectory(supply);
-            robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
-            sleep(500);
-            robot.cupa.servo.setPosition(0.5);
-            drive.followTrajectory(returnToOrigin);
+            sleep(1000);
             drive.followTrajectory(delivery);
-            robot.cupa.toggleDeget();
-            sleep(300);
-            robot.maturica.toggleCollect();
+            sleep(1000);
             drive.followTrajectory(supply);
-            robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
-            sleep(500);
-            robot.cupa.servo.setPosition(0.5);
-            drive.followTrajectory(returnToOrigin);
+            sleep(1000);
             drive.followTrajectory(delivery);
-            robot.cupa.toggleDeget();
-            sleep(300);
-            robot.maturica.toggleCollect();
+            sleep(1000);
             drive.followTrajectory(supply);
-            robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
-            sleep(500);
-            robot.cupa.servo.setPosition(0.5);
-            drive.followTrajectory(returnToOrigin);
+            sleep(1000);
             drive.followTrajectory(delivery);
-            robot.cupa.toggleDeget();
-            sleep(300);
-            robot.maturica.toggleCollect();
+            sleep(1000);
             drive.followTrajectory(supply);
         } else if(teamMarkerLocation == Locations.Middle) {
             Trajectory deliveryFirst = drive.trajectoryBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(5, -40, Math.toRadians(125)))
+                    .lineToLinearHeading(new Pose2d(5, -40, Math.toRadians(130)))
                     .build();
 
             Trajectory supplyFirst = drive.trajectoryBuilder(deliveryFirst.end())
@@ -167,8 +158,8 @@ public class AutonomCubRed extends LinearOpMode {
                     .lineToLinearHeading(new Pose2d(12, -66, Math.toRadians(180)))
                     .build();
 
-            Trajectory delivery = drive.trajectoryBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
+            Trajectory delivery = drive.trajectoryBuilder(supplyFirst.end())
+                    .lineToLinearHeading(new Pose2d(8, -50, Math.toRadians(125)))
                     .build();
 
 
@@ -199,7 +190,7 @@ public class AutonomCubRed extends LinearOpMode {
             drive.followTrajectory(supplyFirst);
             drive.followTrajectory(move);
             robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
+            robot.glisiere.setToPosition(4);
             sleep(500);
             robot.cupa.servo.setPosition(0.5);
             drive.followTrajectory(returnToOrigin);
@@ -210,7 +201,7 @@ public class AutonomCubRed extends LinearOpMode {
             drive.followTrajectory(supply);
             drive.followTrajectory(move);
             robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
+            robot.glisiere.setToPosition(4);
             sleep(500);
             robot.cupa.servo.setPosition(0.5);
             drive.followTrajectory(returnToOrigin);
@@ -221,7 +212,7 @@ public class AutonomCubRed extends LinearOpMode {
             drive.followTrajectory(supply);
             drive.followTrajectory(move);
             robot.cupa.toggleDeget();
-            robot.glisiere.setToPosition(3);
+            robot.glisiere.setToPosition(4);
             sleep(500);
             robot.cupa.servo.setPosition(0.5);
             drive.followTrajectory(returnToOrigin);
@@ -246,7 +237,7 @@ public class AutonomCubRed extends LinearOpMode {
                     .build();
 
             Trajectory delivery = drive.trajectoryBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(125)))
+                    .lineToLinearHeading(new Pose2d(8, -45, Math.toRadians(130)))
                     .build();
 
 
@@ -265,9 +256,11 @@ public class AutonomCubRed extends LinearOpMode {
                     .forward(35)
                     .build();
 
-
+            /*
             robot.brat.goToPosition(1600);
             sleep(1000);
+
+             */
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(2);
             sleep(500);
