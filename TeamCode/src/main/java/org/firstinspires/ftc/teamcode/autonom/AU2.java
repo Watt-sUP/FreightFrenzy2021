@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
@@ -30,7 +31,7 @@ public class AU2 extends LinearOpMode {
                     robot.glisiere.setToPosition(3);
                 })
                 .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.5))
-                .splineToSplineHeading(new Pose2d(-10, -49.5, Math.toRadians(98)), Math.toRadians(120))
+                .splineToSplineHeading(new Pose2d(-10, -49.5, Math.toRadians(98)), Math.toRadians(120), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addDisplacementMarker(() -> robot.cupa.toggleDeget())
                 .build();
 
@@ -39,9 +40,9 @@ public class AU2 extends LinearOpMode {
                 .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
                 .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
                 .addTemporalMarker(1.5, () -> robot.maturica.toggleCollect())
-                .splineToSplineHeading(new Pose2d(0, -60.5, Math.toRadians(180)), Math.toRadians(120))
-                .splineToConstantHeading(new Vector2d(10, -66), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(45, -66), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(0, -60.5, Math.toRadians(180)), Math.toRadians(120), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(10, -66), Math.toRadians(0), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineToConstantHeading(new Vector2d(45, -66), Math.toRadians(0), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
         Trajectory reverse = drive.trajectoryBuilder(supply.end())
@@ -51,8 +52,8 @@ public class AU2 extends LinearOpMode {
                 })
                 .addTemporalMarker(0.15, () -> robot.maturica.toggleEject())
                 .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.5))
-                .splineToConstantHeading(new Vector2d(20, -66), Math.toRadians(180))
-                .splineTo(new Vector2d(-10, -48), Math.toRadians(98))
+                .splineToConstantHeading(new Vector2d(20, -66), Math.toRadians(180), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .splineTo(new Vector2d(-10, -48), Math.toRadians(98), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addDisplacementMarker(() -> robot.cupa.toggleDeget())
                 .build();
         waitForStart();

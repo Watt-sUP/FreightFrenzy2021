@@ -270,7 +270,6 @@ public class DriverControlled extends LinearOpMode {
             cleaning = true;
             timerCos.reset();
             robot.cupa.toggleDeget();
-         //   robot.glisiere.setToPosition(3);
             timerPro.reset();
             deget = false;
             isGlisieraProcessing = true;
