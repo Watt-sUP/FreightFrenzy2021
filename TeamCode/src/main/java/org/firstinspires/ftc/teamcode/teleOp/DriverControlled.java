@@ -23,7 +23,7 @@ public class DriverControlled extends LinearOpMode {
     //Declaratii
     private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
     private boolean first = false, isGlisieraProcessing = false, cleaning = false, magnetic = false, deget =true;
-    private boolean emergency = false;
+    private boolean emergency = false, antiprost = false;
     private Mugurel robot;
     private int stateRata = -1;
     private ElapsedTime timpCupa, timerGli, runTime, timerPro, timerMag, timerMaturica, timerStop;
@@ -242,7 +242,7 @@ public class DriverControlled extends LinearOpMode {
     }
 
     private void cupa(Button cupa) {
-        if (cupa.pressed()) {
+        if (cupa.pressed() && !antiprost) {
             if(!first) {
                 robot.cupa.toggleCupa();
                 isCupaProcessing = true;
@@ -252,6 +252,7 @@ public class DriverControlled extends LinearOpMode {
                 robot.glisiere.setToPosition(2);
                 first = false;
             }
+            antiprost = true;
         }
 
         if(timerGli.milliseconds() >= 400 && isCupaProcessing) {
@@ -259,6 +260,7 @@ public class DriverControlled extends LinearOpMode {
             isDown = true;
             robot.maturica.toggleCollect();
             isCupaProcessing = false;
+            antiprost = false;
         }
     }
 

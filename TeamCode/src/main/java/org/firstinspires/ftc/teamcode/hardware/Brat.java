@@ -13,7 +13,7 @@ public class Brat {
     public CRServo servo_orizontal;
     public DcMotor motor_vertical;
     public Servo servo_fata;
-    private int[] poz = {0, 1870, 2130};
+    private int[] poz = {0, 400, 1975, 2130, 2275};
     public boolean isBrat = false;
     public int pozition = 0;
 
@@ -71,7 +71,7 @@ public class Brat {
 
     public void changePosition(double change) {
         if(change >= 0.1 && !isBrat) {
-            if(pozition < 2)
+            if(pozition < 4)
                 pozition++;
             isBrat = true;
             goToPosition(poz[pozition]);
