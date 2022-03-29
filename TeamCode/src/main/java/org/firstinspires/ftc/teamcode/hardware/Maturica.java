@@ -28,17 +28,17 @@ public class Maturica {
         return state.toString();
     }
 
-    private void stop() {
+    public void stop() {
         motor.setPower(0);
         state = State.Idle;
     }
 
-    private void collect() {
+    public void collect() {
         state = State.Collecting;
         motor.setPower(-1.0);
     }
 
-    private void eject() {
+    public void eject() {
         state = State.Ejecting;
         motor.setPower(1.0);
     }

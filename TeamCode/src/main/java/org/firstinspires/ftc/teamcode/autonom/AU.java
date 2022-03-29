@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
@@ -31,113 +32,161 @@ public class AU extends LinearOpMode {
         return SampleMecanumDriveCancelable.getAccelerationConstraint(DriveConstants.MAX_ACCEL);
     }
 
-    public void cupa_delivery() {
-        robot.cupa.servo.setPosition(0.5);
+    public Trajectory delivery3, delivery2, delivery1;
+    public TrajectorySequence supply, park;
+    public AtomicBoolean sensor_on;
+    public double vv = 45;
+
+    public void update_supply_trajectory(int cycle_id) {
+//        supply = drive.trajectorySequenceBuilder(delivery.end())
+//                .addTemporalMarker(0.5, () -> robot.cupa.collect())
+//                .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
+//                .addTemporalMarker(1.5, () -> robot.maturica.collect())
+//                .splineToLinearHeading(new Pose2d(15, -64.5, Math.toRadians(176)), Math.toRadians(0), velocityConstraint(25), accelerationConstraint())
+//                .addDisplacementMarker(() -> sensor_on.set(true))
+//                .lineToConstantHeading(new Vector2d(40, -67), velocityConstraint(vv), accelerationConstraint())
+//                .lineToConstantHeading(new Vector2d(60, -67), velocityConstraint(7), accelerationConstraint())
+//                .build();
+
+        supply = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .addTemporalMarker(0.75, () -> robot.cupa.collect())
+                .addTemporalMarker(1.25, () -> robot.glisiere.setToPosition(0))
+                .addTemporalMarker(2, () -> robot.maturica.collect())
+                .splineToLinearHeading(new Pose2d(15, -64.5, Math.toRadians(176)), Math.toRadians(0), velocityConstraint(27), accelerationConstraint())
+//                .splineToSplineHeading(new Pose2d(15, -64.5, Math.toRadians(176)), Math.toRadians(0), velocityConstraint(27), accelerationConstraint())
+                .addDisplacementMarker(() -> sensor_on.set(true))
+                .lineToConstantHeading(new Vector2d(46 + (cycle_id - 1) * 5, -67), velocityConstraint(vv), accelerationConstraint())
+//                .splineToSplineHeading(new Pose2d(46 + (cycle_id - 1) * 5, -67, Math.toRadians(176)), Math.toRadians(0), velocityConstraint(vv), accelerationConstraint())
+//                .lineToConstantHeading(new Vector2d(60, -67), velocityConstraint(7), accelerationConstraint())
+                .build();
+
+    }
+
+    public void build_trajectories() {
+        Pose2d startPose = new Pose2d(12, -63, Math.toRadians(90));
+        drive.setPoseEstimate(startPose);
+
+        sensor_on = new AtomicBoolean(false);
+
+
+        delivery3 = drive.trajectoryBuilder(startPose)
+                .addTemporalMarker(0.5, () -> robot.cupa.delivery34())
+                .splineToLinearHeading(new Pose2d(3.5, -51, Math.toRadians(120)), Math.toRadians(120), velocityConstraint(vv), accelerationConstraint())
+                .addDisplacementMarker(() -> robot.cupa.desface())
+                .build();
+
+        delivery2 = drive.trajectoryBuilder(startPose)
+                .addTemporalMarker(0.5, () -> robot.cupa.delivery2())
+                .splineToLinearHeading(new Pose2d(5, -37, Math.toRadians(155)), Math.toRadians(150), velocityConstraint(20), accelerationConstraint())
+                .addDisplacementMarker(() -> robot.cupa.toggleDeget())
+                .build();
+
+        delivery1 = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(5, -36, Math.toRadians(143)), velocityConstraint(20), accelerationConstraint())
+                .build();
+
+//        update_supply_trajectory(0);
+    }
+
+    public void delivery_x() {
+        robot.cupa.strange();
+
+        int level = 3;
+
+        if(level == 1)  {
+            robot.glisiere.setToPosition(2);
+            sleep(700);
+            robot.cupa.delivery34();
+            sleep(500);
+            robot.glisiere.setToPosition(1);
+            drive.followTrajectory(delivery1);
+            robot.cupa.desface();
+        } else if(level == 2) {
+            robot.glisiere.setToPosition(2);
+            sleep(500);
+            drive.followTrajectory(delivery2);
+        }
+
+        if(level == 3)  {
+            robot.glisiere.setToPosition(4);
+            sleep(500);
+            drive.followTrajectory(delivery3);
+        }
+    }
+
+    public void cycle(int id) {
+        telemetry.addData("Cycle", id);
+        telemetry.update();
+
+        update_supply_trajectory(id);
+
+        drive.followTrajectorySequenceAsync(supply);
+        while(drive.isBusy()) {
+            drive.update();
+
+            if(robot.distance.getDistance(DistanceUnit.CM) <= 5 && sensor_on.get()) {
+                drive.breakFollowing();
+                telemetry.addData("Break", "true");
+                telemetry.update();
+                break;
+            }
+        }
+        sensor_on.set(false);
+        robot.cupa.strange();
+        sleep(200);
+        robot.maturica.eject();
+        sleep(200);
+        robot.glisiere.setToPosition(4);
+
+        Trajectory delivery_brk = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .addTemporalMarker(0.7, () -> robot.cupa.delivery34())
+                .addTemporalMarker(1.5, () -> robot.maturica.stop())
+//                .splineTo(new Vector2d(15, -65), 0, velocityConstraint(vv), accelerationConstraint())
+//                .splineToLinearHeading(new Pose2d(3.5, -51, Math.toRadians(120 - 2.5 * id)), Math.toRadians(120), velocityConstraint(vv), accelerationConstraint())
+                .splineToSplineHeading(new Pose2d(15, -65, Math.toRadians(176)), Math.toRadians(176), velocityConstraint(vv), accelerationConstraint())
+                .splineToSplineHeading(new Pose2d(3.5, -51, Math.toRadians(120 - 2.5)), Math.toRadians(120), velocityConstraint(vv), accelerationConstraint())
+                .build();
+
+        drive.followTrajectory(delivery_brk);
+        robot.cupa.desface();
+        sleep(300);
+    }
+
+    public void park_robot() {
+        park = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .addTemporalMarker(0.5, () -> robot.cupa.collect())
+                .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
+                .splineToLinearHeading(new Pose2d(15, -63.5, Math.toRadians(177)), Math.toRadians(0), velocityConstraint(25), accelerationConstraint())
+//                .addDisplacementMarker(() -> robot.maturica.collect())
+                .addDisplacementMarker(() -> sensor_on.set(true))
+                .lineTo(new Vector2d(40, -67))
+//                .lineTo(new Vector2d(60, -67), velocityConstraint(7), accelerationConstraint())
+                .build();
+
+        drive.followTrajectorySequence(park);
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
+        ElapsedTime timer = new ElapsedTime();
         drive = new SampleMecanumDriveCancelable(hardwareMap);
         robot = new Mugurel(hardwareMap);
 
-        AtomicBoolean sensor_on = new AtomicBoolean(false);
-
-        Pose2d startPose = new Pose2d(12, -63, Math.toRadians(90));
-        drive.setPoseEstimate(startPose);
-
-        double vv = 35;
-
-
-        Trajectory delivery = drive.trajectoryBuilder(startPose)
-                .addTemporalMarker(0.5, this::cupa_delivery)
-                .splineToLinearHeading(new Pose2d(3.5, -51, Math.toRadians(120)), Math.toRadians(120), velocityConstraint(vv), accelerationConstraint())
-                .addDisplacementMarker(() -> robot.cupa.toggleDeget())
-                .build();
-
-        TrajectorySequence supply = drive.trajectorySequenceBuilder(delivery.end())
-                .addTemporalMarker(0.5, () -> robot.cupa.servo.setPosition(0.97))
-                .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
-                .addTemporalMarker(1.5, () -> robot.maturica.toggleCollect())
-                .splineToLinearHeading(new Pose2d(15, -65, Math.toRadians(182)), Math.toRadians(0), velocityConstraint(vv), accelerationConstraint())
-                .addDisplacementMarker(() -> sensor_on.set(true))
-                .lineTo(new Vector2d(48, -67), velocityConstraint(15), accelerationConstraint())
-                .build();
-
-//        Trajectory reverse = drive.trajectoryBuilder(supply.end())
-//                .splineToConstantHeading(new Vector2d(20, -65), Math.toRadians(180))
-//                .splineToSplineHeading(new Pose2d(0, -48, Math.toRadians(120)), Math.toRadians(120))
-//                .build();
+        build_trajectories();
 
 
         waitForStart();
 
-        robot.cupa.toggleDeget();
-        robot.glisiere.setToPosition(4);
-        sleep(500);
-        drive.followTrajectory(delivery);
+        timer.reset();
+
+        delivery_x();
         sleep(200);
-        drive.followTrajectorySequenceAsync(supply);
-        while(drive.isBusy()) {
-            drive.update();
 
-            if(robot.distance.getDistance(DistanceUnit.CM) <= 5 && sensor_on.get()) {
-                drive.breakFollowing();
-                telemetry.addData("Break", "true");
-                telemetry.update();
-                break;
-            }
-        }
-        sensor_on.set(false);
-        robot.cupa.toggleDeget();
-        sleep(200);
-        robot.maturica.toggleEject();
-        sleep(200);
-        robot.glisiere.setToPosition(4);
+        cycle(1);
+        cycle(2);
+        if(timer.seconds() < 20)
+            cycle(3);
 
-        TrajectorySequence delivery_brk = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .addTemporalMarker(0.7, this::cupa_delivery)
-                .lineTo(new Vector2d(15, -65), velocityConstraint(vv), accelerationConstraint())
-                .splineToLinearHeading(new Pose2d(3.5, -51, Math.toRadians(120)), Math.toRadians(120), velocityConstraint(vv), accelerationConstraint())
-//                .addDisplacementMarker(() -> robot.cupa.toggleDeget())
-                .build();
-
-        drive.followTrajectorySequence(delivery_brk);
-
-        // CYCLE 2
-        telemetry.addData("Cycle", "2");
-        telemetry.update();
-        robot.cupa.toggleDeget();
-        sleep(200);
-        drive.followTrajectorySequenceAsync(supply);
-        while(drive.isBusy()) {
-            drive.update();
-
-            if(robot.distance.getDistance(DistanceUnit.CM) <= 5 && sensor_on.get()) {
-                drive.breakFollowing();
-                telemetry.addData("Break", "true");
-                telemetry.update();
-                break;
-            }
-        }
-        sensor_on.set(false);
-        robot.cupa.toggleDeget();
-        sleep(200);
-        robot.maturica.toggleEject();
-        sleep(200);
-        robot.glisiere.setToPosition(4);
-
-        delivery_brk = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .addTemporalMarker(0.7, this::cupa_delivery)
-                .lineTo(new Vector2d(15, -65), velocityConstraint(vv), accelerationConstraint())
-                .splineToLinearHeading(new Pose2d(3.5, -51, Math.toRadians(120)), Math.toRadians(120), velocityConstraint(vv), accelerationConstraint())
-//                .addDisplacementMarker(() -> robot.cupa.toggleDeget())
-                .build();
-
-        drive.followTrajectorySequence(delivery_brk);
-        robot.cupa.toggleDeget();
-
-//        drive.followTrajectory(supply);
-//        sleep(1000);
-//        drive.followTrajectory(reverse);
+        park_robot();
     }
 }

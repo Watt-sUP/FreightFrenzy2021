@@ -7,16 +7,16 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Cupa {
     public Servo servo;
-    private double downPosition = 0.6, upPosition = 0.97, upMorePosition = 0.55; //0.05
+    private double del34Position = 0.5, collectPosition = 0.97, del2Position = 0.55; //0.05
     private static double stransPos = 0.25, desfacutPos = 0.55, desfacutMorePos = 0.65;
     private State state;
     private StateDeget stateDeget;
     public Servo deget;
 
     private enum State {
-        Down,
-        Up,
-        UpMore
+        Collect,
+        Delivery_3_4,
+        Delivery_2,
     }
 
     private enum StateDeget {
@@ -26,8 +26,8 @@ public class Cupa {
 
     public Cupa(HardwareMap hardwareMap) {
         servo = hardwareMap.servo.get(Config.cupa);
-        state = State.Up;
-        servo.setPosition(upPosition);
+        state = State.Collect;
+        servo.setPosition(collectPosition);
         stateDeget = StateDeget.Desfacut;
         deget = hardwareMap.servo.get(Config.deget);
         deget.setPosition(desfacutPos);
@@ -37,19 +37,19 @@ public class Cupa {
         return servo.getPosition();
     }
 
-    public void down() {
-        servo.setPosition(downPosition);
-        state = State.Down;
+    public void collect() {
+        servo.setPosition(collectPosition);
+        state = State.Collect;
     }
 
-    private void up() {
-        servo.setPosition(upPosition);
-        state = State.Up;
+    public void delivery34() {
+        servo.setPosition(del34Position);
+        state = State.Delivery_3_4;
     }
 
-    private void upMore() {
-        servo.setPosition(upMorePosition);
-        state = State.UpMore;
+    public void delivery2() {
+        servo.setPosition(del2Position);
+        state = State.Delivery_2;
     }
 
 
@@ -74,8 +74,8 @@ public class Cupa {
     }
 
     public void toggleCupa() {
-        if(state == State.Down) up();
-        else down();
+        if(state == State.Collect) delivery34();
+        else collect();
     }
 
     public void desfaceMore() {
@@ -84,8 +84,8 @@ public class Cupa {
     }
 
     public void toggleCupaMore() {
-        if(state == State.UpMore || state == State.Up) down();
-        else upMore();
+        if(state == State.Delivery_3_4 || state == State.Delivery_2) collect();
+        else delivery2();
     }
 
 
