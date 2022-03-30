@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //@Disabled
@@ -30,6 +31,10 @@ public class AU extends LinearOpMode {
 
     public TrajectoryAccelerationConstraint accelerationConstraint() {
         return SampleMecanumDriveCancelable.getAccelerationConstraint(DriveConstants.MAX_ACCEL);
+    }
+
+    public TrajectoryAccelerationConstraint accelerationConstraint(double a) {
+        return SampleMecanumDriveCancelable.getAccelerationConstraint(a);
     }
 
     public Trajectory delivery3, delivery2, delivery1;
@@ -48,6 +53,8 @@ public class AU extends LinearOpMode {
 //                .lineToConstantHeading(new Vector2d(60, -67), velocityConstraint(7), accelerationConstraint())
 //                .build();
 
+        int[] posX_cyc = {0, 50, 55, 57, 60};
+
         supply = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addTemporalMarker(0.75, () -> robot.cupa.collect())
                 .addTemporalMarker(1.25, () -> robot.glisiere.setToPosition(0))
@@ -55,7 +62,8 @@ public class AU extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(15, -64.5, Math.toRadians(176)), Math.toRadians(0), velocityConstraint(27), accelerationConstraint())
 //                .splineToSplineHeading(new Pose2d(15, -64.5, Math.toRadians(176)), Math.toRadians(0), velocityConstraint(27), accelerationConstraint())
                 .addDisplacementMarker(() -> sensor_on.set(true))
-                .lineToConstantHeading(new Vector2d(46 + (cycle_id - 1) * 5, -67), velocityConstraint(vv), accelerationConstraint())
+                .lineToConstantHeading(new Vector2d(posX_cyc[cycle_id], -67), velocityConstraint(vv), accelerationConstraint(33))
+//                .lineToConstantHeading(new Vector2d(60, -67), velocityConstraint(vv), accelerationConstraint(15))
 //                .splineToSplineHeading(new Pose2d(46 + (cycle_id - 1) * 5, -67, Math.toRadians(176)), Math.toRadians(0), velocityConstraint(vv), accelerationConstraint())
 //                .lineToConstantHeading(new Vector2d(60, -67), velocityConstraint(7), accelerationConstraint())
                 .build();
@@ -134,13 +142,12 @@ public class AU extends LinearOpMode {
         sensor_on.set(false);
         robot.cupa.strange();
         sleep(200);
-        robot.maturica.eject();
-        sleep(200);
         robot.glisiere.setToPosition(4);
 
         Trajectory delivery_brk = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .addTemporalMarker(0.3, () -> robot.maturica.eject())
                 .addTemporalMarker(0.7, () -> robot.cupa.delivery34())
-                .addTemporalMarker(1.5, () -> robot.maturica.stop())
+                .addTemporalMarker(1.75, () -> robot.maturica.stop())
 //                .splineTo(new Vector2d(15, -65), 0, velocityConstraint(vv), accelerationConstraint())
 //                .splineToLinearHeading(new Pose2d(3.5, -51, Math.toRadians(120 - 2.5 * id)), Math.toRadians(120), velocityConstraint(vv), accelerationConstraint())
                 .splineToSplineHeading(new Pose2d(15, -65, Math.toRadians(176)), Math.toRadians(176), velocityConstraint(vv), accelerationConstraint())
@@ -159,7 +166,7 @@ public class AU extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(15, -63.5, Math.toRadians(177)), Math.toRadians(0), velocityConstraint(25), accelerationConstraint())
 //                .addDisplacementMarker(() -> robot.maturica.collect())
                 .addDisplacementMarker(() -> sensor_on.set(true))
-                .lineTo(new Vector2d(40, -67))
+                .lineTo(new Vector2d(48, -67))
 //                .lineTo(new Vector2d(60, -67), velocityConstraint(7), accelerationConstraint())
                 .build();
 

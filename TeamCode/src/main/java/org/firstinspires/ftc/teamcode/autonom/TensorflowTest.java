@@ -43,7 +43,7 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
 public class TensorflowTest extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange.tflite";
+    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange3.tflite";
     private static final String[] LABELS = {
             "Marker"
     };
@@ -127,7 +127,7 @@ public class TensorflowTest extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.9f;
+        tfodParameters.minResultConfidence = 0.5f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
         tfodParameters.useObjectTracker = false;

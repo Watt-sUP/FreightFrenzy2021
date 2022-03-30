@@ -35,12 +35,14 @@ public class Maturica {
 
     public void collect() {
         state = State.Collecting;
-        motor.setPower(-1.0);
+//        motor.setPower(-1.0);
+        motor.setPower(-0.8);
     }
 
     public void eject() {
         state = State.Ejecting;
-        motor.setPower(1.0);
+//        motor.setPower(1.0);
+        motor.setPower(0.8);
     }
 
     public void toggleCollect() {

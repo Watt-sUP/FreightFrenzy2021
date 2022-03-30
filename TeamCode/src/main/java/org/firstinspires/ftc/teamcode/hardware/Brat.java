@@ -13,7 +13,7 @@ public class Brat {
     public CRServo servo_orizontal;
     public DcMotor motor_vertical;
     public Servo servo_fata;
-    private int[] poz = {0, 400, 1975, 2130, 2275};
+    private int[] poz = {0, 600, 875, 1725, 2110, 2275};
     public boolean isBrat = false;
     public int pozition = 0;
 
@@ -88,6 +88,6 @@ public class Brat {
     {
         motor_vertical.setTargetPosition(pos);
         motor_vertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor_vertical.setPower(1);
+        motor_vertical.setPower(0.7);
     }
 }
