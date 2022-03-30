@@ -37,7 +37,7 @@ public class Brat {
         motor_vertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         stare = StateCupa.eject;
-
+        goToPosition(0);
 
     }
 
@@ -71,7 +71,7 @@ public class Brat {
 
     public void changePosition(double change) {
         if(change >= 0.1 && !isBrat) {
-            if(pozition < 4)
+            if(pozition + 1 < poz.length)
                 pozition++;
             isBrat = true;
             goToPosition(poz[pozition]);
@@ -82,6 +82,10 @@ public class Brat {
             goToPosition(poz[pozition]);
         }
         else if(change == 0) isBrat = false;
+    }
+
+    public void addToPosition(int ticks) {
+        goToPosition(motor_vertical.getCurrentPosition() + ticks);
     }
 
     public void goToPosition(int pos)
