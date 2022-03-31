@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import java.util.List;
 
-//@Disabled
+@Disabled
 @Autonomous(name = "Autonom cub rosu", group = "autonom")
 public class AutonomCubRed extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange.tflite";

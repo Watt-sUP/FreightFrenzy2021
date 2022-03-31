@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
 import java.util.List;
 
-//@Disabled
+@Disabled
 @Autonomous(name = "Autonom cub albastru", group = "autonom")
 public class AutonomCubBlue extends LinearOpMode {
 

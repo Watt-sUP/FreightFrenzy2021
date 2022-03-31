@@ -118,7 +118,7 @@ public class DriverControlled extends LinearOpMode {
             brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down);
             maturica(cristi.a);
 //            deget(cristi.b);
-            rata(andrei.x);
+            rata(andrei.x, andrei.y);
             glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper, cristi.b);
             cupa(cristi.y);
             senzor(robot.distance);
@@ -159,9 +159,13 @@ public class DriverControlled extends LinearOpMode {
 
     }
 
-    private void rata(Button rata) {
+    private void rata(Button rata, Button change) {
         double startingPower = 0;
+        double multiplier = 1;
         long start_time = System.nanoTime();
+
+        if(change.pressed())
+            multiplier = -multiplier;
 
         if (rata.pressed()) {
             startingPower = 0.7;
@@ -170,7 +174,7 @@ public class DriverControlled extends LinearOpMode {
                 robot.rata.rotate(0.0);
             } else {
                 stateRata = -1;
-                robot.rata.rotate(startingPower);
+                robot.rata.rotate(startingPower * multiplier);
             }
         }
 
@@ -179,7 +183,7 @@ public class DriverControlled extends LinearOpMode {
             double difference = (end_time - start_time) / 1e6;
 
             if(difference >= 500 && difference <= 1500 && (difference - 1000) > 0)
-                robot.rata.rotate(startingPower + ((difference - 1000) / 30));
+                robot.rata.rotate((startingPower + ((difference - 1000) / 30)) * multiplier);
         }
     }
 

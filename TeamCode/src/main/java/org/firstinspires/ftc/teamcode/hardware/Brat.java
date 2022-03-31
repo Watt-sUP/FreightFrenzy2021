@@ -54,6 +54,21 @@ public class Brat {
             servo_orizontal.setPower(0.0);
     }
 
+    public void moveGaju(double powerVertical, double powerOrizontal) {
+        if(powerVertical < -0.03 || powerVertical > 0.03) {
+            motor_vertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor_vertical.setPower(-powerVertical * 0.5);
+        }
+        else if(powerVertical < 0.03 && powerVertical > -0.03) {
+            goToPosition(motor_vertical.getCurrentPosition());
+        }
+        if(powerOrizontal < -0.03 || powerOrizontal > 0.03) {
+            servo_orizontal.setPower(-powerOrizontal * 0.5);
+        }
+        else if(powerOrizontal < 0.03 && powerOrizontal > -0.03)
+            servo_orizontal.setPower(0.0);
+    }
+
     public void toggleCupa() {
         if(stare == StateCupa.collect) eject();
         else collect();
