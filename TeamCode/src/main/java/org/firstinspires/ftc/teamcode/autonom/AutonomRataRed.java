@@ -84,7 +84,6 @@ public class AutonomRataRed extends LinearOpMode {
                             }
                             break;
                         }
-                        if (recognition.getLabel() != "Team Marker")
                             telemetry.addData("Team Marker:", "Not detected");
                         i++;
                     }
@@ -109,8 +108,6 @@ public class AutonomRataRed extends LinearOpMode {
                     .splineToLinearHeading(new Pose2d(-60, -36, Math.toRadians(270)), Math.toRadians(270), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
-
-            robot.brat.goToPosition(1600);
             sleep(1000);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(4);
@@ -144,8 +141,6 @@ public class AutonomRataRed extends LinearOpMode {
 
             waitForStart();
 
-            robot.brat.goToPosition(1600);
-            sleep(1000);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(2);
             sleep(1000);
@@ -177,8 +172,6 @@ public class AutonomRataRed extends LinearOpMode {
                     .build();
 
 
-            robot.brat.goToPosition(1600);
-            sleep(1000);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(2);
             sleep(1000);

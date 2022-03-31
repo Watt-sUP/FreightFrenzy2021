@@ -67,7 +67,7 @@ public class RataExperimental extends LinearOpMode {
 
         final double duck_position = inchToM(3.0);   // meters
 
-        final double miu = 0.38;     // coef frecare
+        final double miu = 0.05;     // coef frecare
         final double ff = miu * 9.81;   // forta frecare
         final double ff2 = ff * ff;
 
@@ -93,7 +93,7 @@ public class RataExperimental extends LinearOpMode {
             telemetry.update();
 
             double l = now_velocity, r = MAX_VELOCITY;
-            for(int i = 0; i < 20; i++) {
+            for(int i = 0; i < 14; i++) {
                 double m = (l + r) / 2.0;
                 double tm = timer.seconds();
                 double v = m;

@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
 import dalvik.system.DelegateLastClassLoader;
 
-@TeleOp(name = "OpMode", group = "Testing")
-public class DriverControlled extends LinearOpMode {
+@TeleOp(name = "Andrei_Cristi_RED", group = "Testing")
+public class DriverControlled_Red extends LinearOpMode {
 
     //Declaratii
     private boolean faceChanged = false, isCupaProcessing = false, isDown = true, faceIsHeld = false;
@@ -55,6 +55,7 @@ public class DriverControlled extends LinearOpMode {
 
 
         robot.wheels.setUp();
+        robot.rata.setRed();
         waitForStart();
         timpCupa.reset();
         timerGli.reset();
@@ -118,7 +119,7 @@ public class DriverControlled extends LinearOpMode {
             brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down);
             maturica(cristi.a);
 //            deget(cristi.b);
-            rata(andrei.x, andrei.y);
+            rata(andrei.x);
             glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper, cristi.b);
             cupa(cristi.y);
             senzor(robot.distance);
@@ -159,32 +160,35 @@ public class DriverControlled extends LinearOpMode {
 
     }
 
-    private void rata(Button rata, Button change) {
-        double startingPower = 0;
-        double multiplier = 1;
-        long start_time = System.nanoTime();
+    private void rata(Button rata) {
+//        double startingPower = 0;
+//        double multiplier = 1;
+//        long start_time = System.nanoTime();
+//
+//        if(change.pressed())
+//            multiplier = -multiplier;
+//
+//        if (rata.pressed()) {
+//            startingPower = 0.7;
+//            if (stateRata == -1) {
+//                stateRata = 0;
+//                robot.rata.rotate(0.0);
+//            } else {
+//                stateRata = -1;
+//                robot.rata.rotate(startingPower * multiplier);
+//            }
+//        }
+//
+//        if(robot.rata.motor.isBusy() && stateRata == -1) {
+//            long end_time = System.nanoTime();
+//            double difference = (end_time - start_time) / 1e6;
+//
+//            if(difference >= 500 && difference <= 1500 && (difference - 1000) > 0)
+//                robot.rata.rotate((startingPower + ((difference - 1000) / 30)) * multiplier);
+//        }
 
-        if(change.pressed())
-            multiplier = -multiplier;
-
-        if (rata.pressed()) {
-            startingPower = 0.7;
-            if (stateRata == -1) {
-                stateRata = 0;
-                robot.rata.rotate(0.0);
-            } else {
-                stateRata = -1;
-                robot.rata.rotate(startingPower * multiplier);
-            }
-        }
-
-        if(robot.rata.motor.isBusy() && stateRata == -1) {
-            long end_time = System.nanoTime();
-            double difference = (end_time - start_time) / 1e6;
-
-            if(difference >= 500 && difference <= 1500 && (difference - 1000) > 0)
-                robot.rata.rotate((startingPower + ((difference - 1000) / 30)) * multiplier);
-        }
+        if(rata.pressed())
+            robot.rata.score_rata_experimental();
     }
 
     private void glisiere(Button poz0, Button poz1, Button poz2, Button poz3, Button poz4, Button b) {

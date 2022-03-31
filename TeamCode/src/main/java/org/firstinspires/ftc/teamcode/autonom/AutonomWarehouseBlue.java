@@ -41,6 +41,7 @@ public class AutonomWarehouseBlue extends LinearOpMode {
     SampleMecanumDriveCancelable drive;
     Mugurel robot;
     ElapsedTime timer;
+    boolean is_parked;
 
     public TrajectoryVelocityConstraint velocityConstraint(double v) {
         return SampleMecanumDriveCancelable.getVelocityConstraint(v, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
@@ -158,8 +159,6 @@ public class AutonomWarehouseBlue extends LinearOpMode {
     public void delivery_x() {
         robot.cupa.strange();
 
-        int level = 2;
-
         if(level == 1)  {
             supply = supply1;
             robot.glisiere.setToPosition(2);
@@ -209,7 +208,10 @@ public class AutonomWarehouseBlue extends LinearOpMode {
         }
         robot.cupa.strange();
 
-        if(timer.seconds() > 24)    return;
+        if(timer.seconds() > 24)    {
+            is_parked = true;
+            return;
+        }
 
         sleep(200);
         robot.glisiere.setToPosition(4);
@@ -235,6 +237,7 @@ public class AutonomWarehouseBlue extends LinearOpMode {
     }
 
     public void park_robot() {
+        if(is_parked)   return;
         park = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addTemporalMarker(0.5, () -> robot.cupa.collect())
                 .addTemporalMarker(1, () -> robot.glisiere.setToPosition(0))
@@ -250,12 +253,13 @@ public class AutonomWarehouseBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        is_parked = false;
         timer = new ElapsedTime();
         drive = new SampleMecanumDriveCancelable(hardwareMap);
         robot = new Mugurel(hardwareMap);
+        robot.brat.autonomousInitPosition();
 
         build_trajectories();
-
 
         initVuforia();
         initTfod();
@@ -275,7 +279,7 @@ public class AutonomWarehouseBlue extends LinearOpMode {
 
                     confidence = 0.0;
                     int i = 0;
-                    level = 1;
+                    level = 3;
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel() == "Team Marker") {
                             telemetry.addData("Team Marker:", "Detected");
