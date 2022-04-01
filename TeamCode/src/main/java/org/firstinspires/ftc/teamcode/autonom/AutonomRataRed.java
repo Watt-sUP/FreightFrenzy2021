@@ -41,6 +41,7 @@ public class AutonomRataRed extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot = new Mugurel(hardwareMap);
+        robot.brat.autonomousInitPosition();
 
         Pose2d startPosition = new Pose2d(-35.5, -62, Math.toRadians(90));
 
@@ -51,7 +52,7 @@ public class AutonomRataRed extends LinearOpMode {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.0, 16.0 / 9.0);
+            tfod.setZoom(1.2, 16.0 / 9.0);
         }
 
         int pos = 0;
@@ -120,6 +121,7 @@ public class AutonomRataRed extends LinearOpMode {
             drive.followTrajectory(duck);
             robot.rata.motor.setPower(0.6);
             sleep(3000);
+            robot.rata.motor.setPower(0);
             drive.followTrajectory(finish);
         } else if(teamMarkerLocation == Locations.Middle) {
 
@@ -152,6 +154,7 @@ public class AutonomRataRed extends LinearOpMode {
             drive.followTrajectory(duck);
             robot.rata.motor.setPower(0.6);
             sleep(3000);
+            robot.rata.motor.setPower(0);
             drive.followTrajectory(finish);
         } else {
 
@@ -186,6 +189,7 @@ public class AutonomRataRed extends LinearOpMode {
             drive.followTrajectory(duck);
             robot.rata.motor.setPower(0.6);
             sleep(3000);
+            robot.rata.motor.setPower(0);
             drive.followTrajectory(finish);
         }
         }

@@ -41,6 +41,7 @@ public class AutonomRataBlue extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot = new Mugurel(hardwareMap);
+        robot.brat.autonomousInitPosition();
 
         Pose2d startPosition = new Pose2d(-35.5, 62, Math.toRadians(270));
 
@@ -51,7 +52,7 @@ public class AutonomRataBlue extends LinearOpMode {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.2, 16.0/9.0);
         }
 
 
@@ -64,13 +65,13 @@ public class AutonomRataBlue extends LinearOpMode {
 
                     confidence = 0.0;
                     int i = 0;
-                    teamMarkerLocation = Locations.Top;
+                    teamMarkerLocation = Locations.Bottom;
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel() == "Team Marker") {
                             telemetry.addData("Team Marker:", "Detected");
                             if(((recognition.getBottom() - recognition.getTop())) < (recognition.getImageHeight() * 0.8)) {
                                 if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() / 3) && recognition.getConfidence() > confidence) {
-                                    teamMarkerLocation = Locations.Top;
+                                    teamMarkerLocation = Locations.Bottom;
                                     confidence = recognition.getConfidence();
                                 }
                                 else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() < (recognition.getImageWidth() * 2 / 3) && recognition.getConfidence() > confidence) {
@@ -78,7 +79,7 @@ public class AutonomRataBlue extends LinearOpMode {
                                     confidence = recognition.getConfidence();
                                 }
                                 else if (((recognition.getRight() - recognition.getLeft()) / 2) + recognition.getLeft() >= (recognition.getImageWidth() * 2 / 3) && recognition.getConfidence() > confidence) {
-                                    teamMarkerLocation = Locations.Bottom;
+                                    teamMarkerLocation = Locations.Top;
                                     confidence = recognition.getConfidence();
                                 }
                             }
@@ -89,7 +90,7 @@ public class AutonomRataBlue extends LinearOpMode {
                         i++;
                     }
                     telemetry.addData("Marker Location:", teamMarkerLocation.toString());
-                    if(teamMarkerLocation != Locations.Top) { confidence = confidence * 100; telemetry.addData("Localization Confidence:", (int) confidence); }
+                    if(teamMarkerLocation != Locations.Bottom) { confidence = confidence * 100; telemetry.addData("Localization Confidence:", (int) confidence); }
                     telemetry.update();
                 }
             }
@@ -102,7 +103,7 @@ public class AutonomRataBlue extends LinearOpMode {
             Trajectory duck = drive.trajectoryBuilder(cube.end())
                     .addTemporalMarker(0.8, () -> robot.cupa.toggleCupa())
                     .addTemporalMarker(1.3, () -> robot.glisiere.setToPosition(0))
-                    .splineToSplineHeading(new Pose2d(-57, 55, Math.toRadians(100)), Math.toRadians(100), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToSplineHeading(new Pose2d(-58, 56, Math.toRadians(135)), Math.toRadians(135), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
             Trajectory finish = drive.trajectoryBuilder(duck.end())
@@ -110,8 +111,6 @@ public class AutonomRataBlue extends LinearOpMode {
                     .build();
 
 
-            robot.brat.goToPosition(1600);
-            sleep(1000);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(4);
             sleep(1000);
@@ -123,6 +122,7 @@ public class AutonomRataBlue extends LinearOpMode {
             drive.followTrajectory(duck);
             robot.rata.motor.setPower(-0.6);
             sleep(3000);
+            robot.rata.motor.setPower(0);
             drive.followTrajectory(finish);
         } else if(teamMarkerLocation == Locations.Middle) {
 
@@ -134,7 +134,7 @@ public class AutonomRataBlue extends LinearOpMode {
                     .addTemporalMarker(0.8, () -> robot.cupa.servo.setPosition(0.97))
                     .addTemporalMarker(1.3, () -> robot.glisiere.setToPosition(0))
                     .splineToConstantHeading(new Vector2d(-30, 37), Math.toRadians(100), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                    .splineToSplineHeading(new Pose2d(-57, 55, Math.toRadians(100)), Math.toRadians(100), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToSplineHeading(new Pose2d(-58, 56, Math.toRadians(135)), Math.toRadians(135), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
             Trajectory finish = drive.trajectoryBuilder(duck.end())
@@ -142,10 +142,7 @@ public class AutonomRataBlue extends LinearOpMode {
                     .build();
 
 
-            waitForStart();
 
-            robot.brat.goToPosition(1600);
-            sleep(1000);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(2);
             sleep(1000);
@@ -157,6 +154,7 @@ public class AutonomRataBlue extends LinearOpMode {
             drive.followTrajectory(duck);
             robot.rata.motor.setPower(-0.6);
             sleep(3000);
+            robot.rata.motor.setPower(0);
             drive.followTrajectory(finish);
         } else {
 
@@ -169,7 +167,7 @@ public class AutonomRataBlue extends LinearOpMode {
                     .addTemporalMarker(0.7, () -> robot.cupa.servo.setPosition(0.97))
                     .addTemporalMarker(1.1, () -> robot.glisiere.setToPosition(0))
                     .splineToConstantHeading(new Vector2d(-30, 37), Math.toRadians(100), SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                    .splineToSplineHeading(new Pose2d(-57, 55, Math.toRadians(100)), Math.toRadians(100), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToSplineHeading(new Pose2d(-58, 56, Math.toRadians(135)), Math.toRadians(135), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
             Trajectory finish = drive.trajectoryBuilder(duck.end())
@@ -177,8 +175,6 @@ public class AutonomRataBlue extends LinearOpMode {
                     .build();
 
 
-            robot.brat.goToPosition(1600);
-            sleep(1000);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(2);
             sleep(1000);
@@ -193,6 +189,7 @@ public class AutonomRataBlue extends LinearOpMode {
             drive.followTrajectory(duck);
             robot.rata.motor.setPower(-0.6);
             sleep(3000);
+            robot.rata.motor.setPower(0);
             drive.followTrajectory(finish);
         }
     }

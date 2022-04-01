@@ -67,7 +67,7 @@ public class Rata {
 
         final double duck_position = inchToM(3.0);   // meters
 
-        final double miu = 0.05;     // coef frecare
+        final double miu = 0.15;     // coef frecare
         final double ff = miu * 9.81;   // forta frecare
         final double ff2 = ff * ff;
 

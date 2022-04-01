@@ -116,11 +116,11 @@ public class DriverControlled_Red extends LinearOpMode {
             backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
 
 
-            brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down);
+            brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down, gamepad2.right_trigger);
             maturica(cristi.a);
 //            deget(cristi.b);
             rata(andrei.x);
-            glisiere(cristi.x, cristi.right_trigger.toButton(0.3), cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper, cristi.b);
+            glisiere(cristi.x, cristi.left_trigger.toButton(0.3), cristi.right_bumper, cristi.left_bumper, cristi.b, andrei.right_bumper, andrei.left_bumper);
             cupa(cristi.y);
             senzor(robot.distance);
 //            emergency(andrei.a);
@@ -143,9 +143,13 @@ public class DriverControlled_Red extends LinearOpMode {
             robot.maturica.toggleCollect();
     }
 
-    private void brat(double verticalMovement, double horizontalMovement, Button magnet) {
-        robot.brat.move(horizontalMovement);
-        robot.brat.changePosition(verticalMovement);
+    private void brat(double verticalMovement, double horizontalMovement, Button magnet, double trigger) {
+
+        if(trigger < 0.3) {
+            robot.brat.move(horizontalMovement);
+            robot.brat.changePosition(verticalMovement);
+        } else
+            robot.brat.moveGaju(-verticalMovement, horizontalMovement);
         if (magnet.pressed()) {
             robot.brat.toggleCupa();
             timerMag.reset();
@@ -191,17 +195,17 @@ public class DriverControlled_Red extends LinearOpMode {
             robot.rata.score_rata_experimental();
     }
 
-    private void glisiere(Button poz0, Button poz1, Button poz2, Button poz3, Button poz4, Button b) {
+    private void glisiere(Button poz0, Button poz2, Button poz3, Button poz4, Button b, Button addB, Button subB) {
         if (poz0.pressed()) {
             first = false;
             robot.glisiere.setToPosition(0);
             isDown = true;
         }
-        if (poz1.pressed()) {
-            first = true;
-            robot.glisiere.setToPosition(5);
-            isDown = false;
-        } else if (poz2.pressed()) {
+//        if (poz1.pressed()) {
+//            first = true;
+//            robot.glisiere.setToPosition(5);
+//            isDown = false;
+        else if (poz2.pressed()) {
             first = false;
             robot.glisiere.setToPosition(2);
             isDown = false;
@@ -247,6 +251,11 @@ public class DriverControlled_Red extends LinearOpMode {
             robot.maturica.toggleEject();
             cleaning = false;
         }
+
+        if(addB.pressed())
+            robot.glisiere.modifyPosition(200);
+        if(subB.pressed())
+            robot.glisiere.modifyPosition(-200);
     }
 
     private void cupa(Button cupa) {

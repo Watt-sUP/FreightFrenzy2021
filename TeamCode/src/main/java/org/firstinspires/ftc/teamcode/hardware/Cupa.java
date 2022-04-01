@@ -7,8 +7,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Cupa {
     public Servo servo;
-    private double del34Position = 0.5, collectPosition = 0.97, del2Position = 0.55; //0.05
-    private static double stransPos = 0.25, desfacutPos = 0.55, desfacutMorePos = 0.65;
+    private double del34Position = 0.5, collectPosition = 0.99, del2Position = 0.55; //0.05
+    private static double stransPos = 0.25, desfacutPos = 0.53, desfacutMorePos = 0.65;
     private State state;
     private StateDeget stateDeget;
     public Servo deget;

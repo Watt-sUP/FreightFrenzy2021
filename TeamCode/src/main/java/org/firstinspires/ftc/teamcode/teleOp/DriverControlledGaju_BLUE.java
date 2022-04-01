@@ -116,7 +116,7 @@ public class DriverControlledGaju_BLUE extends LinearOpMode {
             maturica(gaju.y);
 //            deget(cristi.b);
             rata(andrei.x);
-            glisiere(gaju.dpad_up, gaju.dpad_down, gaju.b);
+            glisiere(gaju.dpad_up, gaju.dpad_down, gaju.b, andrei.right_bumper, andrei.left_bumper);
             cupa(gaju.a);
             senzor(robot.distance);
 //            emergency(andrei.a);
@@ -192,7 +192,7 @@ public class DriverControlledGaju_BLUE extends LinearOpMode {
             robot.rata.score_rata_experimental();
     }
 
-    private void glisiere(Button pos_up, Button pos_down, Button b) {
+    private void glisiere(Button pos_up, Button pos_down, Button b, Button addB, Button subB) {
 
         if(pos_up.pressed()) {
             pos_glisiere++;
@@ -238,6 +238,11 @@ public class DriverControlledGaju_BLUE extends LinearOpMode {
             robot.maturica.toggleEject();
             cleaning = false;
         }
+
+        if(addB.pressed())
+            robot.glisiere.modifyPosition(200);
+        if(subB.pressed())
+            robot.glisiere.modifyPosition(-200);
     }
 
     private void cupa(Button cupa) {

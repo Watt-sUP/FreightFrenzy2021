@@ -149,7 +149,6 @@ public class AutonomWarehouseBlue extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(14, 65, Math.toRadians(184)), velocityConstraint(25), accelerationConstraint())
                 .addDisplacementMarker(() -> sensor_on.set(true))
                 .addDisplacementMarker(() -> robot.maturica.collect())
-                .waitSeconds(0.4)
                 .lineToConstantHeading(new Vector2d(50, 67), velocityConstraint(vv), accelerationConstraint(33))
                 .build();
 
@@ -222,7 +221,7 @@ public class AutonomWarehouseBlue extends LinearOpMode {
 
         Trajectory delivery_brk = drive.trajectoryBuilder(drive.getPoseEstimate())
 //                .lineToLinearHeading(new Pose2d(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY(), Math.toRadians(180)))
-                .addTemporalMarker(0.3, () -> robot.maturica.eject())
+                .addTemporalMarker(0.2, () -> robot.maturica.eject())
                 .addTemporalMarker(0.7, () -> robot.cupa.delivery34())
                 .addTemporalMarker(1.75, () -> robot.maturica.stop())
 //                .splineTo(new Vector2d(15, -65), 0, velocityConstraint(vv), accelerationConstraint())
@@ -266,7 +265,7 @@ public class AutonomWarehouseBlue extends LinearOpMode {
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(1.2, 16.0/9.0);
         }
 
 
@@ -335,7 +334,7 @@ public class AutonomWarehouseBlue extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.9f;
+        tfodParameters.minResultConfidence = 0.5f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 320;
         tfodParameters.useObjectTracker = false;
