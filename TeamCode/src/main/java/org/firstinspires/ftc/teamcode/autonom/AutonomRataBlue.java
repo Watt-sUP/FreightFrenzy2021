@@ -24,7 +24,7 @@ import java.util.List;
 @Autonomous(name = "Autonom rata albastru", group = "autonom")
 public class AutonomRataBlue extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange.tflite";
+    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange3.tflite";
     private static final String[] LABELS = {
             "Team Marker"
     };
@@ -41,7 +41,7 @@ public class AutonomRataBlue extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot = new Mugurel(hardwareMap);
-        robot.brat.autonomousInitPosition();
+//        robot.brat.autonomousInitPosition();
 
         Pose2d startPosition = new Pose2d(-35.5, 62, Math.toRadians(270));
 
@@ -95,6 +95,8 @@ public class AutonomRataBlue extends LinearOpMode {
                 }
             }
         }
+        robot.brat.autonomousInitPosition();
+        sleep(1600);
         if(teamMarkerLocation == Locations.Top) {
             Trajectory cube = drive.trajectoryBuilder(new Pose2d(-35.5, 62, Math.toRadians(270)))
                     .lineToLinearHeading(new Pose2d(-30, 40, Math.toRadians(320)), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
@@ -109,7 +111,6 @@ public class AutonomRataBlue extends LinearOpMode {
             Trajectory finish = drive.trajectoryBuilder(duck.end())
                     .splineToLinearHeading(new Pose2d(-60, 36, Math.toRadians(90)), Math.toRadians(90), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
-
 
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(4);

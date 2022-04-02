@@ -257,7 +257,7 @@ public class AutonomWarehouseRed extends LinearOpMode {
         timer = new ElapsedTime();
         drive = new SampleMecanumDriveCancelable(hardwareMap);
         robot = new Mugurel(hardwareMap);
-        robot.brat.autonomousInitPosition();
+//        robot.brat.autonomousInitPosition();
 
         build_trajectories();
 
@@ -311,7 +311,8 @@ public class AutonomWarehouseRed extends LinearOpMode {
         }
 
         timer.reset();
-
+        robot.brat.autonomousInitPosition();
+//        sleep(1000);
         delivery_x();
         sleep(200);
 

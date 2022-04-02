@@ -75,12 +75,12 @@ public class Brat {
     }
 
     public void eject() {
-        servo_fata.setPosition(0);
+        servo_fata.setPosition(1);
         stare = StateCupa.eject;
     }
 
     public void collect() {
-        servo_fata.setPosition(1);
+        servo_fata.setPosition(0);
         stare = StateCupa.collect;
     }
 

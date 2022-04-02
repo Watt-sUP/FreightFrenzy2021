@@ -112,7 +112,7 @@ public class DriverControlled_Blue extends LinearOpMode {
             backRightMotor.setPower(Range.clip(backRightPower, -powerLimit, powerLimit));
 
 
-            brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down, gamepad2.right_trigger);
+            brat(gamepad2.left_stick_y, gamepad2.right_stick_x, cristi.dpad_down, gamepad2.right_trigger, cristi.dpad_up);
             maturica(cristi.a);
 //            deget(cristi.b);
             rata(andrei.x);
@@ -139,13 +139,9 @@ public class DriverControlled_Blue extends LinearOpMode {
             robot.maturica.toggleCollect();
     }
 
-    private void brat(double verticalMovement, double horizontalMovement, Button magnet, double trigger) {
+    private void brat(double verticalMovement, double horizontalMovement, Button magnet, double trigger, Button mgn_trg) {
 
-        if(trigger < 0.3) {
-            robot.brat.move(horizontalMovement);
-            robot.brat.changePosition(verticalMovement);
-        } else
-            robot.brat.moveGaju(-verticalMovement, horizontalMovement);
+        robot.brat.moveGaju(-verticalMovement * 0.7, horizontalMovement);
         if (magnet.pressed()) {
             robot.brat.toggleCupa();
             timerMag.reset();
@@ -156,6 +152,9 @@ public class DriverControlled_Blue extends LinearOpMode {
             robot.brat.toggleCupa();
             magnetic = false;
         }
+
+        if(mgn_trg.pressed())
+            robot.brat.toggleCupa();
 
 
     }
@@ -204,14 +203,20 @@ public class DriverControlled_Blue extends LinearOpMode {
         else if (poz2.pressed()) {
             first = false;
             robot.glisiere.setToPosition(2);
+            timerMaturica.reset();
+            cleaning = true;
             isDown = false;
         } else if (poz3.pressed()) {
             first = false;
             robot.glisiere.setToPosition(3);
+            timerMaturica.reset();
+            cleaning = true;
             isDown = false;
         } else if (poz4.pressed()) {
             first = false;
             robot.glisiere.setToPosition(4);
+            timerMaturica.reset();
+            cleaning = true;
             isDown = false;
         }
 /*

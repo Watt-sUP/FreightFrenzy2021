@@ -24,7 +24,7 @@ import java.util.List;
 @Autonomous(name = "Autonom rata rosu", group = "autonom")
 public class AutonomRataRed extends LinearOpMode {
 
-    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange.tflite";
+    private static final String TFOD_MODEL_ASSET = "/sdcard/FIRST/tflitemodels/modelorange3.tflite";
     private static final String[] LABELS = {
             "Team Marker"
     };
@@ -41,7 +41,7 @@ public class AutonomRataRed extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         robot = new Mugurel(hardwareMap);
-        robot.brat.autonomousInitPosition();
+//        robot.brat.autonomousInitPosition();
 
         Pose2d startPosition = new Pose2d(-35.5, -62, Math.toRadians(90));
 
@@ -94,22 +94,24 @@ public class AutonomRataRed extends LinearOpMode {
                 }
             }
         }
+        robot.brat.autonomousInitPosition();
+        sleep(1600);
         if(teamMarkerLocation == Locations.Top) {
             Trajectory cube = drive.trajectoryBuilder(new Pose2d(-35.5, -62, Math.toRadians(90)))
-                    .lineToLinearHeading(new Pose2d(-30, -40, Math.toRadians(40)), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .lineToLinearHeading(new Pose2d(-32, -45, Math.toRadians(40)), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
             Trajectory duck = drive.trajectoryBuilder(cube.end())
                     .addTemporalMarker(0.8, () -> robot.cupa.toggleCupa())
                     .addTemporalMarker(1.3, () -> robot.glisiere.setToPosition(0))
-                    .splineToSplineHeading(new Pose2d(-57, -55, Math.toRadians(260)), Math.toRadians(260), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToSplineHeading(new Pose2d(-57, -57, Math.toRadians(260)), Math.toRadians(260), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
             Trajectory finish = drive.trajectoryBuilder(duck.end())
-                    .splineToLinearHeading(new Pose2d(-60, -36, Math.toRadians(270)), Math.toRadians(270), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToLinearHeading(new Pose2d(-60, -35.25, Math.toRadians(270)), Math.toRadians(270), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
-            sleep(1000);
+//            sleep(500);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(4);
             sleep(1000);
@@ -137,12 +139,13 @@ public class AutonomRataRed extends LinearOpMode {
                     .build();
 
             Trajectory finish = drive.trajectoryBuilder(duck.end())
-                    .splineToLinearHeading(new Pose2d(-60, -36, Math.toRadians(270)), Math.toRadians(270), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToLinearHeading(new Pose2d(-60, -35.25, Math.toRadians(270)), Math.toRadians(270), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
 
-            waitForStart();
+//            waitForStart();
 
+//            sleep(500);
             robot.cupa.toggleDeget();
             robot.glisiere.setToPosition(2);
             sleep(1000);
@@ -171,7 +174,7 @@ public class AutonomRataRed extends LinearOpMode {
                     .build();
 
             Trajectory finish = drive.trajectoryBuilder(duck.end())
-                    .splineToLinearHeading(new Pose2d(-60, -36, Math.toRadians(270)), Math.toRadians(270), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .splineToLinearHeading(new Pose2d(-60, -35.25, Math.toRadians(270)), Math.toRadians(270), SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
 
