@@ -85,7 +85,7 @@ public class AutonomRataRed extends LinearOpMode {
                             }
                             break;
                         }
-                            telemetry.addData("Team Marker:", "Not detected");
+                        telemetry.addData("Team Marker:", "Not detected");
                         i++;
                     }
                     telemetry.addData("Marker Location:", teamMarkerLocation.toString());
@@ -102,8 +102,9 @@ public class AutonomRataRed extends LinearOpMode {
                     .build();
 
             Trajectory duck = drive.trajectoryBuilder(cube.end())
-                    .addTemporalMarker(0.8, () -> robot.cupa.toggleCupa())
-                    .addTemporalMarker(1.3, () -> robot.glisiere.setToPosition(0))
+                    .addTemporalMarker(1.3, () -> robot.cupa.toggleCupa())
+                    .addTemporalMarker(1.8
+                            , () -> robot.glisiere.setToPosition(0))
                     .splineToSplineHeading(new Pose2d(-57, -57, Math.toRadians(260)), Math.toRadians(260), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
@@ -195,7 +196,7 @@ public class AutonomRataRed extends LinearOpMode {
             robot.rata.motor.setPower(0);
             drive.followTrajectory(finish);
         }
-        }
+    }
 
 
 

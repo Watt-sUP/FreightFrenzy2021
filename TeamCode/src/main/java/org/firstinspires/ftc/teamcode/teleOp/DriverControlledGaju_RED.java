@@ -198,12 +198,16 @@ public class DriverControlledGaju_RED extends LinearOpMode {
             pos_glisiere++;
             if(pos_glisiere > 4)    pos_glisiere = 4;
             robot.glisiere.setToPosition(pos_glisiere);
+            cleaning = true;
+            timerMaturica.reset();
         }
 
         if(pos_down.pressed()) {
             pos_glisiere--;
             if(pos_glisiere < 0)    pos_glisiere = 0;
             robot.glisiere.setToPosition(pos_glisiere);
+            cleaning = true;
+            timerMaturica.reset();
         }
 /*
         if(isDown) {

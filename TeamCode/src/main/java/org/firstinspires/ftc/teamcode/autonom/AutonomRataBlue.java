@@ -103,8 +103,8 @@ public class AutonomRataBlue extends LinearOpMode {
                     .build();
 
             Trajectory duck = drive.trajectoryBuilder(cube.end())
-                    .addTemporalMarker(0.8, () -> robot.cupa.toggleCupa())
-                    .addTemporalMarker(1.3, () -> robot.glisiere.setToPosition(0))
+                    .addTemporalMarker(1.3, () -> robot.cupa.toggleCupa())
+                    .addTemporalMarker(1.8, () -> robot.glisiere.setToPosition(0))
                     .splineToSplineHeading(new Pose2d(-58, 56, Math.toRadians(135)), Math.toRadians(135), SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
