@@ -136,8 +136,8 @@ public class AutonomWarehouseRed extends LinearOpMode {
 
         delivery1 = drive.trajectoryBuilder(startPose)
                 .addTemporalMarker(0.7, () -> robot.cupa.servo.setPosition(0.6))
-                .addTemporalMarker(1.3, () -> robot.glisiere.setToPosition(1))
-                .lineToLinearHeading(new Pose2d(-12, -42.5, Math.toRadians(90)), velocityConstraint(25), accelerationConstraint())
+                .addTemporalMarker(1.3, () -> robot.glisiere.setToPosition(2))
+                .lineToLinearHeading(new Pose2d(-12, -42, Math.toRadians(90)), velocityConstraint(25), accelerationConstraint())
 //                .addDisplacementMarker(() -> robot.cupa.delivery2())
                 .build();
 
